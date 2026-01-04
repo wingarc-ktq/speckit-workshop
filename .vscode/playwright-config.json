@@ -1,0 +1,9 @@
+{
+  "browser": {
+    "browserName": "chromium",
+    "contextOptions": {
+      "locale": "ja-JP",
+      "timezoneId": "Asia/Tokyo"
+    }
+  }
+}
