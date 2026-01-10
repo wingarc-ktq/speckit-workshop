@@ -1,4 +1,4 @@
-# UI Prototype
+# Spec Kit Workshop
 
 ## 📖 概要
 
