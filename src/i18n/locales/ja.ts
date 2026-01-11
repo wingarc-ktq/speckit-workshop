@@ -87,6 +87,25 @@ export const ja = {
     title:
       'ページを表示できませんでした。ページを更新してもう一度お試しください。',
   },
+  layouts: {
+    appSidebar: {
+      general: {
+        title: '一般',
+        myFiles: 'マイファイル',
+        recent: '最近使用したファイル',
+        sharedWithMe: '共有アイテム',
+        deletedFiles: 'ゴミ箱',
+      },
+      tags: {
+        title: 'タグ',
+      },
+      storage: {
+        title: 'ストレージ',
+        upgrade: 'アップグレード',
+        usage: '{{used}} GB / {{total}} GB',
+      },
+    },
+  },
   components: {
     tagSelector: {
       label: 'タグ',

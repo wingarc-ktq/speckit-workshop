@@ -83,6 +83,25 @@ export const en = {
     title:
       'The page could not be displayed. Please refresh the page and try again.',
   },
+  layouts: {
+    appSidebar: {
+      general: {
+        title: 'General',
+        myFiles: 'My Files',
+        recent: 'Recent',
+        sharedWithMe: 'Shared with Me',
+        deletedFiles: 'Deleted Files',
+      },
+      tags: {
+        title: 'Tags',
+      },
+      storage: {
+        title: 'Storage',
+        upgrade: 'Upgrade',
+        usage: '{{used}} GB of {{total}} GB',
+      },
+    },
+  },
   components: {
     tagSelector: {
       label: 'Tags',

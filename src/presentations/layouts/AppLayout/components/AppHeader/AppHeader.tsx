@@ -1,8 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 
+import CloseIcon from '@mui/icons-material/Close';
 import MenuIcon from '@mui/icons-material/Menu';
+import NotificationsOutlinedIcon from '@mui/icons-material/NotificationsOutlined';
+import SearchIcon from '@mui/icons-material/Search';
+import Badge from '@mui/material/Badge';
 import IconButton from '@mui/material/IconButton';
-import Toolbar from '@mui/material/Toolbar';
+import InputAdornment from '@mui/material/InputAdornment';
 import Typography from '@mui/material/Typography';
 
 import { Logo } from '@/presentations/ui';
@@ -15,6 +19,12 @@ interface AppHeaderProps {
 }
 
 export const AppHeader: React.FC<AppHeaderProps> = ({ onMenuToggle }) => {
+  const [searchValue, setSearchValue] = useState('');
+
+  const handleSearchClear = () => {
+    setSearchValue('');
+  };
+
   return (
     <S.HeaderAppBar
       enableColorOnDark
@@ -22,8 +32,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({ onMenuToggle }) => {
       elevation={0}
       color="inherit"
     >
-      <Toolbar>
-        {/* Left Side */}
+      <S.StyledToolbar>
         <S.HeaderContent>
           <IconButton
             edge="start"
@@ -46,11 +55,43 @@ export const AppHeader: React.FC<AppHeaderProps> = ({ onMenuToggle }) => {
           </S.LogoSection>
         </S.HeaderContent>
 
-        {/* Right Side */}
+        <S.SearchField
+          value={searchValue}
+          onChange={(e) => setSearchValue(e.target.value)}
+          placeholder="Search something..."
+          size="small"
+          slotProps={{
+            input: {
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchIcon sx={{ color: 'text.secondary' }} />
+                </InputAdornment>
+              ),
+              endAdornment: searchValue && (
+                <InputAdornment position="end">
+                  <IconButton
+                    size="small"
+                    onClick={handleSearchClear}
+                    edge="end"
+                    sx={{ mr: -0.5 }}
+                  >
+                    <CloseIcon fontSize="small" />
+                  </IconButton>
+                </InputAdornment>
+              ),
+            },
+          }}
+        />
+
         <S.HeaderActions>
+          <IconButton>
+            <Badge badgeContent={3} color="error">
+              <NotificationsOutlinedIcon />
+            </Badge>
+          </IconButton>
           <UserMenu />
         </S.HeaderActions>
-      </Toolbar>
+      </S.StyledToolbar>
     </S.HeaderAppBar>
   );
 };
