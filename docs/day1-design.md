@@ -33,6 +33,9 @@ spec.mdを読み解き、Figma MakeでUIデザインを作成する。
 - [ ] Figma for Education アカウント取得済み
 - [ ] Github Copilot または Claude Codeにアクセス可能
 - [ ] このリポジトリをクローン済み
+- [ ] 依存パッケージをインストール済み
+- [ ] MCPのセットアップ済み
+- [ ] 作業ブランチと仕様書ディレクトリを用意済み
 
 ```bash
 git clone git@github.com:wingarc-ktq/speckit-workshop.git
@@ -43,7 +46,16 @@ cp .env.sample .env
 pnpm gen:api
 ```
 
-`.vscode/mcp.json` を開いて、必要なMCPサーバーが起動されていることを確認
+`.vscode/mcp.json` を開いて、必要なMCPサーバーが起動されていることを確認してください。
+
+作業ブランチと、自分の仕様書のディレクトリを用意してください。
+`yyyy-MM-<your-name>`は今の年月と自分の名前に置き換えてください。
+
+```bash
+git checkout -b yyyy-MM-<your-name>
+mv specs/002-document-management/* specs/yyyy-MM-<your-name>
+rmdir specs/002-document-management
+```
 
 ---
 
