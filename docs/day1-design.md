@@ -49,7 +49,7 @@ cp .env.sample .env
 pnpm gen:api
 
 # 作業ブランチと仕様書ディレクトリの作成
-# yyyy-MM-<your-name> は今の年月と自分の名前に置き換える
+# <your-name> は今の年月と自分の名前に置き換える
 git checkout -b 002-document-management-<your-name>
 mkdir specs/002-document-management-<your-name>
 mv specs/002-document-management/* specs/002-document-management-<your-name>
