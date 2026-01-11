@@ -1,8 +1,8 @@
-openapi: 3.1.0
+openapi: 3.0.3
 info:
   title: File Management API
   version: 1.0.0
-  description: ファイル管理API（文書管理システム用）
+  description: ファイル管理API（1dayインターン用）
 
 servers:
   - url: http://localhost:3000/api/v1
@@ -22,11 +22,15 @@ paths:
           schema:
             type: string
             maxLength: 100
-        - name: category
+        - name: tagIds
           in: query
-          description: カテゴリで絞り込み
+          description: タグIDで絞り込み（複数指定可能）
           schema:
-            $ref: '#/components/schemas/FileCategory'
+            type: array
+            items:
+              type: string
+          style: form
+          explode: true
         - name: page
           in: query
           description: ページ番号
@@ -80,17 +84,10 @@ paths:
                   type: string
                   format: binary
                   description: アップロードするファイル（最大10MB）
-                category:
-                  $ref: '#/components/schemas/FileCategory'
                 description:
                   type: string
                   maxLength: 500
                   description: ファイルの説明
-                tagIds:
-                  type: array
-                  items:
-                    type: string
-                  description: 付与するタグのID一覧
       responses:
         '201':
           description: 作成成功
@@ -152,7 +149,7 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
 
     put:
-      summary: ファイルメタデータ更新
+      summary: ファイル更新
       operationId: updateFile
       tags:
         - files
@@ -176,8 +173,6 @@ paths:
                   minLength: 1
                   maxLength: 255
                   description: 新しいファイル名
-                category:
-                  $ref: '#/components/schemas/FileCategory'
                 description:
                   type: string
                   maxLength: 500
@@ -186,7 +181,7 @@ paths:
                   type: array
                   items:
                     type: string
-                  description: 更新後のタグID一覧
+                  description: 更新するタグID一覧
       responses:
         '200':
           description: 更新成功
@@ -242,6 +237,43 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
 
+  /files/bulk-delete:
+    post:
+      summary: ファイル一括削除
+      operationId: bulkDeleteFiles
+      tags:
+        - files
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - fileIds
+              properties:
+                fileIds:
+                  type: array
+                  items:
+                    type: string
+                  minItems: 1
+                  description: 削除するファイルID一覧
+      responses:
+        '204':
+          description: 削除成功
+        '400':
+          description: 不正なリクエスト
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: 未認証
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
   /files/{fileId}/download:
     get:
       summary: ファイルダウンロード
@@ -272,44 +304,6 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
         '404':
           description: ファイルが見つかりません
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-
-  /files/bulk-delete:
-    post:
-      summary: ファイル一括削除
-      operationId: bulkDeleteFiles
-      tags:
-        - files
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              required:
-                - fileIds
-              properties:
-                fileIds:
-                  type: array
-                  items:
-                    type: string
-                  minItems: 1
-                  maxItems: 50
-                  description: 削除するファイルのID一覧（最大50件）
-      responses:
-        '204':
-          description: 削除成功
-        '400':
-          description: 不正なリクエスト
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '401':
-          description: 未認証
           content:
             application/json:
               schema:
@@ -377,7 +371,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
         '409':
-          description: タグ名が既に存在します
+          description: タグ名が重複しています
           content:
             application/json:
               schema:
@@ -437,7 +431,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
         '409':
-          description: タグ名が既に存在します
+          description: タグ名が重複しています
           content:
             application/json:
               schema:
@@ -474,37 +468,16 @@ paths:
 
 components:
   schemas:
-    FileCategory:
-      type: string
-      enum:
-        - proposal # 提案書
-        - contract # 契約書
-        - report # レポート
-        - other # その他
-      description: ファイルカテゴリ
-
-    TagColor:
-      type: string
-      enum:
-        - blue
-        - red
-        - yellow
-        - green
-        - purple
-        - orange
-        - gray
-      description: タグの表示色
-
     FileInfo:
       type: object
       required:
         - id
         - name
         - size
-        - category
         - mimeType
         - uploadedAt
         - downloadUrl
+        - tagIds
       properties:
         id:
           type: string
@@ -521,8 +494,6 @@ components:
           description: ファイルサイズ（バイト）
           minimum: 0
           example: 2048576
-        category:
-          $ref: '#/components/schemas/FileCategory'
         mimeType:
           type: string
           description: MIMEタイプ
@@ -542,41 +513,12 @@ components:
           format: uri
           description: ダウンロードURL
           example: '/api/v1/files/file_abc123/download'
-        tags:
+        tagIds:
           type: array
           items:
-            $ref: '#/components/schemas/TagInfo'
-          description: 付与されているタグ一覧
-
-    TagInfo:
-      type: object
-      required:
-        - id
-        - name
-        - color
-      properties:
-        id:
-          type: string
-          description: タグID
-          example: 'tag_xyz789'
-        name:
-          type: string
-          description: タグ名
-          minLength: 1
-          maxLength: 50
-          example: '提案書'
-        color:
-          $ref: '#/components/schemas/TagColor'
-        createdAt:
-          type: string
-          format: date-time
-          description: 作成日時
-          example: '2024-10-01T00:00:00Z'
-        updatedAt:
-          type: string
-          format: date-time
-          description: 更新日時
-          example: '2024-10-15T12:00:00Z'
+            type: string
+          description: タグID一覧
+          example: ['tag_abc123', 'tag_def456']
 
     FileListResponse:
       type: object
@@ -614,6 +556,50 @@ components:
       properties:
         file:
           $ref: '#/components/schemas/FileInfo'
+
+    TagColor:
+      type: string
+      enum:
+        - blue
+        - red
+        - yellow
+        - green
+        - purple
+        - orange
+        - gray
+      description: タグの色
+
+    TagInfo:
+      type: object
+      required:
+        - id
+        - name
+        - color
+        - createdAt
+        - updatedAt
+      properties:
+        id:
+          type: string
+          description: タグID
+          example: 'tag_abc123'
+        name:
+          type: string
+          description: タグ名
+          minLength: 1
+          maxLength: 50
+          example: '重要'
+        color:
+          $ref: '#/components/schemas/TagColor'
+        createdAt:
+          type: string
+          format: date-time
+          description: 作成日時
+          example: '2024-10-16T10:30:00Z'
+        updatedAt:
+          type: string
+          format: date-time
+          description: 更新日時
+          example: '2024-10-16T10:30:00Z'
 
     TagListResponse:
       type: object

@@ -290,28 +290,10 @@ export type FileErrorCode =
   | 'DUPLICATE_FILE_NAME';
 ```
 
-### TagError
+### TagException (削除済み)
 
-タグ操作に関するエラー。
-
-```typescript
-// src/domain/models/tag/type.ts に追加
-
-export class TagError extends Error {
-  constructor(
-    message: string,
-    public readonly code: TagErrorCode
-  ) {
-    super(message);
-    this.name = 'TagError';
-  }
-}
-
-export type TagErrorCode =
-  | 'TAG_NOT_FOUND'
-  | 'DUPLICATE_TAG_NAME'
-  | 'TAG_IN_USE';
-```
+タグ操作に関するエラーは、現在は `WebApiException` を使用しています。
+将来的にタグ固有のビジネスロジックエラーが必要になった場合は、`src/domain/errors/TagException.ts` として `AuthException` と同じパターンで実装してください。
 
 ## データフロー
 

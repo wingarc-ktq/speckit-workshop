@@ -41,45 +41,45 @@
 
 ### ドメインモデルの実装
 
-- [ ] T006 [P] File関連の型定義を作成 `src/domain/models/file/type.ts`
-- [ ] T007 [P] File型のエクスポート設定 `src/domain/models/file/index.ts`
-- [ ] T008 [P] Tag関連の型定義を作成 `src/domain/models/tag/type.ts`
-- [ ] T009 [P] Tag型のエクスポート設定 `src/domain/models/tag/index.ts`
+- [X] T006 [P] File関連の型定義を作成 `src/domain/models/file/type.ts`
+- [X] T007 [P] File型のエクスポート設定 `src/domain/models/file/index.ts`
+- [X] T008 [P] Tag関連の型定義を作成 `src/domain/models/tag/type.ts`
+- [X] T009 [P] Tag型のエクスポート設定 `src/domain/models/tag/index.ts`
 
 ### Adapterレイヤーの実装
 
-- [ ] T010 [P] ファイル取得リポジトリ `src/adapters/repositories/files/getFiles.ts`
-- [ ] T011 [P] ファイル詳細取得リポジトリ `src/adapters/repositories/files/getFileById.ts`
-- [ ] T012 [P] ファイルアップロードリポジトリ `src/adapters/repositories/files/uploadFile.ts`
-- [ ] T013 [P] ファイル更新リポジトリ `src/adapters/repositories/files/updateFile.ts`
-- [ ] T014 [P] ファイル削除リポジトリ `src/adapters/repositories/files/deleteFile.ts`
-- [ ] T015 [P] ファイル一括削除リポジトリ `src/adapters/repositories/files/bulkDeleteFiles.ts`
-- [ ] T016 [P] ファイルダウンロードリポジトリ `src/adapters/repositories/files/downloadFile.ts`
-- [ ] T017 ファイルリポジトリのエクスポート `src/adapters/repositories/files/index.ts`
-- [ ] T018 [P] タグ取得リポジトリ `src/adapters/repositories/tags/getTags.ts`
-- [ ] T019 [P] タグ作成リポジトリ `src/adapters/repositories/tags/createTag.ts`
-- [ ] T020 [P] タグ更新リポジトリ `src/adapters/repositories/tags/updateTag.ts`
-- [ ] T021 [P] タグ削除リポジトリ `src/adapters/repositories/tags/deleteTag.ts`
-- [ ] T022 タグリポジトリのエクスポート `src/adapters/repositories/tags/index.ts`
-- [ ] T023 repositoryCompositionに files, tags を追加 `src/adapters/repositories/repositoryComposition.ts`
+- [X] T010 [P] ファイル取得リポジトリ `src/adapters/repositories/files/getFiles.ts`
+- [X] T011 [P] ファイル詳細取得リポジトリ `src/adapters/repositories/files/getFileById.ts`
+- [X] T012 [P] ファイルアップロードリポジトリ `src/adapters/repositories/files/uploadFile.ts`
+- [X] T013 [P] ファイル更新リポジトリ `src/adapters/repositories/files/updateFile.ts`
+- [X] T014 [P] ファイル削除リポジトリ `src/adapters/repositories/files/deleteFile.ts`
+- [X] T015 [P] ファイル一括削除リポジトリ `src/adapters/repositories/files/bulkDeleteFiles.ts`
+- [X] T016 [P] ファイルダウンロードリポジトリ `src/adapters/repositories/files/downloadFile.ts`
+- [X] T017 ファイルリポジトリのエクスポート `src/adapters/repositories/files/index.ts`
+- [X] T018 [P] タグ取得リポジトリ `src/adapters/repositories/tags/getTags.ts`
+- [X] T019 [P] タグ作成リポジトリ `src/adapters/repositories/tags/createTag.ts`
+- [X] T020 [P] タグ更新リポジトリ `src/adapters/repositories/tags/updateTag.ts`
+- [X] T021 [P] タグ削除リポジトリ `src/adapters/repositories/tags/deleteTag.ts`
+- [X] T022 タグリポジトリのエクスポート `src/adapters/repositories/tags/index.ts`
+- [X] T023 repositoryCompositionに files, tags を追加 `src/adapters/repositories/repositoryComposition.ts`
 
 ### TanStack Queryフックの実装
 
-- [ ] T024 クエリキー定数を追加 `src/presentations/hooks/queries/constants.ts` に FILES, TAGS キー追加
-- [ ] T025 [P] useFilesフック `src/presentations/hooks/queries/files/useFiles.ts`
-- [ ] T026 [P] useFileByIdフック `src/presentations/hooks/queries/files/useFileById.ts`
-- [ ] T027 [P] useUploadFileフック `src/presentations/hooks/queries/files/useUploadFile.ts`
-- [ ] T028 [P] useUpdateFileフック `src/presentations/hooks/queries/files/useUpdateFile.ts`
-- [ ] T029 [P] useDeleteFileフック `src/presentations/hooks/queries/files/useDeleteFile.ts`
-- [ ] T030 [P] useBulkDeleteFilesフック `src/presentations/hooks/queries/files/useBulkDeleteFiles.ts`
-- [ ] T031 [P] useTagsフック `src/presentations/hooks/queries/tags/useTags.ts`
-- [ ] T032 [P] useCreateTagフック `src/presentations/hooks/queries/tags/useCreateTag.ts`
-- [ ] T033 [P] useUpdateTagフック `src/presentations/hooks/queries/tags/useUpdateTag.ts`
-- [ ] T034 [P] useDeleteTagフック `src/presentations/hooks/queries/tags/useDeleteTag.ts`
+- [X] T024 クエリキー定数を追加 `src/presentations/hooks/queries/constants.ts` に FILES, TAGS キー追加
+- [X] T025 [P] useFilesフック `src/presentations/hooks/queries/files/useFiles.ts`
+- [X] T026 [P] useFileByIdフック `src/presentations/hooks/queries/files/useFileById.ts`
+- [X] T027 [P] useUploadFileフック `src/presentations/hooks/queries/files/useUploadFile.ts`
+- [X] T028 [P] useUpdateFileフック `src/presentations/hooks/queries/files/useUpdateFile.ts`
+- [X] T029 [P] useDeleteFileフック `src/presentations/hooks/queries/files/useDeleteFile.ts`
+- [X] T030 [P] useBulkDeleteFilesフック `src/presentations/hooks/queries/files/useBulkDeleteFiles.ts`
+- [X] T031 [P] useTagsフック `src/presentations/hooks/queries/tags/useTags.ts`
+- [X] T032 [P] useCreateTagフック `src/presentations/hooks/queries/tags/useCreateTag.ts`
+- [X] T033 [P] useUpdateTagフック `src/presentations/hooks/queries/tags/useUpdateTag.ts`
+- [X] T034 [P] useDeleteTagフック `src/presentations/hooks/queries/tags/useDeleteTag.ts`
 
 ### ユーティリティ関数の実装
 
-- [ ] T035 [P] ファイルフォーマッター関数 `src/presentations/utils/fileFormatters.ts`（formatFileSize, getFileType, isSupportedFileType, exceedsMaxUploadSize）
+- [X] T035 [P] ファイルフォーマッター関数 `src/presentations/utils/fileFormatters.ts`（formatFileSize, getFileType, isSupportedFileType, exceedsMaxUploadSize）
 
 ### 共通UIコンポーネントの実装
 
@@ -88,9 +88,9 @@
 
 ### レイアウトの実装
 
-- [ ] T038 AppLayoutコンポーネント `src/presentations/layouts/AppLayout/AppLayout.tsx`
-- [ ] T039 [P] AppSidebarコンポーネント `src/presentations/layouts/AppLayout/components/AppSidebar/AppSidebar.tsx`
-- [ ] T040 [P] AppHeaderコンポーネント `src/presentations/layouts/AppLayout/components/AppHeader/AppHeader.tsx`
+- [X] T038 AppLayoutコンポーネント `src/presentations/layouts/AppLayout/AppLayout.tsx`
+- [X] T039 [P] AppSidebarコンポーネント `src/presentations/layouts/AppLayout/components/AppSidebar/AppSidebar.tsx`
+- [X] T040 [P] AppHeaderコンポーネント `src/presentations/layouts/AppLayout/components/AppHeader/AppHeader.tsx`
 
 ### 国際化（i18n）の設定
 
