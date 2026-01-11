@@ -83,4 +83,15 @@ export const en = {
     title:
       'The page could not be displayed. Please refresh the page and try again.',
   },
+  components: {
+    tagSelector: {
+      label: 'Tags',
+      placeholder: 'Select tags...',
+      noOptions: 'No tags available',
+      loading: 'Loading...',
+      clear: 'Clear',
+      close: 'Close',
+      open: 'Open',
+    },
+  },
 } as const;

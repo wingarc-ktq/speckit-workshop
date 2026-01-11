@@ -87,4 +87,15 @@ export const ja = {
     title:
       'ページを表示できませんでした。ページを更新してもう一度お試しください。',
   },
+  components: {
+    tagSelector: {
+      label: 'タグ',
+      placeholder: 'タグを選択...',
+      noOptions: '利用可能なタグがありません',
+      loading: '読み込み中...',
+      clear: 'クリア',
+      close: '閉じる',
+      open: '開く',
+    },
+  },
 } as const;

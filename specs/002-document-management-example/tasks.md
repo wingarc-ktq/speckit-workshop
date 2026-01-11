@@ -83,8 +83,8 @@
 
 ### 共通UIコンポーネントの実装
 
-- [ ] T036 [P] TagChipsコンポーネント `src/presentations/components/tags/TagChips/TagChips.tsx`
-- [ ] T037 [P] TagSelectorコンポーネント `src/presentations/components/tags/TagSelector/TagSelector.tsx`
+- [X] T036 [P] TagChipsコンポーネント `src/presentations/components/tags/TagChips/TagChips.tsx`
+- [X] T037 [P] TagSelectorコンポーネント `src/presentations/components/tags/TagSelector/TagSelector.tsx`
 
 ### レイアウトの実装
 
