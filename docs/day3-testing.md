@@ -202,7 +202,7 @@ pnpm test:e2e:debug
 
 ```bash
 # HTMLレポートを開く
-pnpm test:report
+pnpm test:e2e:report
 ```
 
 **レポートの確認ポイント**
