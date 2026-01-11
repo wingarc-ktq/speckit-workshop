@@ -228,7 +228,7 @@ Figma Makeで生成されたデザインをFigmaファイルにコピーして�
 
 ### 5.1 speckit.planとは
 
-pec.mdを元に、実装計画（plan.md）を自動生成するコマンドです。
+spec.mdを元に、実装計画（plan.md）を自動生成するコマンドです。
 
 ### 5.2 実行手順
 
