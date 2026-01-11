@@ -37,7 +37,13 @@ spec.mdを読み解き、Figma MakeでUIデザインを作成する。
 ```bash
 git clone git@github.com:wingarc-ktq/speckit-workshop.git
 cd speckit-workshop
+pnpm install
+pnpm test:e2e:install
+cp .env.sample .env
+pnpm gen:api
 ```
+
+`.vscode/mcp.json` を開いて、必要なMCPサーバーが起動されていることを確認
 
 ---
 
