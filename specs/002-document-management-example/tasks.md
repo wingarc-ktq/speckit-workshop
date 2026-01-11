@@ -25,11 +25,11 @@
 
 **Purpose**: プロジェクト初期化と基本構造の作成
 
-- [ ] T001 依存パッケージのインストール `pnpm add @mui/x-data-grid react-dropzone date-fns`
-- [ ] T002 [P] OpenAPI仕様を `schema/files/openapi.yaml` にコピー
-- [ ] T003 [P] orval設定を `schema/orval.config.ts` に追加（filesエンドポイント用）
-- [ ] T004 APIクライアントコードを生成 `pnpm gen:api` → `src/adapters/generated/files.ts`
-- [ ] T005 [P] MSWハンドラーを `src/adapters/mocks/handlers/index.ts` に追加
+- [X] T001 依存パッケージのインストール `pnpm add @mui/x-data-grid react-dropzone date-fns`
+- [X] T002 [P] OpenAPI仕様を `schema/files/openapi.yaml` にコピー
+- [X] T003 [P] orval設定を `schema/orval.config.ts` に追加(filesエンドポイント用)
+- [X] T004 APIクライアントコードを生成 `pnpm gen:api` → `src/adapters/generated/files.ts`
+- [X] T005 [P] MSWハンドラーを `src/adapters/mocks/handlers/index.ts` に追加
 
 ---
 
