@@ -50,8 +50,8 @@ pnpm gen:api
 
 # 作業ブランチと仕様書ディレクトリの作成
 # yyyy-MM-<your-name> は今の年月と自分の名前に置き換える
-git checkout -b yyyy-MM-<your-name>
-mv specs/002-document-management/* specs/yyyy-MM-<your-name>
+git checkout -b 002-document-management-<your-name>
+mv specs/002-document-management/* specs/002-document-management-<your-name>
 rmdir specs/002-document-management
 ```
 

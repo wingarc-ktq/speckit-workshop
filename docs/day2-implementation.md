@@ -65,7 +65,7 @@ src/
 
 ### 1.3 OpenAPI仕様の確認
 
-`specs/files/openapi.yaml` を確認し、使用するAPIを把握します。
+`schema/files/openapi.yaml` を確認し、使用するAPIを把握します。
 
 **主要エンドポイント**
 
@@ -107,7 +107,7 @@ pnpm gen:api
 /speckit.tasks
 ```
 
-### 3.3 タスクの確認
+### 2.2 タスクの確認
 
 分解されたタスクを確認し、必要に応じて修正します。
 
