@@ -65,7 +65,7 @@ src/
 
 ### 1.3 OpenAPI仕様の確認
 
-`specs/openapi.yaml` を確認し、使用するAPIを把握します。
+`specs/files/openapi.yaml` を確認し、使用するAPIを把握します。
 
 **主要エンドポイント**
 
@@ -89,7 +89,7 @@ pnpm gen:api
 
 **生成されるファイル**
 
-- `src/adapters/generated/api.ts` - API型定義とクライアント関数
+- `src/adapters/generated/files.ts` - API型定義とクライアント関数
 
 これらのファイルには、OpenAPI仕様から自動生成された型やAPIクライアント関数が含まれます。
 
