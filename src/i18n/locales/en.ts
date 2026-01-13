@@ -98,6 +98,15 @@ export const en = {
       uploadFailed: 'Upload failed',
       progressPercent: '{{progress}}%',
     },
+    myFilesSection: {
+      title: 'My Files',
+    },
+    recentFilesSection: {
+      title: 'Recent Files',
+      fileCard: {
+        viewButton: 'View Document',
+      },
+    },
   },
   layouts: {
     appSidebar: {

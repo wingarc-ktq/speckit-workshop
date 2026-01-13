@@ -1,6 +1,6 @@
 export type FileId = string;
 
-export interface File {
+export interface DocumentFile {
   /** ファイルID */
   id: FileId;
 
@@ -58,7 +58,7 @@ export interface FileQueryParams {
 
 export interface FileListResponse {
   /** ファイル一覧 */
-  files: File[];
+  files: DocumentFile[];
 
   /** 総件数 */
   total: number;

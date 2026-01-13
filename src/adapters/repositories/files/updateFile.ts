@@ -1,10 +1,10 @@
 import { updateFile as updateFileApi } from '@/adapters/generated/files';
-import type { File, FileId, UpdateFileRequest } from '@/domain/models/file';
+import type { DocumentFile, FileId, UpdateFileRequest } from '@/domain/models/file';
 
 export async function updateFile(
   fileId: FileId,
   request: UpdateFileRequest
-): Promise<File> {
+): Promise<DocumentFile> {
   const response = await updateFileApi(fileId, request);
 
   return {

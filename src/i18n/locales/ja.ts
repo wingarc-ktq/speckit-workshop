@@ -102,6 +102,15 @@ export const ja = {
       uploadFailed: 'アップロードに失敗しました',
       progressPercent: '{{progress}}%',
     },
+    myFilesSection: {
+      title: 'マイファイル',
+    },
+    recentFilesSection: {
+      title: '最近使用したファイル',
+      fileCard: {
+        viewButton: '文書を見る',
+      },
+    },
   },
   layouts: {
     appSidebar: {

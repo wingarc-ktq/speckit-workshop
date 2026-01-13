@@ -7,8 +7,7 @@ import { FileUploadStatus, type UploadingFile } from '@/domain/models/file';
 import { tKeys } from '@/i18n/tKeys';
 import { useUploadFile } from '@/presentations/hooks/queries/files/useUploadFile';
 
-import { FileUploadList } from './components/FileUploadList';
-import { FileUploadZone } from './components/FileUploadZone';
+import { FileUploadList, FileUploadZone } from './components';
 import * as S from './styled';
 
 export const UploadSection: React.FC = () => {

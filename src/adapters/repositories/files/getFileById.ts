@@ -1,7 +1,7 @@
 import { getFileById as getFileByIdApi } from '@/adapters/generated/files';
-import type { File, FileId } from '@/domain/models/file';
+import type { DocumentFile, FileId } from '@/domain/models/file';
 
-export async function getFileById(fileId: FileId): Promise<File> {
+export async function getFileById(fileId: FileId): Promise<DocumentFile> {
   const response = await getFileByIdApi(fileId);
 
   return {

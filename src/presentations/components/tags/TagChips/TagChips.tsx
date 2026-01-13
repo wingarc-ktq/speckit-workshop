@@ -1,3 +1,4 @@
+import SellOutlinedIcon from '@mui/icons-material/SellOutlined';
 import Chip, { type ChipProps } from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
 
@@ -45,6 +46,8 @@ export const TagChips = ({
           label={tag.name}
           color={getChipColor(tag.color)}
           size={size}
+          variant="outlined"
+          icon={<SellOutlinedIcon />}
           onDelete={onDelete ? () => onDelete(tag.id) : undefined}
           onClick={onClick ? () => onClick(tag) : undefined}
         />

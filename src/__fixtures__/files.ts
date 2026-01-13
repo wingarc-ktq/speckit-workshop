@@ -3,7 +3,7 @@ import type {
   FileInfo,
   FileListResponse,
 } from '@/adapters/generated/files';
-import type { File, FileListResponse as FileListResponseDomain, UploadFileRequest, UpdateFileRequest } from '@/domain/models/file';
+import type { DocumentFile, FileListResponse as FileListResponseDomain, UploadFileRequest, UpdateFileRequest } from '@/domain/models/file';
 
 // API レスポンス用のモックデータ
 export const mockFileInfo: FileInfo = {
@@ -52,7 +52,7 @@ export const mockFileListApiResponse: FileListResponse = {
 };
 
 // ドメインモデル用のモックデータ
-export const mockFile: File = {
+export const mockFile: DocumentFile = {
   id: 'file-001',
   name: 'document.pdf',
   size: 1024 * 100,

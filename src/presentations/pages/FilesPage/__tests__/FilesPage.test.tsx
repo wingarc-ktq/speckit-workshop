@@ -1,40 +1,68 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 
+import { mockFileListResponse } from '@/__fixtures__/files';
+import { mockTags } from '@/__fixtures__/tags';
 import { RepositoryTestWrapper } from '@/__fixtures__/testWrappers';
 import { i18n } from '@/i18n/config';
 
 import { FilesPage } from '../FilesPage';
 
 describe('FilesPage', () => {
-  beforeEach(async () => {
-    await i18n.changeLanguage('ja');
-  });
+  const getFiles = vi.fn();
+  const getTags = vi.fn();
 
-  const renderFilePage = () => {
-    return render(
-      <RepositoryTestWrapper>
+  const renderFilePage = async () => {
+    const r = render(
+      <RepositoryTestWrapper
+        hasSuspense
+        override={{
+          files: {
+            getFiles: getFiles,
+          },
+          tags: {
+            getTags: getTags,
+          },
+        }}
+      >
         <FilesPage />
       </RepositoryTestWrapper>
     );
+
+    await waitFor(() =>
+      expect(r.queryByTestId('suspense')).not.toBeInTheDocument()
+    );
+    return r;
   };
 
+  beforeEach(async () => {
+    await i18n.changeLanguage('ja');
+    getFiles.mockResolvedValue(mockFileListResponse);
+    getTags.mockResolvedValue(mockTags);
+  });
+
   describe('基本的な表示', () => {
-    test('FilesPageが表示されること', () => {
-      renderFilePage();
+    test('FilesPageが表示されること', async () => {
+      await renderFilePage();
 
       expect(screen.getByTestId('filesPage')).toBeInTheDocument();
     });
 
-    test('UploadSectionが表示されること', () => {
-      renderFilePage();
+    test('RecentFilesSectionが表示されること', async () => {
+      await renderFilePage();
+
+      expect(screen.getByTestId('recentFilesSection')).toBeInTheDocument();
+    });
+
+    test('UploadSectionが表示されること', async () => {
+      await renderFilePage();
 
       expect(screen.getByTestId('uploadSection')).toBeInTheDocument();
     });
 
-    test('UploadSectionのタイトルが表示されること', () => {
-      renderFilePage();
+    test('MyFilesSectionが表示されること', async () => {
+      await renderFilePage();
 
-      expect(screen.getByText('ファイルをアップロード')).toBeInTheDocument();
+      expect(screen.getByTestId('myFilesSection')).toBeInTheDocument();
     });
   });
 });

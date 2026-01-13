@@ -94,8 +94,8 @@
 
 ### 国際化（i18n）の設定
 
-- [ ] T041 [P] 日本語翻訳を追加 `src/i18n/locales/ja.json` に filesPage セクション追加
-- [ ] T042 [P] 英語翻訳を追加 `src/i18n/locales/en.json` に filesPage セクション追加
+- [X] T041 [P] 日本語翻訳を追加 `src/i18n/locales/ja.json` に filesPage セクション追加
+- [X] T042 [P] 英語翻訳を追加 `src/i18n/locales/en.json` に filesPage セクション追加
 
 ### ルーティングの設定
 
@@ -131,11 +131,11 @@
 
 ### Implementation for User Story 2
 
-- [ ] T049 [P] [US2] FileListTableコンポーネント（MUI DataGrid使用） `src/presentations/pages/FilesPage/components/MyFilesSection/components/FileListTable/FileListTable.tsx`
-- [ ] T050 [US2] MyFilesSectionコンポーネント `src/presentations/pages/FilesPage/components/MyFilesSection/MyFilesSection.tsx`
-- [ ] T051 [US2] リスト/グリッドビュー切り替え機能の実装
-- [ ] T052 [US2] ソート機能の実装（ファイル名、更新日時、ファイルサイズ）
-- [ ] T053 [US2] ページネーション機能の実装（サーバーサイド）
+- [X] T049 [P] [US2] FileListTableコンポーネント（MUI DataGrid使用） `src/presentations/pages/FilesPage/components/MyFilesSection/components/FileListTable/FileListTable.tsx`
+- [X] T050 [US2] MyFilesSectionコンポーネント `src/presentations/pages/FilesPage/components/MyFilesSection/MyFilesSection.tsx`
+- [X] T051 [US2] リスト/グリッドビュー切り替え機能の実装
+- [X] T052 [US2] ソート機能の実装（ファイル名、更新日時、ファイルサイズ）
+- [X] T053 [US2] ページネーション機能の実装（サーバーサイド）
 
 **Checkpoint**: User Story 2が独立して機能し、テスト可能な状態
 
@@ -267,8 +267,8 @@
 
 **Purpose**: Recent Filesセクションの実装とFilesPageの完成
 
-- [ ] T085 [P] FileCardコンポーネント `src/presentations/pages/FilesPage/components/RecentFilesSection/components/FileCard/FileCard.tsx`
-- [ ] T086 RecentFilesSectionコンポーネント `src/presentations/pages/FilesPage/components/RecentFilesSection/RecentFilesSection.tsx`
+- [X] T085 [P] FileCardコンポーネント `src/presentations/pages/FilesPage/components/RecentFilesSection/components/FileCard/FileCard.tsx`
+- [X] T086 RecentFilesSectionコンポーネント `src/presentations/pages/FilesPage/components/RecentFilesSection/RecentFilesSection.tsx`
 - [ ] T087 FilesPageの完成 `src/presentations/pages/FilesPage/FilesPage.tsx`（全セクション統合）
 
 ---
