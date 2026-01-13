@@ -1,3 +1,3 @@
 import { getFileManagementAPIMock } from '@/adapters/generated/files';
 
-export const handlers = getFileManagementAPIMock();
+export const filesHandlers = getFileManagementAPIMock();

@@ -87,6 +87,22 @@ export const ja = {
     title:
       'ページを表示できませんでした。ページを更新してもう一度お試しください。',
   },
+  filesPage: {
+    fileUploadZone: {
+      dragActive: 'ここにファイルをドロップ...',
+      dragInactive: 'クリックしてアップロード、またはドラッグ&ドロップ',
+      supportedFormats: 'PDF、Word、Excel、画像 - 最大200MB',
+    },
+    uploadSection: {
+      title: 'ファイルをアップロード',
+      maxFilesError: '一度にアップロードできるファイルは最大20個までです。',
+      unsupportedFilesError:
+        '次のファイルはサポートされていないか、サイズが大きすぎます: {{files}}',
+      uploadComplete: 'アップロード完了',
+      uploadFailed: 'アップロードに失敗しました',
+      progressPercent: '{{progress}}%',
+    },
+  },
   layouts: {
     appSidebar: {
       general: {

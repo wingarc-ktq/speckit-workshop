@@ -113,11 +113,11 @@
 
 ### Implementation for User Story 1
 
-- [ ] T044 [P] [US1] FileUploadZoneコンポーネント `src/presentations/pages/FilesPage/components/UploadSection/components/FileUploadZone/FileUploadZone.tsx`
-- [ ] T045 [US1] UploadSectionコンポーネント `src/presentations/pages/FilesPage/components/UploadSection/UploadSection.tsx`
-- [ ] T046 [US1] アップロードプログレスバー表示の実装（UploadSection内）
-- [ ] T047 [US1] ファイルサイズ・形式バリデーションのエラーハンドリング実装
-- [ ] T048 [US1] 複数ファイル同時アップロード機能の実装（最大20ファイル）
+- [X] T044 [P] [US1] FileUploadZoneコンポーネント `src/presentations/pages/FilesPage/components/UploadSection/components/FileUploadZone/FileUploadZone.tsx`
+- [X] T045 [US1] UploadSectionコンポーネント `src/presentations/pages/FilesPage/components/UploadSection/UploadSection.tsx`
+- [X] T046 [US1] アップロードプログレスバー表示の実装（UploadSection内）
+- [X] T047 [US1] ファイルサイズ・形式バリデーションのエラーハンドリング実装
+- [X] T048 [US1] 複数ファイル同時アップロード機能の実装（最大20ファイル）
 
 **Checkpoint**: User Story 1が独立して機能し、テスト可能な状態
 

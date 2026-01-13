@@ -88,3 +88,37 @@ export interface UpdateFileRequest {
   /** 更新するタグID一覧（任意） */
   tagIds?: string[];
 }
+
+/**
+ * ファイルアップロード時の状態
+ */
+export const FileUploadStatus = {
+  /** アップロード中 */
+  UPLOADING: 'uploading',
+  /** アップロード成功 */
+  SUCCESS: 'success',
+  /** アップロードエラー */
+  ERROR: 'error',
+} as const;
+export type FileUploadStatus =
+  (typeof FileUploadStatus)[keyof typeof FileUploadStatus];
+
+/**
+ * アップロード中のファイル情報
+ */
+export interface UploadingFile {
+  /** 一意のID（アップロード管理用） */
+  id: string;
+
+  /** アップロードするファイル */
+  file: globalThis.File;
+
+  /** アップロード進捗（0-100） */
+  progress: number;
+
+  /** アップロード状態 */
+  status: FileUploadStatus;
+
+  /** エラーメッセージ（エラー時のみ） */
+  error?: string;
+}

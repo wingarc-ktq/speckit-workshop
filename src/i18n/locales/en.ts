@@ -83,6 +83,22 @@ export const en = {
     title:
       'The page could not be displayed. Please refresh the page and try again.',
   },
+  filesPage: {
+    fileUploadZone: {
+      dragActive: 'Drop files here...',
+      dragInactive: 'Click to upload or drag and drop',
+      supportedFormats: 'PDF, Word, Excel, Images - Max 200MB',
+    },
+    uploadSection: {
+      title: 'Upload Files',
+      maxFilesError: 'You can upload a maximum of 20 files at once.',
+      unsupportedFilesError:
+        'The following files are not supported or too large: {{files}}',
+      uploadComplete: 'Upload complete',
+      uploadFailed: 'Upload failed',
+      progressPercent: '{{progress}}%',
+    },
+  },
   layouts: {
     appSidebar: {
       general: {
