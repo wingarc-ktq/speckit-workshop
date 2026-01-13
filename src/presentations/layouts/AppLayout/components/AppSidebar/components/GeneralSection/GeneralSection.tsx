@@ -1,9 +1,9 @@
 import React from 'react';
 
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
-import FolderSharedOutlinedIcon from '@mui/icons-material/FolderSharedOutlined';
 import HistoryIcon from '@mui/icons-material/History';
 import InsertDriveFileOutlinedIcon from '@mui/icons-material/InsertDriveFileOutlined';
+import ShareIcon from '@mui/icons-material/Share';
 import List from '@mui/material/List';
 import { useTranslation } from 'react-i18next';
 
@@ -18,7 +18,9 @@ export const GeneralSection: React.FC = () => {
 
   return (
     <S.SectionContainer data-testid="generalSection">
-      <S.SectionHeader>{t(tKeys.layouts.appSidebar.general.title)}</S.SectionHeader>
+      <S.SectionHeader>
+        {t(tKeys.layouts.appSidebar.general.title)}
+      </S.SectionHeader>
       <List dense>
         <NavigationListItem
           to="/files"
@@ -32,7 +34,7 @@ export const GeneralSection: React.FC = () => {
         />
         <NavigationListItem
           to="/shared"
-          icon={<FolderSharedOutlinedIcon />}
+          icon={<ShareIcon />}
           label={t(tKeys.layouts.appSidebar.general.sharedWithMe)}
         />
         <NavigationListItem
