@@ -243,9 +243,9 @@ spec.mdを元に、実装計画（plan.md）を自動生成するコマンドで
 
 以下の情報を元に実装プランを作成してください。
 
-仕様書: specs/002-document-management/spec.md
+仕様書: specs/002-document-management-kojima/spec.md
 OpenAPI: schema/files/openapi.yaml
-Figma URL: [あなたのFigma URL]
+Figma URL: https://www.figma.com/design/1crV739muFC76HIPsLS9bf/%E7%84%A1%E9%A1%8C?node-id=0-1&p=f&m=dev
 
 MVP機能（P1）に絞って、実装プランを作成してください。
 ```
