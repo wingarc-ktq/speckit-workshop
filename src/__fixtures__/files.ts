@@ -3,7 +3,12 @@ import type {
   FileInfo,
   FileListResponse,
 } from '@/adapters/generated/files';
-import type { DocumentFile, FileListResponse as FileListResponseDomain, UploadFileRequest, UpdateFileRequest } from '@/domain/models/file';
+import type {
+  DocumentFile,
+  FileListResponse as FileListResponseDomain,
+  UploadFileRequest,
+  UpdateFileRequest,
+} from '@/domain/models/file';
 
 // API レスポンス用のモックデータ
 export const mockFileInfo: FileInfo = {
@@ -29,7 +34,8 @@ export const mockFileListApiResponse: FileListResponse = {
       id: 'file-002',
       name: 'contract.docx',
       size: 1024 * 256, // 256KB
-      mimeType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+      mimeType:
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
       description: 'Contract document',
       uploadedAt: '2025-01-10T15:30:00Z',
       downloadUrl: 'https://api.example.com/files/file-002/download',
@@ -39,7 +45,8 @@ export const mockFileListApiResponse: FileListResponse = {
       id: 'file-003',
       name: 'report.xlsx',
       size: 1024 * 512, // 512KB
-      mimeType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      mimeType:
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
       description: undefined,
       uploadedAt: '2025-01-09T09:00:00Z',
       downloadUrl: 'https://api.example.com/files/file-003/download',
@@ -71,7 +78,8 @@ export const mockFileListResponse: FileListResponseDomain = {
       id: 'file-002',
       name: 'contract.docx',
       size: 1024 * 256,
-      mimeType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+      mimeType:
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
       description: 'Contract document',
       uploadedAt: new Date('2025-01-10T15:30:00Z'),
       downloadUrl: 'https://api.example.com/files/file-002/download',
@@ -81,7 +89,8 @@ export const mockFileListResponse: FileListResponseDomain = {
       id: 'file-003',
       name: 'report.xlsx',
       size: 1024 * 512,
-      mimeType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      mimeType:
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
       description: null,
       uploadedAt: new Date('2025-01-09T09:00:00Z'),
       downloadUrl: 'https://api.example.com/files/file-003/download',
@@ -92,6 +101,140 @@ export const mockFileListResponse: FileListResponseDomain = {
   page: 1,
   limit: 20,
 };
+
+// 検索テスト用の拡張モックデータ（MSWハンドラー用 - API形式）
+export const mockExtendedFileListApi: FileInfo[] = [
+  {
+    id: 'file-001',
+    name: 'document.pdf',
+    size: 1024 * 100, // 100KB
+    mimeType: 'application/pdf',
+    description: 'Sample PDF document',
+    uploadedAt: '2025-01-11T10:00:00Z',
+    downloadUrl: 'https://api.example.com/files/file-001/download',
+    tagIds: [],
+  },
+  {
+    id: 'file-002',
+    name: 'contract.docx',
+    size: 1024 * 256, // 256KB
+    mimeType:
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    description: 'Contract document',
+    uploadedAt: '2025-01-10T15:30:00Z',
+    downloadUrl: 'https://api.example.com/files/file-002/download',
+    tagIds: ['tag-001'],
+  },
+  {
+    id: 'file-003',
+    name: 'report.xlsx',
+    size: 1024 * 512, // 512KB
+    mimeType:
+      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    description: undefined,
+    uploadedAt: '2025-01-09T09:00:00Z',
+    downloadUrl: 'https://api.example.com/files/file-003/download',
+    tagIds: [],
+  },
+  {
+    id: 'file-004',
+    name: 'invoice.pdf',
+    size: 1024 * 128, // 128KB
+    mimeType: 'application/pdf',
+    description: 'Invoice for January',
+    uploadedAt: '2025-01-08T14:00:00Z',
+    downloadUrl: 'https://api.example.com/files/file-004/download',
+    tagIds: [],
+  },
+  {
+    id: 'file-005',
+    name: 'meeting-notes.txt',
+    size: 1024 * 10, // 10KB
+    mimeType: 'text/plain',
+    description: 'Meeting notes for project review',
+    uploadedAt: '2025-01-07T11:00:00Z',
+    downloadUrl: 'https://api.example.com/files/file-005/download',
+    tagIds: ['tag-002'],
+  },
+];
+
+// 検索テスト用の拡張モックデータ（ドメインモデル形式）
+export const mockExtendedFileList: FileListResponseDomain = {
+  files: [
+    mockFile, // document.pdf
+    {
+      id: 'file-002',
+      name: 'contract.docx',
+      size: 1024 * 256,
+      mimeType:
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+      description: 'Contract document',
+      uploadedAt: new Date('2025-01-10T15:30:00Z'),
+      downloadUrl: 'https://api.example.com/files/file-002/download',
+      tagIds: ['tag-001'],
+    },
+    {
+      id: 'file-003',
+      name: 'report.xlsx',
+      size: 1024 * 512,
+      mimeType:
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      description: null,
+      uploadedAt: new Date('2025-01-09T09:00:00Z'),
+      downloadUrl: 'https://api.example.com/files/file-003/download',
+      tagIds: [],
+    },
+    {
+      id: 'file-004',
+      name: 'invoice.pdf',
+      size: 1024 * 128,
+      mimeType: 'application/pdf',
+      description: 'Invoice for January',
+      uploadedAt: new Date('2025-01-08T14:00:00Z'),
+      downloadUrl: 'https://api.example.com/files/file-004/download',
+      tagIds: [],
+    },
+    {
+      id: 'file-005',
+      name: 'meeting-notes.txt',
+      size: 1024 * 10,
+      mimeType: 'text/plain',
+      description: 'Meeting notes for project review',
+      uploadedAt: new Date('2025-01-07T11:00:00Z'),
+      downloadUrl: 'https://api.example.com/files/file-005/download',
+      tagIds: ['tag-002'],
+    },
+  ],
+  total: 5,
+  page: 1,
+  limit: 20,
+};
+
+/**
+ * 検索クエリに基づいてモックデータをフィルタリング
+ */
+export function filterMockFilesBySearch(
+  search: string | undefined
+): FileListResponseDomain {
+  if (!search) {
+    return mockExtendedFileList;
+  }
+
+  const lowerSearch = search.toLowerCase();
+  const filteredFiles = mockExtendedFileList.files.filter((file) => {
+    // 名前でマッチしたら早期リターン
+    if (file.name.toLowerCase().includes(lowerSearch)) return true;
+    // 名前でマッチしなければdescriptionをチェック
+    return file.description?.toLowerCase().includes(lowerSearch) ?? false;
+  });
+
+  return {
+    files: filteredFiles,
+    total: filteredFiles.length,
+    page: 1,
+    limit: 20,
+  };
+}
 
 // アップロード要求用のモックデータ
 export const mockFile1 = new File(['test content'], 'document.pdf', {

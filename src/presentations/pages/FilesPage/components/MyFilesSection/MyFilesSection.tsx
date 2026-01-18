@@ -6,12 +6,18 @@ import type { FileQueryParams } from '@/domain/models/file';
 import { tKeys } from '@/i18n/tKeys';
 import { useFiles } from '@/presentations/hooks/queries/files/useFiles';
 
-import { FileListTable } from './components';
+import { EmptySearchResult, FileListTable } from './components';
 import * as S from './styled';
 
 import type { GridPaginationModel } from '@mui/x-data-grid';
 
-export const MyFilesSection: React.FC = () => {
+interface MyFilesSectionProps {
+  searchQuery?: string;
+}
+
+export const MyFilesSection: React.FC<MyFilesSectionProps> = ({
+  searchQuery,
+}) => {
   const { t } = useTranslation();
   const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({
     page: 0,
@@ -21,6 +27,7 @@ export const MyFilesSection: React.FC = () => {
 
   // Convert MUI pagination model (0-based) to API params (1-based)
   const queryParams: FileQueryParams = {
+    search: searchQuery,
     page: paginationModel.page + 1,
     limit: paginationModel.pageSize,
   };
@@ -34,19 +41,26 @@ export const MyFilesSection: React.FC = () => {
     []
   );
 
+  const hasSearchQuery = !!searchQuery;
+  const hasNoResults = !isFetching && data.files.length === 0 && hasSearchQuery;
+
   return (
     <S.Container data-testid="myFilesSection">
       <S.Title>{t(tKeys.filesPage.myFilesSection.title)}</S.Title>
 
-      <FileListTable
-        files={data.files ?? []}
-        total={data.total ?? 0}
-        paginationModel={paginationModel}
-        onPaginationModelChange={handlePaginationModelChange}
-        selectedFileIds={selectedFileIds}
-        onSelectionChange={setSelectedFileIds}
-        loading={isFetching}
-      />
+      {hasNoResults ? (
+        <EmptySearchResult />
+      ) : (
+        <FileListTable
+          files={data.files ?? []}
+          total={data.total ?? 0}
+          paginationModel={paginationModel}
+          onPaginationModelChange={handlePaginationModelChange}
+          selectedFileIds={selectedFileIds}
+          onSelectionChange={setSelectedFileIds}
+          loading={isFetching}
+        />
+      )}
     </S.Container>
   );
 };

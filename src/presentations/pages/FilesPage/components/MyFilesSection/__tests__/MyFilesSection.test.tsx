@@ -1,8 +1,8 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { vi, describe, test, expect, beforeEach } from 'vitest';
+import { MemoryRouter } from 'react-router-dom';
 
-import { mockFileListResponse } from '@/__fixtures__/files';
+import { filterMockFilesBySearch } from '@/__fixtures__/files';
 import { mockTags } from '@/__fixtures__/tags';
 import { RepositoryTestWrapper } from '@/__fixtures__/testWrappers';
 import { i18n } from '@/i18n/config';
@@ -13,21 +13,23 @@ describe('MyFilesSection', () => {
   const getFiles = vi.fn();
   const getTags = vi.fn();
 
-  const renderMyFilesSection = async () => {
+  const renderMyFilesSection = async (searchQuery?: string) => {
     const r = render(
-      <RepositoryTestWrapper
-        hasSuspense
-        override={{
-          files: {
-            getFiles: getFiles,
-          },
-          tags: {
-            getTags: getTags,
-          },
-        }}
-      >
-        <MyFilesSection />
-      </RepositoryTestWrapper>
+      <MemoryRouter>
+        <RepositoryTestWrapper
+          hasSuspense
+          override={{
+            files: {
+              getFiles: getFiles,
+            },
+            tags: {
+              getTags: getTags,
+            },
+          }}
+        >
+          <MyFilesSection searchQuery={searchQuery} />
+        </RepositoryTestWrapper>
+      </MemoryRouter>
     );
     await waitFor(() =>
       expect(r.queryByTestId('suspense')).not.toBeInTheDocument()
@@ -37,7 +39,10 @@ describe('MyFilesSection', () => {
 
   beforeEach(async () => {
     await i18n.changeLanguage('ja');
-    getFiles.mockResolvedValue(mockFileListResponse);
+    // 検索クエリに応じてフィルタリングされたデータを返す
+    getFiles.mockImplementation((params) => {
+      return Promise.resolve(filterMockFilesBySearch(params?.search));
+    });
     getTags.mockResolvedValue(mockTags);
   });
 
@@ -84,16 +89,12 @@ describe('MyFilesSection', () => {
     test('取得したデータが表示されていること', async () => {
       await renderMyFilesSection();
 
-      // モックデータのファイルが表示されることを確認
-      expect(
-        screen.getByText(mockFileListResponse.files[0].name)
-      ).toBeInTheDocument();
-      expect(
-        screen.getByText(mockFileListResponse.files[1].name)
-      ).toBeInTheDocument();
-      expect(
-        screen.getByText(mockFileListResponse.files[2].name)
-      ).toBeInTheDocument();
+      // モックデータのファイルが表示されることを確認（最初の5件）
+      expect(screen.getByText('document.pdf')).toBeInTheDocument();
+      expect(screen.getByText('contract.docx')).toBeInTheDocument();
+      expect(screen.getByText('report.xlsx')).toBeInTheDocument();
+      expect(screen.getByText('invoice.pdf')).toBeInTheDocument();
+      expect(screen.getByText('meeting-notes.txt')).toBeInTheDocument();
     });
   });
 
@@ -101,8 +102,8 @@ describe('MyFilesSection', () => {
     test('初期ページネーションモデルが page: 0, pageSize: 10 であること', async () => {
       await renderMyFilesSection();
 
-      // ページネーションの表示を確認（1–3 of 3 のような形式）
-      expect(screen.getByText(/1–3 of 3/)).toBeInTheDocument();
+      // ページネーションの表示を確認（1–5 of 5 のような形式）
+      expect(screen.getByText(/1–5 of 5/)).toBeInTheDocument();
     });
 
     test('ページサイズオプションが 5, 10, 25 であること', async () => {
@@ -128,7 +129,7 @@ describe('MyFilesSection', () => {
       await renderMyFilesSection();
 
       // 初期状態のページサイズを確認
-      expect(screen.getByText(/1–3 of 3/)).toBeInTheDocument();
+      expect(screen.getByText(/1–5 of 5/)).toBeInTheDocument();
 
       // ページサイズを5に変更
       const pageSizeButton = screen.getByRole('combobox', {
@@ -227,6 +228,120 @@ describe('MyFilesSection', () => {
       await user.click(screen.getByRole('option', { name: '5' }));
 
       // データが再取得されても正常に動作することを確認
+    });
+  });
+
+  describe('検索機能', () => {
+    test('検索クエリ "pdf" で該当するファイルだけが表示されること', async () => {
+      await renderMyFilesSection('pdf');
+
+      // pdfファイルが表示されること
+      await waitFor(() => {
+        expect(screen.getByText('document.pdf')).toBeInTheDocument();
+        expect(screen.getByText('invoice.pdf')).toBeInTheDocument();
+      });
+
+      // 他のファイルは表示されないこと
+      expect(screen.queryByText('contract.docx')).not.toBeInTheDocument();
+      expect(screen.queryByText('report.xlsx')).not.toBeInTheDocument();
+      expect(screen.queryByText('meeting-notes.txt')).not.toBeInTheDocument();
+    });
+
+    test('検索クエリ "contract" で該当するファイルだけが表示されること', async () => {
+      await renderMyFilesSection('contract');
+
+      // contractファイルが表示されること
+      await waitFor(() => {
+        expect(screen.getByText('contract.docx')).toBeInTheDocument();
+      });
+
+      // 他のファイルは表示されないこと
+      expect(screen.queryByText('document.pdf')).not.toBeInTheDocument();
+      expect(screen.queryByText('report.xlsx')).not.toBeInTheDocument();
+      expect(screen.queryByText('invoice.pdf')).not.toBeInTheDocument();
+      expect(screen.queryByText('meeting-notes.txt')).not.toBeInTheDocument();
+    });
+
+    test('検索クエリ "meeting" で description にマッチするファイルが表示されること', async () => {
+      await renderMyFilesSection('meeting');
+
+      // meeting-notes.txtが表示されること（descriptionに"meeting"が含まれる）
+      await waitFor(() => {
+        expect(screen.getByText('meeting-notes.txt')).toBeInTheDocument();
+      });
+
+      // 他のファイルは表示されないこと
+      expect(screen.queryByText('document.pdf')).not.toBeInTheDocument();
+      expect(screen.queryByText('contract.docx')).not.toBeInTheDocument();
+      expect(screen.queryByText('report.xlsx')).not.toBeInTheDocument();
+      expect(screen.queryByText('invoice.pdf')).not.toBeInTheDocument();
+    });
+
+    test('検索クエリなしの場合は全てのファイルが表示されること', async () => {
+      await renderMyFilesSection();
+
+      // 全てのファイルが表示されること
+      await waitFor(() => {
+        expect(screen.getByText('document.pdf')).toBeInTheDocument();
+        expect(screen.getByText('contract.docx')).toBeInTheDocument();
+        expect(screen.getByText('report.xlsx')).toBeInTheDocument();
+        expect(screen.getByText('invoice.pdf')).toBeInTheDocument();
+        expect(screen.getByText('meeting-notes.txt')).toBeInTheDocument();
+      });
+    });
+  });
+
+  describe('検索結果ゼロ件の表示', () => {
+    describe('i18n: filesPage.myFilesSection.noResults', () => {
+      test('locale:ja "検索結果が見つかりませんでした" が表示される', async () => {
+        // "nonexistent"という検索クエリでは結果がゼロ件になる
+        await renderMyFilesSection('nonexistent');
+
+        await waitFor(() => {
+          expect(
+            screen.getByText('検索結果が見つかりませんでした')
+          ).toBeInTheDocument();
+        });
+      });
+    });
+
+    describe('i18n: filesPage.myFilesSection.noResultsDescription', () => {
+      test('locale:ja "別のキーワードで検索するか、検索条件をクリアしてください" が表示される', async () => {
+        // "nonexistent"という検索クエリでは結果がゼロ件になる
+        await renderMyFilesSection('nonexistent');
+
+        await waitFor(() => {
+          expect(
+            screen.getByText(
+              '別のキーワードで検索するか、検索条件をクリアしてください'
+            )
+          ).toBeInTheDocument();
+        });
+      });
+    });
+
+    test('検索クエリがない場合は、結果がゼロ件でも空の状態メッセージは表示されないこと（DataGridが表示される）', async () => {
+      // 検索クエリなしの場合は、全データが返る
+      // 空データを返すように一時的にモックを変更
+      getFiles.mockResolvedValueOnce({
+        files: [],
+        total: 0,
+        page: 1,
+        limit: 10,
+      });
+
+      // 検索クエリなしでレンダリング
+      await renderMyFilesSection();
+
+      // 空の状態メッセージが表示されていないことを確認
+      expect(
+        screen.queryByText('検索結果が見つかりませんでした')
+      ).not.toBeInTheDocument();
+
+      // DataGridが表示されることを確認
+      await waitFor(() => {
+        expect(screen.getByRole('grid')).toBeInTheDocument();
+      });
     });
   });
 });

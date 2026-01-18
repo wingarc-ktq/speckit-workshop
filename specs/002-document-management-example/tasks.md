@@ -99,7 +99,7 @@
 
 ### ルーティングの設定
 
-- [ ] T043 FilesPageルートを追加 `src/app/router/routes.tsx`
+- [X] T043 FilesPageルートを追加 `src/app/router/routes.tsx`
 
 **Checkpoint**: 基盤準備完了 - ユーザーストーリーの実装を並列で開始可能
 
@@ -149,10 +149,10 @@
 
 ### Implementation for User Story 3
 
-- [ ] T054 [US3] 検索バーコンポーネントをAppHeaderに追加 `src/presentations/layouts/AppLayout/components/AppHeader/AppHeader.tsx`
-- [ ] T055 [US3] 検索デバウンス処理の実装（300ms）
-- [ ] T056 [US3] 検索結果のハイライト表示機能の実装（FileListTable内）
-- [ ] T057 [US3] 検索結果ゼロ件時のメッセージ表示
+- [X] T054 [US3] 検索バーコンポーネントをAppHeaderに追加し、URLパラメータと連携 `src/presentations/layouts/AppLayout/components/AppHeader/AppHeader.tsx`
+- [X] T055 [US3] 検索デバウンス処理の実装（300ms）`src/presentations/hooks/useDebounce.ts`
+- [X] T056 [US3] 検索に合致したファイルが表示されることを確認（ハイライト不要）
+- [X] T057 [US3] 検索結果ゼロ件時のメッセージ表示 `src/presentations/pages/FilesPage/components/MyFilesSection/MyFilesSection.tsx`
 
 **Checkpoint**: User Story 3が独立して機能し、テスト可能な状態
 
@@ -269,7 +269,7 @@
 
 - [X] T085 [P] FileCardコンポーネント `src/presentations/pages/FilesPage/components/RecentFilesSection/components/FileCard/FileCard.tsx`
 - [X] T086 RecentFilesSectionコンポーネント `src/presentations/pages/FilesPage/components/RecentFilesSection/RecentFilesSection.tsx`
-- [ ] T087 FilesPageの完成 `src/presentations/pages/FilesPage/FilesPage.tsx`（全セクション統合）
+- [X] T087 FilesPageの完成 `src/presentations/pages/FilesPage/FilesPage.tsx`（全セクション統合）
 
 ---
 

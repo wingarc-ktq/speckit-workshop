@@ -1,4 +1,5 @@
 import { render, screen, waitFor } from '@testing-library/react';
+import { MemoryRouter } from 'react-router-dom';
 
 import { mockFileListResponse } from '@/__fixtures__/files';
 import { mockTags } from '@/__fixtures__/tags';
@@ -11,21 +12,23 @@ describe('FilesPage', () => {
   const getFiles = vi.fn();
   const getTags = vi.fn();
 
-  const renderFilePage = async () => {
+  const renderFilePage = async (initialEntries: string[] = ['/']) => {
     const r = render(
-      <RepositoryTestWrapper
-        hasSuspense
-        override={{
-          files: {
-            getFiles: getFiles,
-          },
-          tags: {
-            getTags: getTags,
-          },
-        }}
-      >
-        <FilesPage />
-      </RepositoryTestWrapper>
+      <MemoryRouter initialEntries={initialEntries}>
+        <RepositoryTestWrapper
+          hasSuspense
+          override={{
+            files: {
+              getFiles: getFiles,
+            },
+            tags: {
+              getTags: getTags,
+            },
+          }}
+        >
+          <FilesPage />
+        </RepositoryTestWrapper>
+      </MemoryRouter>
     );
 
     await waitFor(() =>
@@ -62,6 +65,36 @@ describe('FilesPage', () => {
     test('MyFilesSectionが表示されること', async () => {
       await renderFilePage();
 
+      expect(screen.getByTestId('myFilesSection')).toBeInTheDocument();
+    });
+  });
+
+  describe('検索時の表示', () => {
+    test('検索クエリがある場合、RecentFilesSectionが表示されないこと', async () => {
+      await renderFilePage(['/?search=pdf']);
+
+      expect(
+        screen.queryByTestId('recentFilesSection')
+      ).not.toBeInTheDocument();
+    });
+
+    test('検索クエリがある場合、UploadSectionが表示されないこと', async () => {
+      await renderFilePage(['/?search=pdf']);
+
+      expect(screen.queryByTestId('uploadSection')).not.toBeInTheDocument();
+    });
+
+    test('検索クエリがある場合、MyFilesSectionは表示されること', async () => {
+      await renderFilePage(['/?search=pdf']);
+
+      expect(screen.getByTestId('myFilesSection')).toBeInTheDocument();
+    });
+
+    test('検索クエリがない場合、全てのセクションが表示されること', async () => {
+      await renderFilePage();
+
+      expect(screen.getByTestId('recentFilesSection')).toBeInTheDocument();
+      expect(screen.getByTestId('uploadSection')).toBeInTheDocument();
       expect(screen.getByTestId('myFilesSection')).toBeInTheDocument();
     });
   });

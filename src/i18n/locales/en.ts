@@ -100,6 +100,9 @@ export const en = {
     },
     myFilesSection: {
       title: 'My Files',
+      noResults: 'No search results found',
+      noResultsDescription:
+        'Try a different keyword or clear the search filter',
     },
     recentFilesSection: {
       title: 'Recent Files',
@@ -109,6 +112,9 @@ export const en = {
     },
   },
   layouts: {
+    appHeader: {
+      searchPlaceholder: 'Search files...',
+    },
     appSidebar: {
       general: {
         title: 'General',

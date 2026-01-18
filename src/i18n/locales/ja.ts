@@ -104,6 +104,9 @@ export const ja = {
     },
     myFilesSection: {
       title: 'マイファイル',
+      noResults: '検索結果が見つかりませんでした',
+      noResultsDescription:
+        '別のキーワードで検索するか、検索条件をクリアしてください',
     },
     recentFilesSection: {
       title: '最近使用したファイル',
@@ -113,6 +116,9 @@ export const ja = {
     },
   },
   layouts: {
+    appHeader: {
+      searchPlaceholder: 'ファイルを検索...',
+    },
     appSidebar: {
       general: {
         title: '一般',
