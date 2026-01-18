@@ -38,6 +38,12 @@ export const FileIcon = styled(DescriptionIcon)(({ theme }) => ({
   color: theme.palette.info.main,
 }));
 
+export const TagChipsContainer = styled(Box)({
+  minHeight: 24, // small Chipの高さと同じ領域を確保
+  display: 'flex',
+  alignItems: 'center',
+});
+
 export const FileName = styled(Typography)(({ theme }) => ({
   ...theme.typography.body2,
 }));

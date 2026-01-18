@@ -9,7 +9,7 @@ import { useFilesSearchParams } from './hooks/useFilesSearchParams';
 import * as S from './styled';
 
 export const FilesPage: React.FC = () => {
-  const { searchQuery } = useFilesSearchParams();
+  const { searchQuery, tagIds } = useFilesSearchParams();
   const isSearching = !!searchQuery;
 
   return (
@@ -20,7 +20,7 @@ export const FilesPage: React.FC = () => {
           <UploadSection />
         </>
       )}
-      <MyFilesSection searchQuery={searchQuery} />
+      <MyFilesSection searchQuery={searchQuery} tagIds={tagIds} />
     </S.Page>
   );
 };

@@ -1,33 +1,37 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 
 import AddIcon from '@mui/icons-material/Add';
-import SellOutlinedIcon from '@mui/icons-material/SellOutlined';
 import IconButton from '@mui/material/IconButton';
 import List from '@mui/material/List';
 import { useTranslation } from 'react-i18next';
 
 import { tKeys } from '@/i18n';
+import { useTags } from '@/presentations/hooks/queries/tags/useTags';
+import { useFilesSearchParams } from '@/presentations/pages/FilesPage/hooks/useFilesSearchParams';
 
-import { NavigationListItem } from '../shared';
-
+import { TagListItem } from './components';
 import * as S from './styled';
-
-interface TagItem {
-  id: string;
-  name: string;
-  color: string;
-}
 
 export const TagsSection: React.FC = () => {
   const { t } = useTranslation();
+  const { tagIds, setTagIds } = useFilesSearchParams();
+  const { data: tags = [], isLoading } = useTags();
 
-  // サンプルデータ
-  const tags: TagItem[] = [
-    { id: '1', name: '請求書', color: '#0074e4' },
-    { id: '2', name: '提案書', color: '#ff6b35' },
-    { id: '3', name: '未処理', color: '#1ecb7f' },
-    { id: '4', name: '完了', color: '#ff4081' },
-  ];
+  const handleTagClick = useCallback(
+    (tagId: string) => {
+      // 選択されていなければ追加、選択されていれば解除
+      if (tagIds.includes(tagId)) {
+        setTagIds(tagIds.filter((id) => id !== tagId));
+      } else {
+        setTagIds([...tagIds, tagId]);
+      }
+    },
+    [tagIds, setTagIds]
+  );
+
+  if (isLoading) {
+    return null;
+  }
 
   return (
     <S.SectionContainer data-testid="tagsSection">
@@ -40,13 +44,19 @@ export const TagsSection: React.FC = () => {
         </IconButton>
       </S.HeaderWithButton>
       <List dense>
-        {tags.map((tag) => (
-          <NavigationListItem
-            key={tag.id}
-            icon={<SellOutlinedIcon sx={{ color: tag.color }} />}
-            label={tag.name}
-          />
-        ))}
+        {tags.map((tag) => {
+          const isSelected = tagIds.includes(tag.id);
+
+          return (
+            <TagListItem
+              key={tag.id}
+              name={tag.name}
+              color={tag.color}
+              selected={isSelected}
+              onClick={() => handleTagClick(tag.id)}
+            />
+          );
+        })}
       </List>
     </S.SectionContainer>
   );

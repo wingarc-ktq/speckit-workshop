@@ -29,7 +29,9 @@ export const FileCard: React.FC<FileCardProps> = ({ file, onView }) => {
           <S.IconContainer>
             <S.FileIcon />
           </S.IconContainer>
-          {fileTags.length > 0 && <TagChips tags={fileTags} size="small" />}
+          <S.TagChipsContainer>
+            {fileTags.length > 0 && <TagChips tags={fileTags} size="small" />}
+          </S.TagChipsContainer>
           <S.FileName>{file.name}</S.FileName>
           <S.DateContainer>
             <S.DateIcon />

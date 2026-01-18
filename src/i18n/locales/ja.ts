@@ -118,6 +118,15 @@ export const ja = {
   layouts: {
     appHeader: {
       searchPlaceholder: 'ファイルを検索...',
+      filterPopover: {
+        title: '詳細検索',
+        searchLabel: 'キーワード',
+        searchPlaceholder: 'ファイル名を入力...',
+        tagsLabel: 'タグで絞り込み',
+        tagsPlaceholder: 'タグを選択...',
+        clear: 'クリア',
+        apply: '適用',
+      },
     },
     appSidebar: {
       general: {

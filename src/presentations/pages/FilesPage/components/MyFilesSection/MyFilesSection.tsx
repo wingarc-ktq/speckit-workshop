@@ -13,10 +13,12 @@ import type { GridPaginationModel } from '@mui/x-data-grid';
 
 interface MyFilesSectionProps {
   searchQuery?: string;
+  tagIds?: string[];
 }
 
 export const MyFilesSection: React.FC<MyFilesSectionProps> = ({
   searchQuery,
+  tagIds,
 }) => {
   const { t } = useTranslation();
   const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({
@@ -28,6 +30,7 @@ export const MyFilesSection: React.FC<MyFilesSectionProps> = ({
   // Convert MUI pagination model (0-based) to API params (1-based)
   const queryParams: FileQueryParams = {
     search: searchQuery,
+    tagIds: tagIds && tagIds.length > 0 ? tagIds : undefined,
     page: paginationModel.page + 1,
     limit: paginationModel.pageSize,
   };

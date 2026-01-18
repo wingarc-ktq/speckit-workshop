@@ -52,10 +52,38 @@ export function useFilesSearchParams() {
     return pageSize ? parseInt(pageSize, 10) : undefined;
   }, [searchParams]);
 
+  /**
+   * タグIDの配列を取得
+   */
+  const getTagIds = useCallback((): string[] => {
+    const tags = searchParams.get(QUERY_PARAMS.TAGS);
+    return tags ? tags.split(',').filter(Boolean) : [];
+  }, [searchParams]);
+
+  /**
+   * タグIDの配列を設定
+   * ページ番号をリセットします
+   */
+  const setTagIds = useCallback(
+    (tagIds: string[]) => {
+      if (tagIds.length > 0) {
+        searchParams.set(QUERY_PARAMS.TAGS, tagIds.join(','));
+        // フィルタ変更時はページをリセット
+        searchParams.delete(QUERY_PARAMS.PAGE);
+      } else {
+        searchParams.delete(QUERY_PARAMS.TAGS);
+      }
+      setSearchParams(searchParams, { replace: true });
+    },
+    [searchParams, setSearchParams]
+  );
+
   return {
     searchQuery: getSearchQuery(),
     page: getPage(),
     pageSize: getPageSize(),
+    tagIds: getTagIds(),
     setSearchQuery,
+    setTagIds,
   };
 }

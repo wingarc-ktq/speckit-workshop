@@ -59,7 +59,7 @@ describe('GeneralSection', () => {
     test('マイファイルリンクが正しいパスを指している', () => {
       renderGeneralSection();
       const myFilesLink = screen.getByText('マイファイル').closest('a');
-      expect(myFilesLink).toHaveAttribute('href', '/files');
+      expect(myFilesLink).toHaveAttribute('href', '/');
     });
 
     test('最近使用したファイルリンクが正しいパスを指している', () => {
@@ -82,8 +82,8 @@ describe('GeneralSection', () => {
   });
 
   describe('現在のルートとの連動', () => {
-    test('/files ルートではマイファイルが選択状態になる', () => {
-      renderGeneralSection('/files');
+    test('/ ルートではマイファイルが選択状態になる', () => {
+      renderGeneralSection('/');
       const myFilesLink = screen.getByText('マイファイル').closest('a');
       expect(myFilesLink).toHaveClass('active');
     });

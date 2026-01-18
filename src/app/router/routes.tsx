@@ -1,12 +1,7 @@
 import { createBrowserRouter } from 'react-router-dom';
 
 import { AppLayout } from '@/presentations/layouts';
-import {
-  FilesPage,
-  HomePage,
-  LoginPage,
-  NotFoundPage,
-} from '@/presentations/pages';
+import { FilesPage, LoginPage, NotFoundPage } from '@/presentations/pages';
 
 import { ProtectedRoute, RouteErrorBoundary } from './components';
 
@@ -14,7 +9,6 @@ import { ProtectedRoute, RouteErrorBoundary } from './components';
 const ROUTE_PATH = {
   HOME: '/',
   LOGIN: '/login',
-  FILES: '/files',
 };
 
 export const routes = [
@@ -40,10 +34,6 @@ export const routes = [
         children: [
           {
             index: true,
-            lazy: async () => ({ Component: HomePage }),
-          },
-          {
-            path: ROUTE_PATH.FILES,
             lazy: async () => ({ Component: FilesPage }),
           },
         ],

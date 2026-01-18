@@ -114,6 +114,15 @@ export const en = {
   layouts: {
     appHeader: {
       searchPlaceholder: 'Search files...',
+      filterPopover: {
+        title: 'Advanced Search',
+        searchLabel: 'Keyword',
+        searchPlaceholder: 'Enter file name...',
+        tagsLabel: 'Filter by tags',
+        tagsPlaceholder: 'Select tags...',
+        clear: 'Clear',
+        apply: 'Apply',
+      },
     },
     appSidebar: {
       general: {

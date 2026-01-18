@@ -23,7 +23,7 @@ export const GeneralSection: React.FC = () => {
       </S.SectionHeader>
       <List dense>
         <NavigationListItem
-          to="/files"
+          to="/"
           icon={<InsertDriveFileOutlinedIcon />}
           label={t(tKeys.layouts.appSidebar.general.myFiles)}
         />

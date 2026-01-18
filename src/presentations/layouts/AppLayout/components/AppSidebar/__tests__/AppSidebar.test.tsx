@@ -1,33 +1,50 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 
+import { mockTags } from '@/__fixtures__/tags';
+import { RepositoryTestWrapper } from '@/__fixtures__/testWrappers';
 import { i18n } from '@/i18n/config';
 
 import { AppSidebar } from '../AppSidebar';
 
 describe('AppSidebar', () => {
+  const getTags = vi.fn(async () => mockTags);
+
   beforeEach(async () => {
     await i18n.changeLanguage('ja');
   });
 
-  const renderAppSidebar = () => {
-    return render(
+  const renderAppSidebar = async () => {
+    const r = render(
       <MemoryRouter>
-        <AppSidebar />
+        <RepositoryTestWrapper
+          hasSuspense
+          override={{
+            tags: {
+              getTags,
+            },
+          }}
+        >
+          <AppSidebar />
+        </RepositoryTestWrapper>
       </MemoryRouter>
     );
+    await waitFor(() => {
+      expect(screen.queryByTestId('suspense')).not.toBeInTheDocument();
+    });
+    return r;
   };
 
   describe('基本的な表示', () => {
-    test('サイドバーが表示されること', () => {
-      renderAppSidebar();
+    test('サイドバーが表示されること', async () => {
+      await renderAppSidebar();
 
       const sidebar = screen.getByTestId('appSidebar');
       expect(sidebar).toBeInTheDocument();
     });
 
-    test('サイドバーがpersistentモードで表示されること', () => {
-      renderAppSidebar();
+    test('サイドバーがpersistentモードで表示されること', async () => {
+      await renderAppSidebar();
 
       const sidebar = screen.getByTestId('appSidebar');
       expect(sidebar).toHaveClass('MuiDrawer-root');
@@ -35,29 +52,29 @@ describe('AppSidebar', () => {
   });
 
   describe('セクションコンポーネントの表示', () => {
-    test('GeneralSectionが表示されること', () => {
-      renderAppSidebar();
+    test('GeneralSectionが表示されること', async () => {
+      await renderAppSidebar();
 
       const generalSection = screen.getByTestId('generalSection');
       expect(generalSection).toBeInTheDocument();
     });
 
-    test('TagsSectionが表示されること', () => {
-      renderAppSidebar();
+    test('TagsSectionが表示されること', async () => {
+      await renderAppSidebar();
 
       const tagsSection = screen.getByTestId('tagsSection');
       expect(tagsSection).toBeInTheDocument();
     });
 
-    test('StorageSectionが表示されること', () => {
-      renderAppSidebar();
+    test('StorageSectionが表示されること', async () => {
+      await renderAppSidebar();
 
       const storageSection = screen.getByTestId('storageSection');
       expect(storageSection).toBeInTheDocument();
     });
 
-    test('全てのセクションが正しい順序で表示されること', () => {
-      renderAppSidebar();
+    test('全てのセクションが正しい順序で表示されること', async () => {
+      await renderAppSidebar();
 
       const generalSection = screen.getByTestId('generalSection');
       const tagsSection = screen.getByTestId('tagsSection');
@@ -82,9 +99,8 @@ describe('AppSidebar', () => {
   });
 
   describe('構造とレイアウト', () => {
-    test('Drawerコンポーネントが正しい属性を持つこと', () => {
-      renderAppSidebar();
-
+    test('Drawerコンポーネントが正しい属性を持つこと', async () => {
+      await renderAppSidebar();
       const sidebar = screen.getByTestId('appSidebar');
 
       // MUI Drawerのクラスが適用されていることを確認
@@ -95,9 +111,8 @@ describe('AppSidebar', () => {
       expect(paper).toBeInTheDocument();
     });
 
-    test('Toolbarが表示されること', () => {
-      const { container } = renderAppSidebar();
-
+    test('Toolbarが表示されること', async () => {
+      const { container } = await renderAppSidebar();
       // MUI Toolbarのクラスが存在することを確認
       const toolbar = container.querySelector('.MuiToolbar-root');
       expect(toolbar).toBeInTheDocument();

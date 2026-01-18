@@ -27,18 +27,18 @@ const additionalMockFiles = Array.from(
     // Distribute tags meaningfully across files
     let tagIds: string[] = [];
     if (index % 5 === 0) {
-      tagIds = ['tag-1']; // Important
+      tagIds = ['tag-001'];
     } else if (index % 5 === 1) {
-      tagIds = ['tag-2']; // Work
+      tagIds = ['tag-002'];
     } else if (index % 5 === 2) {
-      tagIds = ['tag-3']; // Personal
+      tagIds = ['tag-003'];
     } else if (index % 5 === 3) {
-      tagIds = ['tag-2', 'tag-5']; // Work + Urgent
+      tagIds = ['tag-002', 'tag-005'];
     } else {
-      tagIds = ['tag-1', 'tag-2']; // Important + Work
+      tagIds = ['tag-001', 'tag-002'];
     }
 
-    const fileIndex = index + 6; // Start from 6 since we have 5 fixed files
+    const fileIndex = index;
     return {
       id: `file-${String(fileIndex).padStart(3, '0')}`,
       name: `Document_${fileIndex}.pdf`,
@@ -52,7 +52,7 @@ const additionalMockFiles = Array.from(
   }
 );
 
-const mockFiles = [...mockExtendedFileListApi, ...additionalMockFiles];
+const mockFiles = [...additionalMockFiles, ...mockExtendedFileListApi];
 
 // Custom handler for getFiles with pagination and search support
 const getFilesWithPaginationHandler = getGetFilesMockHandler(
@@ -61,17 +61,31 @@ const getFilesWithPaginationHandler = getGetFilesMockHandler(
     const page = parseInt(url.searchParams.get('page') || '1', 10);
     const limit = parseInt(url.searchParams.get('limit') || '10', 10);
     const search = url.searchParams.get('search') || undefined;
+    const tagIdsParam = url.searchParams.get('tagIds') || undefined;
 
-    // Filter files by search query
+    // Filter files by search query and tags
     let filteredFiles: FileInfo[] = mockFiles;
+
+    // Filter by search query
     if (search) {
       const lowerSearch = search.toLowerCase();
-      filteredFiles = mockFiles.filter((file) => {
+      filteredFiles = filteredFiles.filter((file) => {
         // 名前でマッチしたら早期リターン
         if (file.name.toLowerCase().includes(lowerSearch)) return true;
         // 名前でマッチしなければdescriptionをチェック
         return file.description?.toLowerCase().includes(lowerSearch) ?? false;
       });
+    }
+
+    // Filter by tags (OR condition - file must have at least one of the specified tags)
+    if (tagIdsParam) {
+      const requestedTagIds = tagIdsParam.split(',').filter(Boolean);
+      if (requestedTagIds.length > 0) {
+        filteredFiles = filteredFiles.filter((file) => {
+          // Check if file has at least one of the requested tags
+          return requestedTagIds.some((tagId) => file.tagIds?.includes(tagId));
+        });
+      }
     }
 
     // Calculate pagination
@@ -91,35 +105,35 @@ const getFilesWithPaginationHandler = getGetFilesMockHandler(
 // Define a stable list of mock tags with meaningful names
 const mockTags = [
   {
-    id: 'tag-1',
+    id: 'tag-001',
     name: '請求書',
     color: 'blue' as const,
     createdAt: new Date('2025-01-01T00:00:00Z').toISOString(),
     updatedAt: new Date('2025-01-01T00:00:00Z').toISOString(),
   },
   {
-    id: 'tag-2',
+    id: 'tag-002',
     name: '提案書',
     color: 'orange' as const,
     createdAt: new Date('2025-01-01T00:00:00Z').toISOString(),
     updatedAt: new Date('2025-01-01T00:00:00Z').toISOString(),
   },
   {
-    id: 'tag-3',
+    id: 'tag-003',
     name: '未処理',
     color: 'green' as const,
     createdAt: new Date('2025-01-01T00:00:00Z').toISOString(),
     updatedAt: new Date('2025-01-01T00:00:00Z').toISOString(),
   },
   {
-    id: 'tag-4',
+    id: 'tag-004',
     name: '完了',
     color: 'red' as const,
     createdAt: new Date('2025-01-01T00:00:00Z').toISOString(),
     updatedAt: new Date('2025-01-01T00:00:00Z').toISOString(),
   },
   {
-    id: 'tag-5',
+    id: 'tag-005',
     name: 'その他',
     color: 'gray' as const,
     createdAt: new Date('2025-01-01T00:00:00Z').toISOString(),
