@@ -16,10 +16,12 @@ import {
 } from '@mui/material';
 import { Download as DownloadIcon, Edit as EditIcon, Delete as DeleteIcon } from '@mui/icons-material';
 import type { Document } from '@/domain/models/document';
+import { highlightMatch } from '@/presentations/utils/highlightMatch';
 
 interface FileListProps {
   documents: Document[];
   isLoading: boolean;
+  searchKeyword?: string;
   onSort?: (sortBy: string, sortOrder: 'asc' | 'desc') => void;
   onPageChange?: (page: number) => void;
   onRowClick?: (document: Document) => void;
@@ -50,6 +52,7 @@ interface FileListProps {
 export function FileList({
   documents,
   isLoading,
+  searchKeyword,
   onSort: _onSort,
   onPageChange: _onPageChange,
   onRowClick,
@@ -223,7 +226,12 @@ export function FileList({
                   data-testid={`checkbox-${document.id}`}
                 />
               </TableCell>
-              <TableCell sx={{ fontWeight: 500 }}>{document.fileName}</TableCell>
+              <TableCell
+                sx={{ fontWeight: 500 }}
+                dangerouslySetInnerHTML={{
+                  __html: searchKeyword ? highlightMatch(document.fileName, searchKeyword) : document.fileName,
+                }}
+              />
               <TableCell>
                 <Box sx={{ display: 'flex', gap: 0.5, flexWrap: 'wrap' }}>
                   {document.tags.length > 0 ? (

@@ -119,22 +119,22 @@
 
 ### Tests for User Story 3 ⚠️
 
-- [ ] T045 [P] [US3] Write contract test for GET /files with search param in `playwright/tests/specs/document-management/search.spec.ts`: test filename search (partial match), test tag name search, test no results message
-- [ ] T046 [P] [US3] Write component test for SearchBar in `src/presentations/components/search/__tests__/SearchBar.test.tsx`: test input change, test search trigger on Enter/blur, test clear button, test debounce behavior
-- [ ] T047 [P] [US3] Write utility test for highlight matching logic in `src/presentations/utils/__tests__/highlightMatch.test.ts`: test substring highlighting, test case-insensitive matching
+- [X] T045 [P] [US3] Write contract test for GET /files with search param in `playwright/tests/specs/document-management/search.spec.ts`: test filename search (partial match), test tag name search, test no results message
+- [X] T046 [P] [US3] Write component test for SearchBar in `src/presentations/components/search/__tests__/SearchBar.test.tsx`: test input change, test search trigger on Enter/blur, test clear button, test debounce behavior
+- [X] T047 [P] [US3] Write utility test for highlight matching logic in `src/presentations/utils/__tests__/highlightMatch.test.ts`: test substring highlighting, test case-insensitive matching
 
 ### Implementation for User Story 3
 
-- [ ] T048 [P] [US3] Create SearchBar component in `src/presentations/components/search/SearchBar.tsx`: Material-UI TextField with debounced input, clear button, search icon, data-testid
-- [ ] T049 [US3] Create highlight utility in `src/presentations/utils/highlightMatch.ts`: function to mark matching substrings in text for HTML rendering with `<mark>` tags
-- [ ] T050 [US3] Update FileList component in `src/presentations/components/files/FileList.tsx` to display highlighted fileName when search is active, using highlight utility
-- [ ] T051 [US3] Update FileGridView component in `src/presentations/components/files/FileGridView.tsx` to display highlighted fileName in cards when search is active
-- [ ] T052 [US3] Update useDocuments hook in `src/presentations/hooks/queries/useDocuments.ts` to accept search param and pass to GET /files as query param
-- [ ] T053 [US3] Create useSearch custom hook in `src/presentations/hooks/queries/useSearch.ts`: manage search state with debounce, sync with URL searchParams, trigger useDocuments refetch
-- [ ] T054 [P] [US3] Update MSW handler in `src/adapters/mocks/handlers/fileHandlers.ts` to filter results by search param (case-insensitive filename and tag name match)
-- [ ] T055 [US3] Create SearchResultsStatus component in `src/presentations/components/search/SearchResultsStatus.tsx`: display result count, "No documents found" empty state when zero results
-- [ ] T056 [US3] Integrate SearchBar into DocumentManagementPage in `src/presentations/pages/DocumentManagementPage.tsx` above file list with full-width layout
-- [ ] T057 [P] [US3] Test multi-word search: add E2E test in `playwright/tests/specs/document-management/search.spec.ts` for searching "田中 商事" returning documents with both keywords
+- [X] T048 [P] [US3] Create SearchBar component in `src/presentations/components/search/SearchBar.tsx`: Material-UI TextField with debounced input, clear button, search icon, data-testid
+- [X] T049 [US3] Create highlight utility in `src/presentations/utils/highlightMatch.ts`: function to mark matching substrings in text for HTML rendering with `<mark>` tags
+- [X] T050 [US3] Update FileList component in `src/presentations/components/files/FileList.tsx` to display highlighted fileName when search is active, using highlight utility
+- [X] T051 [US3] Update FileGridView component in `src/presentations/components/files/FileGridView.tsx` to display highlighted fileName in cards when search is active
+- [X] T052 [US3] Update useDocuments hook in `src/presentations/hooks/queries/useDocuments.ts` to accept search param and pass to GET /files as query param
+- [X] T053 [US3] Create useSearch custom hook in `src/presentations/hooks/queries/useSearch.ts`: manage search state with debounce, sync with URL searchParams, trigger useDocuments refetch
+- [X] T054 [P] [US3] Update MSW handler in `src/adapters/mocks/handlers/fileHandlers.ts` to filter results by search param (case-insensitive filename and tag name match)
+- [X] T055 [US3] Create SearchResultsStatus component in `src/presentations/components/search/SearchResultsStatus.tsx`: display result count, "No documents found" empty state when zero results
+- [X] T056 [US3] Integrate SearchBar into DocumentManagementPage in `src/presentations/pages/DocumentManagementPage.tsx` above file list with full-width layout
+- [X] T057 [P] [US3] Test multi-word search: add E2E test in `playwright/tests/specs/document-management/search.spec.ts` for searching "田中 商事" returning documents with both keywords
 
 **Checkpoint**: US3 完全機能。キーワード検索、ハイライト、結果表示全て動作。
 

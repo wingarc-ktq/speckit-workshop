@@ -12,6 +12,7 @@ import {
   DateRangeFilter,
   TagFilter,
 } from '@/presentations/components';
+import { SearchResultsStatus } from '@/presentations/components/search/SearchResultsStatus';
 
 /**
  * DocumentManagementPage コンポーネント
@@ -149,6 +150,13 @@ export function DocumentManagementPage() {
 
         {/* 一覧表示 - Figmaデザイン準拠 */}
         <Stack spacing={2}>
+          {/* 検索結果ステータス */}
+          <SearchResultsStatus
+            totalCount={totalCount}
+            searchKeyword={searchKeyword}
+            isSearchActive={!!searchKeyword}
+          />
+
           {/* アップロード日で絞り込み表示 */}
           {(startDate || endDate) && (
             <Box sx={{ fontSize: '0.875rem', color: '#666' }}>
@@ -185,6 +193,7 @@ export function DocumentManagementPage() {
             <FileList
               documents={documents}
               isLoading={isLoading}
+              searchKeyword={searchKeyword}
               totalCount={totalCount}
               currentPage={currentPage}
               pageSize={pageSize}
@@ -196,7 +205,7 @@ export function DocumentManagementPage() {
               }}
             />
           ) : (
-            <FileGridView documents={documents} isLoading={isLoading} />
+            <FileGridView documents={documents} isLoading={isLoading} searchKeyword={searchKeyword} />
           )}
 
           {/* ページネーション */}

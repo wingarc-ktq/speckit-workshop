@@ -19,6 +19,7 @@ import {
   InsertDriveFile as FileIcon,
 } from '@mui/icons-material';
 import type { Document } from '@/domain/models/document';
+import { highlightMatch } from '@/presentations/utils/highlightMatch';
 
 // MUI v7 Grid コンポーネントの型互換性を確保
 const Grid = MuiGrid as any;
@@ -26,6 +27,7 @@ const Grid = MuiGrid as any;
 interface FileGridViewProps {
   documents: Document[];
   isLoading: boolean;
+  searchKeyword?: string;
   onCardClick?: (document: Document) => void;
 }
 
@@ -63,7 +65,7 @@ const getFileTypeInfo = (fileName: string) => {
  * />
  * ```
  */
-export function FileGridView({ documents, isLoading, onCardClick }: FileGridViewProps) {
+export function FileGridView({ documents, isLoading, searchKeyword, onCardClick }: FileGridViewProps) {
   // ローディング中のスケルトンカードを生成
   const skeletonCards = useMemo(() => {
     return isLoading ? Array.from({ length: 8 }).map((_, i) => ({ id: `skeleton-${i}` })) : [];
@@ -181,9 +183,10 @@ export function FileGridView({ documents, isLoading, onCardClick }: FileGridView
                     mb: 1,
                   }}
                   title={document.fileName}
-                >
-                  {document.fileName}
-                </Typography>
+                  dangerouslySetInnerHTML={{
+                    __html: searchKeyword ? highlightMatch(document.fileName, searchKeyword) : document.fileName,
+                  }}
+                />
 
                 {/* タグ */}
                 <Box sx={{ display: 'flex', gap: 0.5, flexWrap: 'wrap', justifyContent: 'center', mb: 1, minHeight: 24 }}>
