@@ -256,7 +256,7 @@
 
 ### 検索コンポーネント
 
-- [ ] **T028** [P] [US3] `FileSearchBar` を `src/presentations/features/files/components/FileSearch/FileSearchBar.tsx` に作成
+- [x] **T028** [P] [US3] `FileSearchBar` を `src/presentations/features/files/components/FileSearch/FileSearchBar.tsx` に作成 ✅
   - MUI `TextField` 使用
   - 検索アイコン表示
   - クリアボタン
@@ -264,35 +264,36 @@
 
 ### カスタムフック
 
-- [ ] **T029** [US3] `useFileSearch` フックを `src/presentations/hooks/useFileSearch.ts` に作成
+- [x] **T029** [US3] `useFileSearch` フックを `src/presentations/hooks/useFileSearch.ts` に作成 ✅
   - `useState` で検索クエリを管理
   - `useDebounce` でデバウンス処理（300ms）
   - `useFiles` フックを内部で使用
   - `src/presentations/hooks/__tests__/useFileSearch.test.ts` にテスト追加
 
-- [ ] **T030** [P] [US3] `useDebounce` フックを `src/presentations/hooks/useDebounce.ts` に作成（存在しない場合）
+- [x] **T030** [P] [US3] `useDebounce` フックを `src/presentations/hooks/useDebounce.ts` に作成（存在しない場合）✅
   - ジェネリック型対応
   - `src/presentations/hooks/__tests__/useDebounce.test.ts` にテスト追加
 
 ### 検索結果表示
 
-- [ ] **T031** [P] [US3] `FileSearchResults` を `src/presentations/features/files/components/FileSearch/FileSearchResults.tsx` に作成
+- [x] **T031** [P] [US3] `FileSearchResults` を `src/presentations/features/files/components/FileSearch/FileSearchResults.tsx` に作成 ✅
   - 検索結果件数表示
   - ハイライト表示（オプション）
   - 結果0件時のメッセージ
 
 ### 統合
 
-- [ ] **T032** [US3] `FilesPage` に検索機能を統合
-  - `FileListToolbar` で `FileSearchBar` を使用
+- [x] **T032** [US3] `FilesPage` に検索機能を統合 ✅
+  - `FileSearchBar` で検索入力
+  - デバウンス処理（300ms）を適用
   - 検索クエリを `useFiles` に渡す
-  - 検索結果を `FileList` に表示
+  - 検索結果を `FileSearchResults` で表示
 
 **チェックポイント**: 検索機能完成 - デバウンス動作、結果表示、0件メッセージが動作
 
 ---
 
-## Phase 7: User Story 1 - 文書のアップロードと基本情報登録 (Priority: P1) 🎯 MVP
+## Phase 6: User Story 1 - 文書のアップロードと基本情報登録 (Priority: P1) 🎯 MVP
 
 **目的**: ユーザーがドラッグ&ドロップまたはファイル選択でPDF/画像をアップロードできる
 
@@ -363,7 +364,7 @@
 
 ---
 
-## Phase 8: テスト実装
+## Phase 7: テスト実装
 
 **目的**: 品質保証のための包括的なテスト
 
@@ -418,7 +419,7 @@
 
 ---
 
-## Phase 9: 統合とデバッグ
+## Phase 8: 統合とデバッグ
 
 **目的**: すべての機能を統合し、品質を最終確認
 
@@ -476,12 +477,12 @@
 ## タスク統計
 
 - **総タスク数**: 62
-- **完了**: 26 ✅
+- **完了**: 33 ✅
 - **Phase 1**: 2タスク ✅
 - **Phase 2**: 13タスク（基盤）✅
 - **Phase 3**: 3タスク（ヘッダーとテーマ）✅
-- **Phase 4**: 13タスク（文書一覧 + カテゴリーフィルター）✅ (T023, T024 オプショナル除く)
-- **Phase 5**: 5タスク（検索）
+- **Phase 4**: 10タスク（文書一覧 + カテゴリーフィルター）✅
+- **Phase 5**: 5タスク（検索）✅
 - **Phase 6**: 8タスク（アップロード）
 - **Phase 7**: 7タスク（テスト）
 - **Phase 8**: 10タスク（統合）
@@ -494,9 +495,9 @@
 ```
 Phase 1 (SETUP) ✅
   └─> Phase 2 (FOUND) - 基盤実装 ✅
-        └─> Phase 3 (LAYOUT) - レイアウト調整
-              ├─> Phase 4 (US2) - 文書一覧
-              ├─> Phase 5 (US3) - 検索 [Phase 4に依存]
+        └─> Phase 3 (HEADER) - ヘッダーとテーマ ✅
+              ├─> Phase 4 (US2) - 文書一覧 ✅
+              ├─> Phase 5 (US3) - 検索 ✅ [Phase 4に依存]
               └─> Phase 6 (US1) - アップロード [並列可能]
                     └─> Phase 7 (TEST) - テスト実装
                           └─> Phase 8 (POLISH) - 統合とデバッグ

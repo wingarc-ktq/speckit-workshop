@@ -3,21 +3,21 @@ import React, { useState } from 'react';
 import AddIcon from '@mui/icons-material/Add';
 import FolderIcon from '@mui/icons-material/Folder';
 import GridViewIcon from '@mui/icons-material/GridView';
-import SearchIcon from '@mui/icons-material/Search';
 import TableRowsIcon from '@mui/icons-material/TableRows';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import InputAdornment from '@mui/material/InputAdornment';
 import MenuItem from '@mui/material/MenuItem';
 import Paper from '@mui/material/Paper';
 import Select from '@mui/material/Select';
-import TextField from '@mui/material/TextField';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import Typography from '@mui/material/Typography';
 
 import type { GetFilesParams } from '@/domain/models/files';
+import { FileSearchBar } from '@/presentations/features/files/components/FileSearch/FileSearchBar';
+import { FileSearchResults } from '@/presentations/features/files/components/FileSearch/FileSearchResults';
 
+import { useDebounce } from '../../hooks/useDebounce';
 import { useFiles } from '../../hooks/queries/useFiles';
 import { useTags } from '../../hooks/queries/useTags';
 
@@ -37,10 +37,13 @@ export const FilesPage: React.FC = () => {
   const [sortOrder, setSortOrder] = useState<SortOrder>('desc');
   const [page, setPage] = useState(1);
 
+  // デバウンス処理を適用した検索クエリ
+  const debouncedSearchQuery = useDebounce(searchQuery, 300);
+
   const queryParams: GetFilesParams = {
     page,
     limit: 20,
-    search: searchQuery,
+    search: debouncedSearchQuery,
     tagIds: selectedTags,
     sortBy,
     sortOrder,
@@ -115,28 +118,7 @@ export const FilesPage: React.FC = () => {
         }}
       >
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-          <TextField
-            placeholder="ファイル名やタグで検索..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            size="small"
-            sx={{
-              flex: 1,
-              maxWidth: 496,
-              '& .MuiOutlinedInput-root': {
-                bgcolor: '#fffbf5',
-                borderRadius: 3,
-                '& fieldset': { borderColor: '#ffd6a7' },
-              },
-            }}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <SearchIcon sx={{ color: '#8b7355' }} />
-                </InputAdornment>
-              ),
-            }}
-          />
+          <FileSearchBar value={searchQuery} onChange={setSearchQuery} />
           <Box sx={{ display: 'flex', gap: 1, ml: 'auto' }}>
             <Select
               value={sortBy}
@@ -230,7 +212,17 @@ export const FilesPage: React.FC = () => {
           overflow: 'hidden',
         }}
       >
+        {/* 検索結果表示 */}
+        <FileSearchResults
+          searchQuery={debouncedSearchQuery}
+          resultCount={filesData?.total || 0}
+          isLoading={isLoading}
+        />
+
+        {/* ファイル一覧 */}
         <FileListTable files={filesData?.files || []} isLoading={isLoading} />
+
+        {/* ページネーション */}
         {filesData && filesData.total > 0 && (
           <PaginationControls
             page={page}
