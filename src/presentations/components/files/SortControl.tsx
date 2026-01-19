@@ -1,0 +1,70 @@
+import { Box, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
+
+interface SortControlProps {
+  sortBy: string;
+  sortOrder: 'asc' | 'desc';
+  onSortChange: (sortBy: string, sortOrder: 'asc' | 'desc') => void;
+}
+
+/**
+ * SortControl コンポーネント
+ * 文書一覧のソート条件を選択
+ *
+ * @component
+ * @example
+ * ```tsx
+ * <SortControl
+ *   sortBy="fileName"
+ *   sortOrder="asc"
+ *   onSortChange={handleSortChange}
+ * />
+ * ```
+ */
+export function SortControl({ sortBy, sortOrder, onSortChange }: SortControlProps) {
+  const handleSortByChange = (event: any) => {
+    const newSortBy = event.target.value;
+    onSortChange(newSortBy, sortOrder);
+    // localStorage に保存
+    localStorage.setItem('documentSortBy', newSortBy);
+  };
+
+  const handleSortOrderChange = (event: any) => {
+    const newSortOrder = event.target.value;
+    onSortChange(sortBy, newSortOrder);
+    // localStorage に保存
+    localStorage.setItem('documentSortOrder', newSortOrder);
+  };
+
+  return (
+    <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
+      <FormControl size="small" sx={{ minWidth: 150 }}>
+        <InputLabel id="sort-by-label">ソート</InputLabel>
+        <Select
+          labelId="sort-by-label"
+          value={sortBy}
+          label="ソート"
+          onChange={handleSortByChange}
+          data-testid="sort-by-select"
+        >
+          <MenuItem value="fileName">ファイル名</MenuItem>
+          <MenuItem value="uploadedAt">アップロード日時</MenuItem>
+          <MenuItem value="fileSize">ファイルサイズ</MenuItem>
+        </Select>
+      </FormControl>
+
+      <FormControl size="small" sx={{ minWidth: 100 }}>
+        <InputLabel id="sort-order-label">順序</InputLabel>
+        <Select
+          labelId="sort-order-label"
+          value={sortOrder}
+          label="順序"
+          onChange={handleSortOrderChange}
+          data-testid="sort-order-select"
+        >
+          <MenuItem value="asc">昇順</MenuItem>
+          <MenuItem value="desc">降順</MenuItem>
+        </Select>
+      </FormControl>
+    </Box>
+  );
+}

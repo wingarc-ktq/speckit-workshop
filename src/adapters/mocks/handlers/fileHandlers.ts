@@ -1,11 +1,11 @@
 import { http, HttpResponse } from 'msw';
-import type { Document, DocumentListResponse } from '../../domain/models/document/Document';
-import type { Tag } from '../../domain/models/tag/Tag';
+import type { Document, DocumentListResponse } from '@/domain/models/document';
+import type { Tag } from '@/domain/models/tag';
 
 /**
  * API base URL
  */
-const API_BASE_URL = 'http://localhost:3000/api/v1';
+const API_BASE_URL = 'http://localhost:3000/api';
 
 /**
  * Mock documents data store
@@ -122,15 +122,15 @@ function handleGetDocuments() {
     if (search) {
       filtered = filtered.filter((doc) =>
         doc.fileName.toLowerCase().includes(search) ||
-        doc.tags.some((tag) => tag.name.toLowerCase().includes(search))
+        doc.tags.some((tag: Tag) => tag.name.toLowerCase().includes(search))
       );
     }
 
     // Tag filter (AND logic - all selected tags must be present)
     if (tagIdsParam.length > 0) {
       filtered = filtered.filter((doc) => {
-        const docTagIds = doc.tags.map((tag) => tag.id);
-        return tagIdsParam.every((tagId) => docTagIds.includes(tagId));
+        const docTagIds = doc.tags.map((tag: Tag) => tag.id);
+        return tagIdsParam.every((tagId: string) => docTagIds.includes(tagId));
       });
     }
 
@@ -447,7 +447,7 @@ function handleDeleteTag() {
 
     // Remove tag from all documents
     mockDocuments.forEach((doc) => {
-      doc.tags = doc.tags.filter((tag) => tag.id !== id);
+      doc.tags = doc.tags.filter((tag: Tag) => tag.id !== id);
     });
 
     // Remove tag

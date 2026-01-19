@@ -62,21 +62,21 @@
 
 ### Tests for User Story 1 ⚠️
 
-- [ ] T020 [P] [US1] Write contract test for POST /files endpoint in `playwright/tests/specs/document-management/upload.spec.ts`: test successful file upload, test file size validation (max 10MB), test unsupported format rejection
-- [ ] T021 [P] [US1] Write component test for FileUploadArea in `src/presentations/components/files/__tests__/FileUploadArea.test.tsx`: test drag-over state change, test file selection and validation, test multiple file selection (max 20)
-- [ ] T022 [P] [US1] Write component test for file format validation in `src/presentations/components/files/__tests__/FileUploadArea.test.tsx`: verify only PDF, DOCX, XLSX, JPG, PNG are accepted
+- [x] T020 [P] [US1] Write contract test for POST /files endpoint in `playwright/tests/specs/document-management/upload.spec.ts`: test successful file upload, test file size validation (max 10MB), test unsupported format rejection
+- [x] T021 [P] [US1] Write component test for FileUploadArea in `src/presentations/components/files/__tests__/FileUploadArea.test.tsx`: test drag-over state change, test file selection and validation, test multiple file selection (max 20)
+- [x] T022 [P] [US1] Write component test for file format validation in `src/presentations/components/files/__tests__/FileUploadArea.test.tsx`: verify only PDF, DOCX, XLSX, JPG, PNG are accepted
 
 ### Implementation for User Story 1
 
-- [ ] T023 [P] [US1] Create FileUploadArea component in `src/presentations/components/files/FileUploadArea.tsx` with react-dropzone: drag-drop zone, file preview list, tag selector, upload button, progress indicators
-- [ ] T024 [P] [US1] Create TagSelector component in `src/presentations/components/tags/TagSelector.tsx`: Material-UI Autocomplete or Select for tag multi-selection with Material-UI Chip display
-- [ ] T025 [US1] Create useFileUpload mutation hook in `src/presentations/hooks/mutations/useFileUpload.ts` using @tanstack/react-query to handle multipart file upload with progress tracking
-- [ ] T026 [US1] Implement file validation logic in `src/domain/models/document/DocumentError.ts`: validate file size (max 10MB), file format whitelist (pdf, docx, xlsx, jpg, png), max file count (20 per upload)
-- [ ] T027 [US1] Create error display component in `src/presentations/components/files/FileUploadError.tsx`: Material-UI Alert for size, format, count violations
-- [ ] T028 [US1] Implement upload progress display in `src/presentations/components/files/FileUploadArea.tsx`: MUI LinearProgress per file with percentage, cancel button
-- [ ] T029 [P] [US1] Create MSW multipart form-data handler upgrade in `src/adapters/mocks/handlers/fileHandlers.ts` to accept tagged file uploads
-- [ ] T030 [US1] Create success notification on upload complete in `src/presentations/components/files/FileUploadArea.tsx` using Material-UI Snackbar
-- [ ] T031 [US1] Test duplicate filename handling: create scenario test in `playwright/tests/specs/document-management/upload.spec.ts` for "file already exists" dialog
+- [x] T023 [P] [US1] Create FileUploadArea component in `src/presentations/components/files/FileUploadArea.tsx` with react-dropzone: drag-drop zone, file preview list, tag selector, upload button, progress indicators
+- [x] T024 [P] [US1] Create TagSelector component in `src/presentations/components/tags/TagSelector.tsx`: Material-UI Autocomplete or Select for tag multi-selection with Material-UI Chip display
+- [x] T025 [US1] Create useFileUpload mutation hook in `src/presentations/hooks/mutations/useFileUpload.ts` using @tanstack/react-query to handle multipart file upload with progress tracking
+- [x] T026 [US1] Implement file validation logic in `src/domain/models/document/DocumentError.ts`: validate file size (max 10MB), file format whitelist (pdf, docx, xlsx, jpg, png), max file count (20 per upload)
+- [x] T027 [US1] Create error display component in `src/presentations/components/files/FileUploadError.tsx`: Material-UI Alert for size, format, count violations
+- [x] T028 [US1] Implement upload progress display in `src/presentations/components/files/FileUploadArea.tsx`: MUI LinearProgress per file with percentage, cancel button
+- [x] T029 [P] [US1] Create MSW multipart form-data handler upgrade in `src/adapters/mocks/handlers/fileHandlers.ts` to accept tagged file uploads
+- [x] T030 [US1] Create success notification on upload complete in `src/presentations/components/files/FileUploadArea.tsx` using Material-UI Snackbar
+- [x] T031 [US1] Test duplicate filename handling: create scenario test in `playwright/tests/specs/document-management/upload.spec.ts` for "file already exists" dialog
 
 **Checkpoint**: US1 完全機能。ドラッグ&ドロップアップロード、タグ設定、進捗表示が動作。
 

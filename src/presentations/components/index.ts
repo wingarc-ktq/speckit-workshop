@@ -1,2 +1,11 @@
 export * from './dialogs';
 export * from './forms';
+export { FileUploadArea } from './files/FileUploadArea';
+export { FileUploadError } from './files/FileUploadError';
+export { FileList } from './files/FileList';
+export { FileGridView } from './files/FileGridView';
+export { ViewToggle } from './files/ViewToggle';
+export { SortControl } from './files/SortControl';
+export { DocumentPagination } from './files/DocumentPagination';
+export { DocumentEmptyState } from './files/DocumentEmptyState';
+export { TagSelector } from './tags/TagSelector';

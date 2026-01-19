@@ -1,10 +1,11 @@
-import { useQuery, UseQueryResult } from '@tanstack/react-query';
-import { documentRepository } from '../../adapters/repositories';
+import { useQuery } from '@tanstack/react-query';
+import type { UseQueryResult } from '@tanstack/react-query';
+import { repositoryComposition } from '@/adapters/repositories';
 import type {
   Document,
   DocumentFilter,
   DocumentListResponse,
-} from '../../domain/models/document/Document';
+} from '@/domain/models/document';
 
 /**
  * useDocuments フック
@@ -29,7 +30,7 @@ export function useDocuments(
   return useQuery<DocumentListResponse, Error>({
     queryKey: ['documents', filters],
     queryFn: async () => {
-      return documentRepository.getDocuments(filters);
+      return repositoryComposition.document.getDocuments(filters);
     },
     staleTime: 1000 * 60 * 5, // 5 minutes
     gcTime: 1000 * 60 * 10, // 10 minutes (formerly cacheTime)
@@ -52,7 +53,7 @@ export function useDocument(id: string): UseQueryResult<Document> {
   return useQuery<Document, Error>({
     queryKey: ['document', id],
     queryFn: async () => {
-      return documentRepository.getDocumentById(id);
+      return repositoryComposition.document.getDocumentById(id);
     },
     enabled: !!id,
     staleTime: 1000 * 60 * 5, // 5 minutes
@@ -80,7 +81,7 @@ export function useTrashDocuments(
   return useQuery<DocumentListResponse, Error>({
     queryKey: ['trash-documents', { page, limit }],
     queryFn: async () => {
-      return documentRepository.getTrashDocuments(page, limit);
+      return repositoryComposition.document.getTrashDocuments(page, limit);
     },
     staleTime: 1000 * 60 * 1, // 1 minute
     gcTime: 1000 * 60 * 5, // 5 minutes
