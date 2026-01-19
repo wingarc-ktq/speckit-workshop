@@ -171,7 +171,7 @@ export const FileUploadDialog: React.FC<FileUploadDialogProps> = ({ open, onClos
           {/* アップロード進捗 */}
           {hasUploaded && (
             <Box>
-              <Typography variant="subtitle2" gutterBottom sx={{ fontWeight: 'bold' }}>
+              <Typography variant="subtitle2" gutterBottom sx={{ color: '#7e2a0c', fontWeight: 'bold' }}>
                 アップロード進捗
               </Typography>
               {selectedFiles.map((file) => (
@@ -195,6 +195,7 @@ export const FileUploadDialog: React.FC<FileUploadDialogProps> = ({ open, onClos
               onChange={(e) => setDescription(e.target.value)}
               fullWidth
               sx={{
+                '& .MuiInputLabel-root': { color: '#7e2a0c' },
                 '& .MuiOutlinedInput-root': {
                   '& fieldset': { borderColor: '#ffd6a7' },
                 },
@@ -231,6 +232,7 @@ export const FileUploadDialog: React.FC<FileUploadDialogProps> = ({ open, onClos
                     label={undefined}
                     placeholder="タグを選択..."
                     sx={{
+                      '& .MuiInputBase-input::placeholder': { color: '#9ca3af', opacity: 1 },
                       '& .MuiOutlinedInput-root': {
                         '& fieldset': { borderColor: '#ffd6a7' },
                       },

@@ -759,3 +759,414 @@ Phase 1 (SETUP) ✅
 5. Phase 10（削除とゴミ箱）[Phase 4完了後、並列可能]
 6. Phase 11（テスト）
 7. Phase 12（ポリッシュ）
+
+---
+
+## アーキテクチャ図（コードレビュー用）
+
+### 1. システムアーキテクチャ全体図
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                         Presentation Layer                          │
+│  ┌─────────────────────────────────────────────────────────────┐   │
+│  │  Pages (FilesPage, TrashPage)                               │   │
+│  │    └─> Components (FileListTable, FileUploadDialog, etc.)   │   │
+│  │         └─> Hooks (useFiles, useFileUpload, useTags, etc.)  │   │
+│  └─────────────────────────────────────────────────────────────┘   │
+└─────────────────────────────────────────────────────────────────────┘
+                               ↓ ↑
+┌─────────────────────────────────────────────────────────────────────┐
+│                         Adapters Layer                              │
+│  ┌─────────────────────────────────────────────────────────────┐   │
+│  │  Repositories (files/, tags/)                               │   │
+│  │    ├─> getFiles(), uploadFile(), getFile()                  │   │
+│  │    ├─> getTags(), createTag(), updateTag(), deleteTag()     │   │
+│  │    └─> deleteFile(), getTrash(), restoreFile(), etc.        │   │
+│  │         └─> Generated API Functions (Orval)                 │   │
+│  └─────────────────────────────────────────────────────────────┘   │
+│  ┌─────────────────────────────────────────────────────────────┐   │
+│  │  MSW Handlers (files.ts, tags.ts, trash.ts)                 │   │
+│  │    └─> Mock Data Management                                 │   │
+│  └─────────────────────────────────────────────────────────────┘   │
+└─────────────────────────────────────────────────────────────────────┘
+                               ↓ ↑
+┌─────────────────────────────────────────────────────────────────────┐
+│                         Domain Layer                                │
+│  ┌─────────────────────────────────────────────────────────────┐   │
+│  │  Models (FileInfo, TagInfo)                                 │   │
+│  │  Utils (fileValidation, fileDownload)                       │   │
+│  └─────────────────────────────────────────────────────────────┘   │
+└─────────────────────────────────────────────────────────────────────┘
+                               ↓ ↑
+┌─────────────────────────────────────────────────────────────────────┐
+│                      External API / Backend                         │
+│                    (OpenAPI Specification)                          │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### 2. データフロー図（ファイル一覧表示）
+
+```
+User
+  │
+  │ 1. /files にアクセス
+  ↓
+FilesPage
+  │
+  │ 2. useFiles() フックを呼び出し
+  ↓
+useFiles (React Query)
+  │
+  │ 3. getFiles({ page, limit, search, tagIds }) を呼び出し
+  ↓
+Repository (getFiles.ts)
+  │
+  │ 4. Orval生成のAPI関数を呼び出し
+  ↓
+MSW Handler (files.ts)
+  │
+  │ 5. モックデータを返却
+  ↓
+Repository
+  │
+  │ 6. FileListResponse を返却
+  ↓
+useFiles
+  │
+  │ 7. キャッシュに保存、データを返却
+  ↓
+FilesPage
+  │
+  │ 8. FileListTable にデータを渡す
+  ↓
+FileListTable
+  │
+  │ 9. テーブル形式でレンダリング
+  ↓
+User に表示
+```
+
+### 3. データフロー図（ファイルアップロード）
+
+```
+User
+  │
+  │ 1. 「おたよりを追加」ボタンをクリック
+  ↓
+FilesPage
+  │
+  │ 2. FileUploadDialog を開く
+  ↓
+FileUploadDialog
+  │
+  │ 3. ファイル選択 / ドラッグ&ドロップ
+  ↓
+FileUploadDropzone
+  │
+  │ 4. ファイルバリデーション (fileValidation.ts)
+  │    - ファイル形式チェック (PDF, JPG, PNG)
+  │    - ファイルサイズチェック (最大10MB)
+  │    - ファイル数チェック (最大20ファイル)
+  ↓
+FileUploadDialog
+  │
+  │ 5. タグ選択、説明入力
+  │
+  │ 6. 「アップロード」ボタンをクリック
+  ↓
+useFileUpload (React Query Mutation)
+  │
+  │ 7. uploadFile({ file, description, tagIds }) を呼び出し
+  ↓
+Repository (uploadFile.ts)
+  │
+  │ 8. Orval生成のAPI関数を呼び出し
+  ↓
+MSW Handler (files.ts)
+  │
+  │ 9. ファイルを保存、FileResponse を返却
+  ↓
+useFileUpload
+  │
+  │ 10. 成功時に files クエリを無効化 (refetch)
+  ↓
+FilesPage
+  │
+  │ 11. ダイアログを閉じる
+  │
+  │ 12. 一覧が自動更新される
+  ↓
+User に表示
+```
+
+### 4. コンポーネント依存関係図
+
+```
+AppLayout
+  ├─> AppHeader
+  │     └─> ゴミ箱ボタン (TrashPage へ遷移)
+  │
+  └─> FilesPage (ルート: /files)
+        ├─> FilesSectionHeader
+        │     └─> アップロードボタン
+        │
+        ├─> ツールバー
+        │     ├─> 検索バー (useFileSearch)
+        │     ├─> ソート選択
+        │     └─> 表示モード切替
+        │
+        ├─> CategoryFilter
+        │     └─> タグチップ (useTags)
+        │
+        ├─> FileListTable
+        │     ├─> FileIcon
+        │     ├─> タグチップ
+        │     └─> ファイル行クリック → FileDetailDialog
+        │
+        ├─> PaginationControls
+        │
+        ├─> FileUploadDialog
+        │     ├─> FileUploadDropzone
+        │     └─> FileUploadProgress
+        │
+        ├─> FileDetailDialog (Phase 7)
+        │     ├─> FilePreview
+        │     ├─> FileMetadata
+        │     ├─> ダウンロードボタン
+        │     ├─> 編集ボタン → FileEditDialog (Phase 9)
+        │     └─> 削除ボタン → DeleteConfirmDialog (Phase 10)
+        │
+        └─> FileEditDialog (Phase 9)
+              └─> FileEditForm
+
+TrashPage (ルート: /trash) (Phase 10)
+  ├─> TrashFileList
+  │     ├─> 復元ボタン (useRestoreFile)
+  │     └─> 完全削除ボタン (usePermanentlyDeleteFile)
+  │
+  └─> DeleteConfirmDialog
+
+TagManagementDialog (Phase 8)
+  ├─> TagForm
+  │     └─> TagColorPicker
+  │
+  ├─> 新規タグ作成 (useCreateTag)
+  ├─> タグ編集 (useUpdateTag)
+  └─> タグ削除 (useDeleteTag)
+```
+
+### 5. React Query キャッシュフロー図
+
+```
+┌──────────────────────────────────────────────────────────┐
+│                    React Query Cache                     │
+├──────────────────────────────────────────────────────────┤
+│  Query Keys                      │  Cache Time / Stale   │
+├──────────────────────────────────┼───────────────────────┤
+│  ['files', params]               │  5分 (Phase 4)        │
+│  ['file', id]                    │  10分 (Phase 7)       │
+│  ['tags']                        │  10分 (Phase 4)       │
+│  ['trash']                       │  5分 (Phase 10)       │
+└──────────────────────────────────────────────────────────┘
+           ↑                ↓
+           │                │
+    ┌──────┴────────────────┴──────┐
+    │     Query Invalidation       │
+    ├──────────────────────────────┤
+    │  uploadFile → ['files']      │
+    │  updateFile → ['files']      │
+    │  deleteFile → ['files']      │
+    │  createTag → ['tags']        │
+    │  updateTag → ['tags','files']│
+    │  deleteTag → ['tags','files']│
+    │  restoreFile → ['trash','files']│
+    │  permanentlyDeleteFile → ['trash']│
+    └──────────────────────────────┘
+```
+
+### 6. ファイル構造図（主要ディレクトリ）
+
+```
+src/
+├── adapters/
+│   ├── generated/
+│   │   └── files.ts (Orval自動生成)
+│   ├── mocks/
+│   │   └── handlers/
+│   │       ├── files.ts (Phase 2) ✅
+│   │       ├── tags.ts (Phase 2, 8) ✅
+│   │       └── trash.ts (Phase 10)
+│   └── repositories/
+│       └── files/
+│           ├── getFiles.ts (Phase 2) ✅
+│           ├── uploadFile.ts (Phase 2) ✅
+│           ├── getFile.ts (Phase 2) ✅
+│           ├── getTags.ts (Phase 2) ✅
+│           ├── updateFile.ts (Phase 9)
+│           ├── deleteFile.ts (Phase 10)
+│           ├── getTrash.ts (Phase 10)
+│           └── restoreFile.ts (Phase 10)
+│
+├── domain/
+│   ├── models/
+│   │   └── files/
+│   │       ├── FileInfo.ts (Phase 2) ✅
+│   │       └── TagInfo.ts (Phase 2) ✅
+│   └── utils/
+│       ├── fileValidation.ts (Phase 6) ✅
+│       └── fileDownload.ts (Phase 7)
+│
+├── presentations/
+│   ├── components/
+│   │   ├── AppHeader/ (Phase 3) ✅
+│   │   └── FileIcon/ (Phase 4) ✅
+│   ├── pages/
+│   │   ├── FilesPage/ (Phase 4-6) ✅
+│   │   │   └── components/
+│   │   │       ├── FileListTable.tsx ✅
+│   │   │       ├── CategoryFilter.tsx ✅
+│   │   │       └── PaginationControls.tsx ✅
+│   │   └── TrashPage/ (Phase 10)
+│   ├── features/
+│   │   └── files/
+│   │       └── components/
+│   │           ├── FileUpload/ (Phase 6) ✅
+│   │           ├── FileDetail/ (Phase 7)
+│   │           ├── FileEdit/ (Phase 9)
+│   │           └── TagManagement/ (Phase 8)
+│   └── hooks/
+│       ├── queries/
+│       │   ├── useFiles.ts (Phase 4) ✅
+│       │   ├── useTags.ts (Phase 4) ✅
+│       │   ├── useFileDetail.ts (Phase 7)
+│       │   └── useTrash.ts (Phase 10)
+│       └── mutations/
+│           ├── useFileUpload.ts (Phase 6) ✅
+│           ├── useUpdateFile.ts (Phase 9)
+│           ├── useDeleteFile.ts (Phase 10)
+│           ├── useCreateTag.ts (Phase 8)
+│           ├── useUpdateTag.ts (Phase 8)
+│           └── useDeleteTag.ts (Phase 8)
+│
+└── i18n/
+    └── locales/
+        ├── ja.ts (Phase 2) ✅
+        └── en.ts (Phase 2) ✅
+```
+
+### 7. Phase別実装状況マップ
+
+```
+Phase 1: SETUP ✅
+  ✅ ブランチ確認
+  ✅ OpenAPI確認
+
+Phase 2: 基盤実装 ✅
+  ✅ API生成 (Orval)
+  ✅ エンティティ (FileInfo, TagInfo)
+  ✅ MSWハンドラー (files, tags)
+  ✅ リポジトリ関数
+  ✅ i18n翻訳
+
+Phase 3: ヘッダーとテーマ ✅
+  ✅ カスタムテーマカラー
+  ✅ AppHeader コンポーネント
+  ✅ AppLayout 統合
+
+Phase 4: 文書一覧 (US2) ✅
+  ✅ FilesPage
+  ✅ FileListTable
+  ✅ CategoryFilter
+  ✅ useFiles フック
+  ✅ ページネーション
+
+Phase 5: 検索 (US3) ✅
+  ✅ FileSearchBar
+  ✅ useFileSearch フック
+  ✅ デバウンス処理
+
+Phase 6: アップロード (US1) ✅
+  ✅ FileUploadDialog
+  ✅ FileUploadDropzone
+  ✅ useFileUpload フック
+  ✅ ファイルバリデーション
+
+Phase 7: 詳細表示 (US5) ← 次のステップ
+  ⬜ FileDetailDialog
+  ⬜ FilePreview
+  ⬜ FileMetadata
+  ⬜ useFileDetail フック
+  ⬜ ダウンロード機能
+
+Phase 8: タグ管理 (US6)
+  ⬜ TagManagementDialog
+  ⬜ TagForm
+  ⬜ CRUD操作 (create, update, delete)
+
+Phase 9: メタデータ編集 (US7)
+  ⬜ FileEditDialog
+  ⬜ useUpdateFile フック
+
+Phase 10: ゴミ箱 (US8)
+  ⬜ TrashPage
+  ⬜ 削除・復元・完全削除機能
+
+Phase 11-12: テスト・統合
+  ⬜ ユニットテスト
+  ⬜ E2Eテスト
+  ⬜ パフォーマンス最適化
+```
+
+---
+
+## コードレビューチェックリスト
+
+### アーキテクチャ
+
+- [ ] レイヤー分離が適切か（Presentation / Adapters / Domain）
+- [ ] 依存関係が一方向か（上位層から下位層へ）
+- [ ] ドメインロジックがプレゼンテーション層に漏れていないか
+
+### データフロー
+
+- [ ] React Queryのキャッシュ戦略が適切か
+- [ ] Mutation後のクエリ無効化が適切に設定されているか
+- [ ] ローディング状態とエラー状態が適切に処理されているか
+
+### コンポーネント設計
+
+- [ ] コンポーネントが単一責任原則に従っているか
+- [ ] propsが適切に型定義されているか
+- [ ] カスタムフックでロジックが分離されているか
+- [ ] 再利用可能なコンポーネントが適切に抽出されているか
+
+### バリデーション
+
+- [ ] ファイルアップロードのバリデーションが適切か
+- [ ] フォーム入力のバリデーションが実装されているか
+- [ ] エラーメッセージが多言語対応されているか
+
+### パフォーマンス
+
+- [ ] 不要な再レンダリングが発生していないか
+- [ ] デバウンス処理が適切に実装されているか
+- [ ] キャッシュ設定（staleTime, cacheTime）が適切か
+
+### テスト
+
+- [ ] ユニットテストが実装されているか
+- [ ] コンポーネントテストが実装されているか
+- [ ] E2Eテストが主要なシナリオをカバーしているか
+
+### アクセシビリティ
+
+- [ ] キーボードナビゲーションが適切に動作するか
+- [ ] スクリーンリーダー対応が適切か
+- [ ] ARIA属性が適切に設定されているか
+
+### セキュリティ
+
+- [ ] XSS対策が適切か
+- [ ] ファイルアップロードの安全性が確保されているか
+- [ ] 認証・認可が適切に実装されているか（該当する場合）

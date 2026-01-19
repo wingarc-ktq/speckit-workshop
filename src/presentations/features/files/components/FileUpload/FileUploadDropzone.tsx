@@ -102,7 +102,7 @@ export const FileUploadDropzone: React.FC<FileUploadDropzoneProps> = ({
       {/* 選択されたファイルのプレビュー */}
       {selectedFiles.length > 0 && (
         <Box sx={{ mt: 2 }}>
-          <Typography variant="subtitle2" gutterBottom sx={{ color: '#7e2a0c', fontWeight: 'bold' }}>
+          <Typography variant="subtitle2" gutterBottom sx={{ color: '#f54900', fontWeight: 'bold' }}>
             選択されたファイル ({selectedFiles.length}件)
           </Typography>
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
@@ -118,7 +118,7 @@ export const FileUploadDropzone: React.FC<FileUploadDropzoneProps> = ({
                   border: '1px solid #e5e7eb',
                 }}
               >
-                <Typography variant="body2" sx={{ color: '#374151' }}>
+                <Typography variant="body2" sx={{ color: '#1f2937', fontWeight: 500 }}>
                   {file.name}
                 </Typography>
                 <Typography variant="caption" sx={{ color: '#6b7280' }}>
