@@ -1,7 +1,7 @@
 import { createBrowserRouter } from 'react-router-dom';
 
 import { AppLayout } from '@/presentations/layouts';
-import { FilesPage, HomePage, LoginPage, NotFoundPage } from '@/presentations/pages';
+import { FilesPage, HomePage, LoginPage, NotFoundPage, TrashPage } from '@/presentations/pages';
 
 import { ProtectedRoute, RouteErrorBoundary } from './components';
 
@@ -10,6 +10,7 @@ const ROUTE_PATH = {
   HOME: '/',
   LOGIN: '/login',
   FILES: '/files',
+  TRASH: '/trash',
 };
 
 export const routes = [
@@ -40,6 +41,10 @@ export const routes = [
           {
             path: ROUTE_PATH.FILES,
             lazy: async () => ({ Component: FilesPage }),
+          },
+          {
+            path: ROUTE_PATH.TRASH,
+            lazy: async () => ({ Component: TrashPage }),
           },
         ],
       },

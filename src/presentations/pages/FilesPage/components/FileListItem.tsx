@@ -14,9 +14,10 @@ import { useTags } from '@/presentations/hooks/queries/useTags';
 
 interface FileListItemProps {
   file: FileInfo;
+  onFileClick?: (fileId: string) => void;
 }
 
-export const FileListItem: React.FC<FileListItemProps> = ({ file }) => {
+export const FileListItem: React.FC<FileListItemProps> = ({ file, onFileClick }) => {
   const { data: tagsData } = useTags();
   const tags = tagsData?.tags ?? [];
 
@@ -28,6 +29,7 @@ export const FileListItem: React.FC<FileListItemProps> = ({ file }) => {
   return (
     <Card
       elevation={0}
+      onClick={() => onFileClick?.(file.id)}
       sx={{
         border: '2px solid',
         borderColor: '#ffd6a7',
@@ -35,6 +37,7 @@ export const FileListItem: React.FC<FileListItemProps> = ({ file }) => {
         bgcolor: 'white',
         height: '100%',
         transition: 'all 0.2s',
+        cursor: onFileClick ? 'pointer' : 'default',
         '&:hover': {
           borderColor: '#ff9800',
           boxShadow: '0 4px 12px rgba(255, 152, 0, 0.15)',

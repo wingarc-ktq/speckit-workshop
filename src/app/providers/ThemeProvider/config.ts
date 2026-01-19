@@ -45,5 +45,77 @@ export const appTheme = createTheme({
         },
       },
     },
+    MuiCheckbox: {
+      styleOverrides: {
+        root: {
+          color: '#757575',
+          '&.Mui-checked': {
+            color: '#FF9800',
+          },
+          '&:hover': {
+            backgroundColor: 'rgba(255, 152, 0, 0.08)',
+          },
+        },
+      },
+    },
+    MuiFormControlLabel: {
+      styleOverrides: {
+        label: {
+          color: '#424242',
+          fontWeight: 500,
+        },
+      },
+    },
+    MuiInputLabel: {
+      styleOverrides: {
+        root: {
+          color: '#424242',
+          fontWeight: 500,
+          '&.Mui-focused': {
+            color: '#FF9800',
+          },
+        },
+      },
+    },
+    MuiOutlinedInput: {
+      styleOverrides: {
+        root: {
+          '& .MuiOutlinedInput-notchedOutline': {
+            borderColor: '#D0D0D0',
+          },
+          '&:hover .MuiOutlinedInput-notchedOutline': {
+            borderColor: '#FF9800',
+          },
+          '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+            borderColor: '#FF9800',
+          },
+        },
+        input: {
+          color: '#424242',
+        },
+      },
+    },
+    MuiTableCell: {
+      styleOverrides: {
+        root: {
+          color: '#424242',
+        },
+        head: {
+          color: '#424242',
+          fontWeight: 600,
+        },
+      },
+    },
+    MuiIconButton: {
+      styleOverrides: {
+        root: {
+          color: '#757575',
+          '&:hover': {
+            color: '#FF9800',
+            backgroundColor: 'rgba(255, 152, 0, 0.08)',
+          },
+        },
+      },
+    },
   },
 });

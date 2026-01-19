@@ -1,6 +1,7 @@
 import React from 'react';
 
 import DeleteIcon from '@mui/icons-material/Delete';
+import ListIcon from '@mui/icons-material/List';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -8,7 +9,15 @@ import Button from '@mui/material/Button';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 
-export const AppHeader: React.FC = () => {
+interface AppHeaderProps {
+  showTrashButton?: boolean;
+  onToggleView?: () => void;
+}
+
+export const AppHeader: React.FC<AppHeaderProps> = ({
+  showTrashButton = true,
+  onToggleView,
+}) => {
   return (
     <AppBar
       position="fixed"
@@ -45,27 +54,29 @@ export const AppHeader: React.FC = () => {
                 lineHeight: 1,
               }}
             >
-              先生と保護者の方々よりよ資料
             </Typography>
           </Box>
         </Box>
-        <Button
-          variant="contained"
-          startIcon={<DeleteIcon />}
-          sx={{
-            bgcolor: 'white',
-            color: '#FF9800',
-            fontWeight: 600,
-            px: 2,
-            py: 1,
-            borderRadius: 2,
-            '&:hover': {
-              bgcolor: 'rgba(255, 255, 255, 0.9)',
-            },
-          }}
-        >
-          ごみ箱
-        </Button>
+        {onToggleView && (
+          <Button
+            variant="contained"
+            startIcon={showTrashButton ? <DeleteIcon /> : <ListIcon />}
+            onClick={onToggleView}
+            sx={{
+              bgcolor: 'white',
+              color: '#FF9800',
+              fontWeight: 600,
+              px: 2,
+              py: 1,
+              borderRadius: 2,
+              '&:hover': {
+                bgcolor: 'rgba(255, 255, 255, 0.9)',
+              },
+            }}
+          >
+            {showTrashButton ? 'ごみ箱' : '一覧へ'}
+          </Button>
+        )}
       </Toolbar>
     </AppBar>
   );

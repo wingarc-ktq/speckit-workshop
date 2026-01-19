@@ -4,7 +4,7 @@ import { HTTP_STATUS_CLIENT_ERROR, HTTP_STATUS_SUCCESS } from '@/domain/constant
 import type { FileInfo, FileListResponse } from '@/domain/models/files';
 
 // アップロードされたファイルのデータを保存するMap
-const uploadedFilesData = new Map<string, Blob>();
+export const uploadedFilesData = new Map<string, Blob>();
 
 /**
  * 表示可能なモックPDFを生成する関数
@@ -293,7 +293,7 @@ const generateMockFiles = (): FileInfo[] => {
 };
 
 // モックファイルをミュータブルな配列として保持
-let MOCK_FILES = generateMockFiles();
+export const MOCK_FILES: FileInfo[] = generateMockFiles();
 
 /**
  * ファイル管理APIのMSWハンドラー
@@ -305,17 +305,18 @@ export const getFilesHandlers = () => {
 
     const url = new URL(request.url);
     const search = url.searchParams.get('search') || '';
-    const tagIdsParam = url.searchParams.get('tagIds') || '';
+    const tagIds = url.searchParams.getAll('tagIds');
     const page = parseInt(url.searchParams.get('page') || '1', 10);
     const limit = parseInt(url.searchParams.get('limit') || '20', 10);
+    const sortBy = url.searchParams.get('sortBy') || 'uploadedAt';
+    const sortOrder = url.searchParams.get('sortOrder') || 'desc';
 
     // タグIDでフィルタリング
     let filteredFiles = MOCK_FILES;
 
-    if (tagIdsParam) {
-      const tagIds = tagIdsParam.split(',');
+    if (tagIds.length > 0) {
       filteredFiles = filteredFiles.filter((file) =>
-        tagIds.some((tagId) => file.tagIds.includes(tagId))
+        tagIds.every((tagId) => file.tagIds.includes(tagId))
       );
     }
 
@@ -327,6 +328,21 @@ export const getFilesHandlers = () => {
           file.description?.toLowerCase().includes(search.toLowerCase())
       );
     }
+
+    // ソート
+    const compare = (a: typeof filteredFiles[number], b: typeof filteredFiles[number]) => {
+      let result = 0;
+      if (sortBy === 'name') {
+        result = a.name.localeCompare(b.name, 'ja');
+      } else if (sortBy === 'size') {
+        result = a.size - b.size;
+      } else {
+        result = new Date(a.uploadedAt).getTime() - new Date(b.uploadedAt).getTime();
+      }
+      return sortOrder === 'asc' ? result : -result;
+    };
+
+    filteredFiles = [...filteredFiles].sort(compare);
 
     // ページネーション
     const total = filteredFiles.length;

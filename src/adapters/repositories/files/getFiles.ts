@@ -17,6 +17,8 @@ export const getFiles: GetFiles = async (params?: GetFilesParams): Promise<FileL
       tagIds: params?.tagIds,
       page: params?.page,
       limit: params?.limit,
+      sortBy: params?.sortBy,
+      sortOrder: params?.sortOrder,
     });
 
     return {

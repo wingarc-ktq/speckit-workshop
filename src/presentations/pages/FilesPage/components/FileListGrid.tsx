@@ -12,9 +12,10 @@ import { FileListItem } from './FileListItem';
 interface FileListGridProps {
   files: FileInfo[];
   isLoading: boolean;
+  onFileClick?: (fileId: string) => void;
 }
 
-export const FileListGrid: React.FC<FileListGridProps> = ({ files, isLoading }) => {
+export const FileListGrid: React.FC<FileListGridProps> = ({ files, isLoading, onFileClick }) => {
   if (isLoading) {
     return (
       <Box sx={{ display: 'flex', justifyContent: 'center', p: 8 }}>
@@ -46,7 +47,7 @@ export const FileListGrid: React.FC<FileListGridProps> = ({ files, isLoading }) 
               lg: 3,
             }}
           >
-            <FileListItem file={file} />
+            <FileListItem file={file} onFileClick={onFileClick} />
           </Grid>
         ))}
       </Grid>

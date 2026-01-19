@@ -1,12 +1,13 @@
 import { setupWorker } from 'msw/browser';
 
-import { getCustomAuthAPIMock, getFilesHandlers, getTagsHandlers } from './handlers';
+import { getCustomAuthAPIMock, getFilesHandlers, getTagsHandlers, getTrashHandlers } from './handlers';
 
 // MSWワーカーを設定
 export const worker = setupWorker(
   ...getCustomAuthAPIMock(),
   ...getFilesHandlers(),
-  ...getTagsHandlers()
+  ...getTagsHandlers(),
+  ...getTrashHandlers()
 );
 
 // 開発環境でのみMSWを開始

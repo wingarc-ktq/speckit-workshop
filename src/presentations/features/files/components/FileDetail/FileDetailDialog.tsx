@@ -1,4 +1,5 @@
 import CloseIcon from '@mui/icons-material/Close';
+import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import DownloadIcon from '@mui/icons-material/Download';
 import Alert from '@mui/material/Alert';
@@ -14,6 +15,8 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import React from 'react';
 
 import { downloadFile } from '@/domain/utils/fileDownload';
+import { DeleteConfirmDialog } from '@/presentations/components/dialogs';
+import { useDeleteFile } from '@/presentations/hooks/mutations/useDeleteFile';
 import { useFileDetail } from '@/presentations/hooks/queries/useFileDetail';
 
 import { FileEditDialog } from '../FileEdit/FileEditDialog';
@@ -35,12 +38,15 @@ export const FileDetailDialog = ({
   onClose,
 }: FileDetailDialogProps) => {
   const [editOpen, setEditOpen] = React.useState(false);
+  const [deleteOpen, setDeleteOpen] = React.useState(false);
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
+  const deleteMutation = useDeleteFile();
 
   React.useEffect(() => {
     if (!open) {
       setEditOpen(false);
+      setDeleteOpen(false);
     }
   }, [open]);
 
@@ -78,6 +84,16 @@ export const FileDetailDialog = ({
           sx={{ flexShrink: 0 }}
         >
           編集
+        </Button>
+        <Button
+          variant="outlined"
+          color="error"
+          startIcon={<DeleteIcon />}
+          onClick={() => setDeleteOpen(true)}
+          disabled={!file}
+          sx={{ flexShrink: 0 }}
+        >
+          削除
         </Button>
         <Button
           variant="contained"
@@ -156,6 +172,20 @@ export const FileDetailDialog = ({
       </DialogContent>
 
       <FileEditDialog open={editOpen} file={file ?? null} onClose={() => setEditOpen(false)} />
+      <DeleteConfirmDialog
+        open={deleteOpen}
+        title="ファイルを削除しますか？"
+        description={file?.name}
+        confirmLabel="削除"
+        isLoading={deleteMutation.isPending}
+        onConfirm={async () => {
+          if (!file) return;
+          await deleteMutation.mutateAsync(file.id);
+          setDeleteOpen(false);
+          onClose();
+        }}
+        onClose={() => setDeleteOpen(false)}
+      />
     </Dialog>
   );
 };

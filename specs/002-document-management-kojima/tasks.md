@@ -528,7 +528,7 @@
 
 ### OpenAPI拡張
 
-- [ ] **T080** [FOUND] `schema/files/openapi.yaml` にゴミ箱エンドポイントを追加
+- [x] **T080** [FOUND] `schema/files/openapi.yaml` にゴミ箱エンドポイントを追加
   - `DELETE /api/v1/files/{id}` - ファイルをゴミ箱に移動
   - `GET /api/v1/trash` - ゴミ箱のファイル一覧取得
   - `POST /api/v1/trash/{id}/restore` - ファイル復元
@@ -537,7 +537,7 @@
 
 ### MSWハンドラー拡張
 
-- [ ] **T081** [P] [FOUND] `src/adapters/mocks/handlers/trash.ts` を作成
+- [x] **T081** [P] [FOUND] `src/adapters/mocks/handlers/trash.ts` を作成
   - ゴミ箱用のモックデータ管理
   - `deleteFile` ハンドラー: ファイルをゴミ箱に移動（deletedAtフィールド追加）
   - `getTrash` ハンドラー: ゴミ箱のファイル一覧を返す
@@ -547,7 +547,7 @@
 
 ### リポジトリ拡張
 
-- [ ] **T082** [P] [FOUND] ゴミ箱リポジトリ関数を `src/adapters/repositories/files/` に作成
+- [x] **T082** [P] [FOUND] ゴミ箱リポジトリ関数を `src/adapters/repositories/files/` に作成
   - `deleteFile(id: string): Promise<void>`
   - `getTrash(): Promise<TrashListResponse>`
   - `restoreFile(id: string): Promise<void>`
@@ -555,53 +555,53 @@
 
 ### 削除UIコンポーネント
 
-- [ ] **T083** [P] [US8] `DeleteConfirmDialog` を `src/presentations/components/dialogs/DeleteConfirmDialog.tsx` に作成
+- [x] **T083** [P] [US8] `DeleteConfirmDialog` を `src/presentations/components/dialogs/DeleteConfirmDialog.tsx` に作成
   - 削除確認メッセージ
   - キャンセル・削除ボタン
   - 警告アイコン
 
 ### ゴミ箱ページ
 
-- [ ] **T084** [US8] `TrashPage` を `src/presentations/pages/TrashPage/TrashPage.tsx` に作成
+- [x] **T084** [US8] `TrashPage` を `src/presentations/pages/TrashPage/TrashPage.tsx` に作成
   - ゴミ箱ファイル一覧表示
   - 復元ボタン
   - 完全削除ボタン
   - 空のゴミ箱メッセージ
 
-- [ ] **T085** [P] [US8] `TrashFileList` を `src/presentations/pages/TrashPage/components/TrashFileList.tsx` に作成
+- [x] **T085** [P] [US8] `TrashFileList` を `src/presentations/pages/TrashPage/components/TrashFileList.tsx` に作成
   - テーブル形式で表示
   - ファイル名、削除日時、復元・削除アクション
 
 ### カスタムフック
 
-- [ ] **T086** [US8] `useDeleteFile` フックを `src/presentations/hooks/mutations/useDeleteFile.ts` に作成
+- [x] **T086** [US8] `useDeleteFile` フックを `src/presentations/hooks/mutations/useDeleteFile.ts` に作成
   - `useMutation` を使用してファイル削除
   - 成功時に `files` クエリを無効化
 
-- [ ] **T087** [US8] `useTrash` フックを `src/presentations/hooks/queries/useTrash.ts` に作成
+- [x] **T087** [US8] `useTrash` フックを `src/presentations/hooks/queries/useTrash.ts` に作成
   - `useQuery` を使用してゴミ箱ファイル一覧を取得
 
-- [ ] **T088** [US8] `useRestoreFile` フックを `src/presentations/hooks/mutations/useRestoreFile.ts` に作成
+- [x] **T088** [US8] `useRestoreFile` フックを `src/presentations/hooks/mutations/useRestoreFile.ts` に作成
   - `useMutation` を使用してファイル復元
   - 成功時に `trash` と `files` クエリを無効化
 
-- [ ] **T089** [US8] `usePermanentlyDeleteFile` フックを `src/presentations/hooks/mutations/usePermanentlyDeleteFile.ts` に作成
+- [x] **T089** [US8] `usePermanentlyDeleteFile` フックを `src/presentations/hooks/mutations/usePermanentlyDeleteFile.ts` に作成
   - `useMutation` を使用して完全削除
   - 成功時に `trash` クエリを無効化
 
 ### ルーティング
 
-- [ ] **T090** [US8] `src/app/router/routes.tsx` にゴミ箱ルートを追加
+- [x] **T090** [US8] `src/app/router/routes.tsx` にゴミ箱ルートを追加
   - パス: `/trash`
   - コンポーネント: `TrashPage`
 
 ### 統合
 
-- [ ] **T091** [US8] `FileListTable` と `FileDetailDialog` に削除ボタンを追加
+- [x] **T091** [US8] `FileListTable` と `FileDetailDialog` に削除ボタンを追加
   - 削除ボタンクリックで `DeleteConfirmDialog` を表示
   - 確認後にファイル削除を実行
 
-- [ ] **T092** [US8] ヘッダーに「ご希箱」（ゴミ箱）ボタンを追加
+- [x] **T092** [US8] ヘッダーに「ご希箱」（ゴミ箱）ボタンを追加
   - クリックで `/trash` ページに遷移
 
 **チェックポイント**: 削除とゴミ箱機能完成 - ファイル削除、ゴミ箱一覧、復元、完全削除が動作
