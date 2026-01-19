@@ -174,18 +174,18 @@
 
 ### Tests for User Story 5 ⚠️
 
-- [ ] T068 [P] [US5] Write contract test for GET /files/:id in `playwright/tests/specs/document-management/detail.spec.ts`: test document detail retrieval, test download endpoint response
-- [ ] T069 [P] [US5] Write component test for FileDetailsModal in `src/presentations/components/files/__tests__/FileDetailsModal.test.tsx`: test modal open/close, test PDF preview render, test image preview render, test download button
-- [ ] T070 [P] [US5] Write component test for PDFViewer in `src/presentations/components/files/__tests__/PDFViewer.test.tsx`: test PDF loading, test page navigation, test error handling
+- [X] T068 [P] [US5] Write contract test for GET /files/:id in `playwright/tests/specs/document-management/detail.spec.ts`: test document detail retrieval, test download endpoint response
+- [X] T069 [P] [US5] Write component test for FileDetailsModal in `src/presentations/components/files/__tests__/FileDetailsModal.test.tsx`: test modal open/close, test PDF preview render, test image preview render, test download button
+- [X] T070 [P] [US5] Write component test for PDFViewer in `src/presentations/components/files/__tests__/PDFViewer.test.tsx`: test PDF loading, test page navigation, test error handling
 
 ### Implementation for User Story 5
 
-- [ ] T071 [P] [US5] Create FileDetailsModal component in `src/presentations/components/files/FileDetailsModal.tsx`: Material-UI Modal/Dialog displaying file metadata (name, size, uploadedAt, uploadedBy, tags), preview area, action buttons
-- [ ] T072 [P] [US5] Create PDFViewer component in `src/presentations/components/files/PDFViewer.tsx`: wrap react-pdf Document/Page components with Suspense, MUI Skeleton loading state, error boundary, page navigation
-- [ ] T073 [P] [US5] Create ImageViewer component in `src/presentations/components/files/ImageViewer.tsx`: `<img>` element with error handling, Blob URL support for CORS, loading skeleton
-- [ ] T074 [US5] Create useFileDetails custom hook in `src/presentations/hooks/queries/useFileDetails.ts`: fetch single document using GET /files/:id with TanStack Query
-- [ ] T075 [US5] Create download handler in `src/presentations/hooks/mutations/useDownloadFile.ts`: fetch file from API and trigger browser download using Blob and URL.createObjectURL
-- [ ] T076 [US5] Update FileList component to open FileDetailsModal on row click with document ID
+- [X] T071 [P] [US5] Create FileDetailsModal component in `src/presentations/components/files/FileDetailsModal.tsx`: Material-UI Modal/Dialog displaying file metadata (name, size, uploadedAt, uploadedBy, tags), preview area, action buttons
+- [X] T072 [P] [US5] Create PDFViewer component in `src/presentations/components/files/PDFViewer.tsx`: wrap react-pdf Document/Page components with Suspense, MUI Skeleton loading state, error boundary, page navigation
+- [X] T073 [P] [US5] Create ImageViewer component in `src/presentations/components/files/ImageViewer.tsx`: `<img>` element with error handling, Blob URL support for CORS, loading skeleton
+- [X] T074 [US5] Create useFileDetails custom hook in `src/presentations/hooks/queries/useFileDetails.ts`: fetch single document using GET /files/:id with TanStack Query
+- [X] T075 [US5] Create download handler in `src/presentations/hooks/mutations/useDownloadFile.ts`: fetch file from API and trigger browser download using Blob and URL.createObjectURL
+- [X] T076 [US5] Update FileList component to open FileDetailsModal on row click with document ID
 - [ ] T077 [US5] Update FileGridView component to open FileDetailsModal on card click with document ID
 - [ ] T078 [P] [US5] Update MSW handler in `src/adapters/mocks/handlers/fileHandlers.ts` to add GET /files/:id endpoint returning full document object
 - [ ] T079 [US5] Implement file download route in MSW: GET /files/:id/download returning Blob with Content-Disposition header

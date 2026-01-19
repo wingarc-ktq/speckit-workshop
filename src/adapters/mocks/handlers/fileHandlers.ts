@@ -279,6 +279,35 @@ function handleGetDocumentById() {
 }
 
 /**
+ * GET /files/:id/download - ファイルダウンロード
+ */
+function handleDownloadDocument() {
+  return http.get(`${API_BASE_URL}/files/:id/download`, ({ params }) => {
+    const { id } = params;
+    const doc = mockDocuments.find((d) => d.id === id);
+
+    if (!doc) {
+      return HttpResponse.json(
+        { error: 'Document not found' },
+        { status: 404 }
+      );
+    }
+
+    const blob = new Blob(['dummy file content'], {
+      type: 'application/octet-stream',
+    });
+
+    return new HttpResponse(blob, {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/octet-stream',
+        'Content-Disposition': `attachment; filename="${doc.fileName}"`,
+      },
+    });
+  });
+}
+
+/**
  * PUT /files/:id - ファイル更新
  */
 function handleUpdateDocument() {
@@ -465,6 +494,7 @@ export function getFileHandlers() {
     handleGetDocuments(),
     handleUploadDocument(),
     handleGetDocumentById(),
+    handleDownloadDocument(),
     handleUpdateDocument(),
     handleDeleteDocument(),
     handleRestoreDocument(),

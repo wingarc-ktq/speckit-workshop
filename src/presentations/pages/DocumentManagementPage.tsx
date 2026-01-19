@@ -1,5 +1,6 @@
 import { Box, Container, Stack, Dialog, DialogTitle, DialogContent } from '@mui/material';
 import { useState, useEffect, useMemo } from 'react';
+import type { Document } from '@/domain/models/document';
 import { useDocuments, useTagFilter, useTags } from '@/presentations/hooks/queries';
 import { useDocumentHeader } from '@/presentations/layouts/AppLayout/contexts';
 import {
@@ -11,6 +12,7 @@ import {
   DocumentEmptyState,
   DateRangeFilter,
   TagFilter,
+  FileDetailsModal,
 } from '@/presentations/components';
 import { FilterStatusBar } from '@/presentations/components/files/FilterStatusBar';
 import { SearchResultsStatus } from '@/presentations/components/search/SearchResultsStatus';
@@ -32,6 +34,8 @@ export function DocumentManagementPage() {
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
   const [searchKeyword, setSearchKeyword] = useState('');
+  const [selectedDocument, setSelectedDocument] = useState<Document | null>(null);
+  const [showDetailsModal, setShowDetailsModal] = useState(false);
   const { selectedTagIds, setTagIds, clearTagIds } = useTagFilter();
   const { data: allTags } = useTags();
 
@@ -156,6 +160,18 @@ export function DocumentManagementPage() {
           </DialogContent>
         </Dialog>
 
+        {/* 文書詳細モーダル */}
+        {selectedDocument && (
+          <FileDetailsModal
+            open={showDetailsModal}
+            documentId={selectedDocument.id}
+            onClose={() => {
+              setShowDetailsModal(false);
+              setSelectedDocument(null);
+            }}
+          />
+        )}
+
         {/* 一覧表示 - Figmaデザイン準拠 */}
         <Stack spacing={2}>
           {/* 検索結果ステータス */}
@@ -215,6 +231,10 @@ export function DocumentManagementPage() {
               currentPage={currentPage}
               pageSize={pageSize}
               onPageChange={setCurrentPage}
+              onRowClick={(doc) => {
+                setSelectedDocument(doc);
+                setShowDetailsModal(true);
+              }}
               onSort={(by, order) => {
                 setSortBy(by);
                 setSortOrder(order);
@@ -222,7 +242,15 @@ export function DocumentManagementPage() {
               }}
             />
           ) : (
-            <FileGridView documents={documents} isLoading={isLoading} searchKeyword={searchKeyword} />
+            <FileGridView 
+              documents={documents} 
+              isLoading={isLoading} 
+              searchKeyword={searchKeyword}
+              onCardClick={(doc) => {
+                setSelectedDocument(doc);
+                setShowDetailsModal(true);
+              }}
+            />
           )}
 
           {/* ページネーション */}
