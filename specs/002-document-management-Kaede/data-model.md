@@ -16,6 +16,8 @@
 - uploadedAt: DateTime (アップロード日時)
 - downloadUrl: string (ダウンロードURL)
 - tagIds: string[] (タグID配列)
+- isDeleted: boolean (ゴミ箱に移動しているか)
+- deletedAt?: DateTime (削除日時)
 
 **Relationships**:
 - Many-to-Many with Tag (via tagIds)
@@ -31,6 +33,13 @@
 - Active → Deleted (soft delete, move to trash)
 - Deleted → Restored (from trash)
 - Deleted → Permanently Deleted (after 30 days)
+
+**State Transitions**:
+- Created → Active
+- Active → Deleted (soft delete / move to trash)
+- Deleted → Active (restore)
+- Deleted → Permanently Deleted (after 30 days)
+
 
 ### Tag (タグ)
 
@@ -85,6 +94,14 @@
 2. API call: POST/PUT /tags
 3. Server validates uniqueness
 4. Response: TagInfo
+
+### Trash Flow
+1. User deletes a document
+2. Document is marked as isDeleted = true
+3. Document disappears from normal list
+4. User opens Trash page
+5. User restores or permanently deletes the document
+
 
 ## Constraints
 

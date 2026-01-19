@@ -7,7 +7,39 @@
 
 ## Summary
 
-文書管理システムのMVP機能を実装。ユーザーが文書をアップロード・分類・検索できるシンプルな管理システム。P1機能（アップロード、一覧表示、検索）に絞り、Material-UIベースのレスポンシブUIとOpenAPI定義済みAPIを使用。
+文書管理システムのMVP機能を実装。ユーザーが文書をアップロード・分類・検索できるシンプルな管理システム。P1機能（アップロード、一覧表示、検索）を土台にP2（タグ管理・詳細表示）、P3（メタデータ編集・削除／ゴミ箱）も段階的に実装、Material-UIベースのレスポンシブUIとOpenAPI定義済みAPIを使用。
+本フェーズでは、User Story 1〜8 を対象とし、文書のライフサイクル（作成・閲覧・編集・削除・復元）を一通り扱える状態を目指す。
+
+## Scope
+
+### In Scope
+- User Story 1〜3（P1）: アップロード、一覧表示、検索
+- User Story 4〜6（P2）: タグフィルタ、詳細表示、タグ管理
+- User Story 7〜8（P3）: メタデータ編集、削除・ゴミ箱・復元
+
+### Out of Scope
+- User Story 9（検索条件の保存）
+- 文書のバージョン管理
+- 権限管理（ユーザー別アクセス制御）
+
+## Phase Breakdown
+
+### Phase 1 (P1)
+- File upload
+- Document list (list/grid)
+- Keyword search
+
+### Phase 2 (P2)
+- Tag filtering
+- Document detail view
+- Tag management (create / edit / delete)
+
+### Phase 3 (P3)
+- Document metadata edit
+- Soft delete (move to trash)
+- Restore from trash
+- Permanent delete (UI only)
+
 
 ## Technical Context
 
@@ -72,10 +104,12 @@ src/
 │   │   │   ├── FileUpload.tsx
 │   │   │   ├── FileList.tsx
 │   │   │   └── FileSearch.tsx
+│   │   │   └── FileActions.tsx   # edit / delete / restore
 │   │   └── tags/
 │   ├── pages/
 │   │   ├── DocumentManagementPage.tsx
 │   │   └── FileDetailPage.tsx
+│   │   └── TrashPage.tsx
 │   ├── hooks/
 │   │   ├── queries/
 │   │   └── mutations/

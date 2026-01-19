@@ -5,12 +5,14 @@
  * 新規にrepositories配下にディレクトリを作成した場合は、ここに追加してください。
  */
 import * as auth from './auth';
+import * as files from './files';
 
 /**
  * リポジトリの構成型
  */
 export type RepositoryComposition = {
   auth: typeof auth;
+  files: typeof files;
 };
 
 /**
@@ -18,4 +20,5 @@ export type RepositoryComposition = {
  */
 export const repositoryComposition: RepositoryComposition = {
   auth,
+  files,
 } as const;

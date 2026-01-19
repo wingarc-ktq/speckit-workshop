@@ -83,6 +83,28 @@ export const ja = {
       goBack: '前のページに戻る',
     },
   },
+  fileList: {
+    headers: {
+      name: 'ファイル名',
+      tags: 'タグ',
+      uploadedAt: 'アップロード日時',
+      size: 'サイズ',
+      uploader: 'アップロード者',
+    },
+    empty: {
+      title: 'ファイルがありません',
+      message: 'ファイルをアップロードして開始してください。',
+    },
+    error: {
+      title: 'エラーが発生しました',
+      message: 'ファイル一覧の読み込みに失敗しました。',
+    },
+    search: {
+      placeholder: 'ファイル名で検索...',
+      noResults: '該当する文書が見つかりませんでした',
+      noResultsMessage: '検索条件やフィルタを変更して、再度お試しください',
+    },
+  },
   crashPage: {
     title:
       'ページを表示できませんでした。ページを更新してもう一度お試しください。',

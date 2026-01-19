@@ -1,7 +1,7 @@
 import { createBrowserRouter } from 'react-router-dom';
 
 import { AppLayout } from '@/presentations/layouts';
-import { HomePage, LoginPage, NotFoundPage } from '@/presentations/pages';
+import { DocumentManagementPage, HomePage, LoginPage, NotFoundPage } from '@/presentations/pages';
 
 import { ProtectedRoute, RouteErrorBoundary } from './components';
 
@@ -9,6 +9,7 @@ import { ProtectedRoute, RouteErrorBoundary } from './components';
 const ROUTE_PATH = {
   HOME: '/',
   LOGIN: '/login',
+  DOCUMENTS: '/documents',
 };
 
 export const routes = [
@@ -35,6 +36,10 @@ export const routes = [
           {
             index: true,
             lazy: async () => ({ Component: HomePage }),
+          },
+          {
+            path: ROUTE_PATH.DOCUMENTS,
+            lazy: async () => ({ Component: DocumentManagementPage }),
           },
         ],
       },

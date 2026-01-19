@@ -1,9 +1,12 @@
 import { setupWorker } from 'msw/browser';
 
-import { getCustomAuthAPIMock } from './handlers';
+import { getCustomAuthAPIMock, getFilesAPIMock } from './handlers';
 
 // MSWワーカーを設定
-export const worker = setupWorker(...getCustomAuthAPIMock());
+export const worker = setupWorker(
+  ...getCustomAuthAPIMock(),
+  ...getFilesAPIMock()
+);
 
 // 開発環境でのみMSWを開始
 export async function enableMocking() {

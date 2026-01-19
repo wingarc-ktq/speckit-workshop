@@ -15,6 +15,11 @@ export const QUERY_KEYS = {
     CURRENT_SESSION: [GLOBAL_LOADING, 'auth', 'currentSession'],
   },
 
+  // ファイル管理関連
+  FILES: {
+    LIST: [GLOBAL_LOADING, 'files', 'list'],
+  },
+
   // 今後の拡張例
   // USERS: {
   //   LIST: [GLOBAL_LOADING, 'users', 'list'],

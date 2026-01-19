@@ -79,6 +79,26 @@ export const en = {
       goBack: 'Go Back',
     },
   },
+  fileList: {
+    headers: {
+      name: 'File Name',
+      tags: 'Tags',
+      uploadedAt: 'Uploaded At',
+      size: 'Size',
+      uploader: 'Uploader',
+    },
+    empty: {
+      title: 'No Files',
+      message: 'Upload a file to get started.',
+    },
+    error: {
+      title: 'An Error Occurred',
+      message: 'Failed to load the file list.',
+    },    search: {
+      placeholder: 'Search by file name...',
+      noResults: 'No documents found',
+      noResultsMessage: 'Try changing your search query or filters',
+    },  },
   crashPage: {
     title:
       'The page could not be displayed. Please refresh the page and try again.',

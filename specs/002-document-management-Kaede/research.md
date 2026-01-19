@@ -58,3 +58,15 @@
 
 **Alternatives considered**: 手動テスト vs 自動テスト - 自動テストを選択して回帰防止。</content>
 <parameter name="filePath">/home/kaepo/speckit-workshop/specs/002-document-management-Kaede/research.md
+
+## Decision: Trash (Soft Delete) UX
+
+**Rationale**:
+誤削除を防ぐため、文書削除は即時完全削除せずゴミ箱へ移動する方式を採用する。
+削除操作時には確認ダイアログを表示し、削除後はSnackbarで通知する。
+
+ゴミ箱は通常の文書一覧とは分離した専用ページとし、
+復元および完全削除を明示的な操作として提供する。
+
+**Alternatives considered**:
+- Undo のみ提供 → 状態管理が複雑なため不採用

@@ -74,6 +74,7 @@
     "react-error-boundary": "^6.0.0",
     "react-hook-form": "^7.65.0",
     "react-router-dom": "^7.6.2",
+    "use-debounce": "^10.1.0",
     "zod": "^4.1.12"
   },
   "devDependencies": {

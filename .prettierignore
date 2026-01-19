@@ -1,0 +1,12 @@
+node_modules/
+dist/
+build/
+coverage/
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+public/mockServiceWorker.js
+schema/
+src/adapters/generated/
+playwright/test-results/
+playwright/playwright-report/
