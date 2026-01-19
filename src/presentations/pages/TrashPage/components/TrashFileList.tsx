@@ -3,11 +3,6 @@ import React from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import CircularProgress from '@mui/material/CircularProgress';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
 import Typography from '@mui/material/Typography';
 
 import type { TrashFileInfo } from '@/domain/models/files';
@@ -48,68 +43,72 @@ export const TrashFileList: React.FC<TrashFileListProps> = ({
   }
 
   return (
-    <Table>
-      <TableHead
-        sx={{
-          background: 'linear-gradient(to right, #eff6ff, #eef2ff)',
-          borderBottom: '2px solid #bedbff',
-        }}
-      >
-        <TableRow>
-          <TableCell sx={{ color: '#1c398e', fontWeight: 'bold', fontSize: 14 }}>
-            ファイル名
-          </TableCell>
-          <TableCell sx={{ color: '#1c398e', fontWeight: 'bold', fontSize: 14 }}>
-            削除日時
-          </TableCell>
-          <TableCell sx={{ color: '#1c398e', fontWeight: 'bold', fontSize: 14 }}>
-            操作
-          </TableCell>
-        </TableRow>
-      </TableHead>
-      <TableBody>
-        {files.map((file) => (
-          <TableRow key={file.id} sx={{ borderBottom: '1px solid #dbeafe' }}>
-            <TableCell>
-              <Typography variant="body1" sx={{ fontWeight: 'bold', color: '#101828' }}>
-                {file.name}
-              </Typography>
-            </TableCell>
-            <TableCell>
-              <Typography variant="body2" sx={{ fontWeight: 'bold', color: '#364153' }}>
-                {new Date(file.deletedAt).toLocaleString('ja-JP', {
-                  year: 'numeric',
-                  month: '2-digit',
-                  day: '2-digit',
-                  hour: '2-digit',
-                  minute: '2-digit',
-                })}
-              </Typography>
-            </TableCell>
-            <TableCell>
-              <Box sx={{ display: 'flex', gap: 1 }}>
-                <Button
-                  size="small"
-                  variant="outlined"
-                  onClick={() => onRestore(file)}
-                  disabled={isRestoring || isDeleting}
-                >
-                  復元
-                </Button>
-                <Button
-                  size="small"
-                  variant="contained"
-                  color="error"
-                  onClick={() => onPermanentDelete(file)}
-                  disabled={isDeleting}
-                >
-                  完全削除
-                </Button>
-              </Box>
-            </TableCell>
-          </TableRow>
-        ))}
-      </TableBody>
-    </Table>
+    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, p: 2 }}>
+      {files.map((file) => (
+        <Box
+          key={file.id}
+          sx={{
+            border: '2px solid #bedbff',
+            borderRadius: 2,
+            p: 2,
+            bgcolor: 'white',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 2,
+          }}
+        >
+          <Box>
+            <Typography variant="body2" sx={{ color: '#1c398e', fontWeight: 'bold', mb: 0.5 }}>
+              ファイル名
+            </Typography>
+            <Typography variant="body1" sx={{ fontWeight: 'bold', color: '#101828' }}>
+              {file.name}
+            </Typography>
+          </Box>
+
+          <Box>
+            <Typography variant="body2" sx={{ color: '#1c398e', fontWeight: 'bold', mb: 0.5 }}>
+              削除日時
+            </Typography>
+            <Typography variant="body2" sx={{ fontWeight: 'bold', color: '#364153' }}>
+              {new Date(file.deletedAt).toLocaleString('ja-JP', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit',
+              })}
+            </Typography>
+          </Box>
+
+          <Box>
+            <Typography variant="body2" sx={{ color: '#1c398e', fontWeight: 'bold', mb: 1 }}>
+              操作
+            </Typography>
+            <Box sx={{ display: 'flex', gap: 1 }}>
+              <Button
+                size="small"
+                variant="outlined"
+                onClick={() => onRestore(file)}
+                disabled={isRestoring || isDeleting}
+                sx={{ flex: 1 }}
+              >
+                復元
+              </Button>
+              <Button
+                size="small"
+                variant="contained"
+                color="error"
+                onClick={() => onPermanentDelete(file)}
+                disabled={isDeleting}
+                sx={{ flex: 1 }}
+              >
+                完全削除
+              </Button>
+            </Box>
+          </Box>
+        </Box>
+      ))}
+    </Box>
   );
 };

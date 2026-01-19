@@ -124,37 +124,55 @@ export const FilesPage: React.FC = () => {
   };
 
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3, width: '100%' }}>
+    <Box sx={{ display: 'flex', flexDirection: 'column', gap: { xs: 2, md: 3 }, width: '100%' }}>
       {/* ヘッダーセクション */}
       <Paper
         elevation={0}
         sx={{
-          p: 3,
+          p: { xs: 2, md: 3 },
           border: '2px solid',
           borderColor: '#ffd6a7',
           borderRadius: 2,
           bgcolor: 'white',
         }}
       >
-        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: { xs: 'flex-start', md: 'center' },
+            justifyContent: 'space-between',
+            flexDirection: { xs: 'column', md: 'row' },
+            gap: { xs: 2, md: 0 },
+          }}
+        >
           <Box>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 0.5 }}>
               {pageMode === 'list' ? (
-                <FolderIcon sx={{ fontSize: 28, color: '#7e2a0c' }} />
+                <FolderIcon sx={{ fontSize: { xs: 24, md: 28 }, color: '#7e2a0c' }} />
               ) : (
-                <DeleteIcon sx={{ fontSize: 28, color: '#7e2a0c' }} />
+                <DeleteIcon sx={{ fontSize: { xs: 24, md: 28 }, color: '#7e2a0c' }} />
               )}
-              <Typography variant="h4" sx={{ color: '#7e2a0c', fontWeight: 'bold', fontSize: 24 }}>
+              <Typography
+                variant="h4"
+                sx={{ color: '#7e2a0c', fontWeight: 'bold', fontSize: { xs: 20, md: 24 } }}
+              >
                 {pageMode === 'list' ? 'おたより・資料一覧' : 'ごみ箱'}
               </Typography>
             </Box>
-            <Typography variant="body2" sx={{ color: '#f54900', ml: 4.5 }}>
+            <Typography variant="body2" sx={{ color: '#f54900', ml: { xs: 3.5, md: 4.5 } }}>
               {pageMode === 'list'
                 ? `${filesData?.total || 0}件のおたより`
                 : `${trashFiles.length}件`}
             </Typography>
           </Box>
-          <Box sx={{ display: 'flex', gap: 1 }}>
+          <Box
+            sx={{
+              display: 'flex',
+              gap: 1,
+              flexDirection: { xs: 'column', sm: 'row' },
+              width: { xs: '100%', sm: 'auto' },
+            }}
+          >
             {pageMode === 'list' ? (
               <>
                 <Button
@@ -167,6 +185,7 @@ export const FilesPage: React.FC = () => {
                     borderRadius: 2,
                     textTransform: 'none',
                     fontWeight: 'bold',
+                    width: { xs: '100%', sm: 'auto' },
                     '&:hover': {
                       borderColor: '#ff6900',
                       bgcolor: '#fff7ed',
@@ -175,11 +194,13 @@ export const FilesPage: React.FC = () => {
                 >
                   タグ管理
                 </Button>
+                {/* デスクトップ画面でのみ表示 */}
                 <Button
                   variant="contained"
                   onClick={() => setUploadDialogOpen(true)}
                   startIcon={<AddIcon />}
                   sx={{
+                    display: { xs: 'none', md: 'flex' },
                     bgcolor: '#ff6900',
                     '&:hover': { bgcolor: '#e65f00' },
                     borderRadius: 2,
@@ -199,6 +220,7 @@ export const FilesPage: React.FC = () => {
                     borderRadius: 2,
                     textTransform: 'none',
                     fontWeight: 'bold',
+                    width: { xs: '100%', sm: 'auto' },
                   }}
                 >
                   ごみ箱
@@ -215,6 +237,7 @@ export const FilesPage: React.FC = () => {
                   borderRadius: 2,
                   textTransform: 'none',
                   fontWeight: 'bold',
+                  width: { xs: '100%', sm: 'auto' },
                 }}
               >
                 一覧へ
@@ -230,22 +253,36 @@ export const FilesPage: React.FC = () => {
           <Paper
             elevation={0}
             sx={{
-              p: 3,
+              p: { xs: 2, md: 3 },
               border: '2px solid',
               borderColor: '#fff085',
               borderRadius: 2,
               bgcolor: 'white',
             }}
           >
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            <Box
+              sx={{
+                display: 'flex',
+                flexDirection: { xs: 'column', md: 'row' },
+                alignItems: { xs: 'stretch', md: 'center' },
+                gap: { xs: 1.5, md: 1 },
+              }}
+            >
               <FileSearchBar value={searchQuery} onChange={setSearchQuery} />
-              <Box sx={{ display: 'flex', gap: 1, ml: 'auto' }}>
+              <Box
+                sx={{
+                  display: 'flex',
+                  gap: 1,
+                  ml: { xs: 0, md: 'auto' },
+                  flexWrap: { xs: 'wrap', sm: 'nowrap' },
+                }}
+              >
                 <Select
                   value={sortBy}
                   onChange={(e) => setSortBy(e.target.value as SortBy)}
                   size="small"
                   sx={{
-                    minWidth: 140,
+                    minWidth: { xs: 'calc(50% - 4px)', sm: 140 },
                     bgcolor: '#fffbf5',
                     borderRadius: 3,
                     '& fieldset': { borderColor: '#ffd6a7' },
@@ -260,7 +297,7 @@ export const FilesPage: React.FC = () => {
                   onChange={(e) => setSortOrder(e.target.value as SortOrder)}
                   size="small"
                   sx={{
-                    minWidth: 100,
+                    minWidth: { xs: 'calc(50% - 4px)', sm: 100 },
                     bgcolor: '#fffbf5',
                     borderRadius: 3,
                     '& fieldset': { borderColor: '#ffd6a7' },
@@ -278,6 +315,7 @@ export const FilesPage: React.FC = () => {
                     bgcolor: '#fff7ed',
                     border: '2px solid #ffd6a7',
                     borderRadius: 3,
+                    display: { xs: 'none', sm: 'flex' },
                   }}
                 >
                   <ToggleButton
@@ -307,7 +345,7 @@ export const FilesPage: React.FC = () => {
           <Paper
             elevation={0}
             sx={{
-              p: 3,
+              p: { xs: 2, md: 3 },
               border: '2px solid',
               borderColor: '#b9f8cf',
               borderRadius: 2,
@@ -429,13 +467,15 @@ export const FilesPage: React.FC = () => {
           onClick={handleBulkDelete}
           sx={{
             position: 'fixed',
-            bottom: 32,
-            right: 32,
+            bottom: { xs: 16, md: 32 },
+            right: { xs: 16, md: 32 },
+            left: { xs: 16, sm: 'auto' },
             bgcolor: '#dc2626',
             color: 'white',
             fontWeight: 'bold',
-            px: 3,
-            py: 1.5,
+            px: { xs: 2, md: 3 },
+            py: { xs: 1, md: 1.5 },
+            fontSize: { xs: '0.875rem', md: '1rem' },
             boxShadow: '0 4px 20px rgba(220, 38, 38, 0.4)',
             '&:hover': {
               bgcolor: '#b91c1c',
@@ -445,6 +485,32 @@ export const FilesPage: React.FC = () => {
         >
           <DeleteIcon sx={{ mr: 1 }} />
           選択した{selectedFileIds.length}件をごみ箱へ
+        </Fab>
+      </Zoom>
+
+      {/* フローティングアップロードボタン（デスクトップ以外で右上に表示） */}
+      <Zoom in={pageMode === 'list' && selectedFileIds.length === 0 && !uploadDialogOpen}>
+        <Fab
+          color="primary"
+          onClick={() => setUploadDialogOpen(true)}
+          sx={{
+            display: { xs: 'flex', md: 'none' },
+            position: 'fixed',
+            top: { xs: 16, sm: 24 },
+            right: { xs: 16, sm: 24 },
+            bgcolor: '#524841',
+            color: 'white',
+            width: 56,
+            height: 56,
+            zIndex: (theme) => theme.zIndex.modal + 1,
+            boxShadow: '0 4px 20px rgba(255, 105, 0, 0.4)',
+            '&:hover': {
+              bgcolor: '#c98555',
+              boxShadow: '0 6px 24px rgba(255, 105, 0, 0.5)',
+            },
+          }}
+        >
+          <AddIcon />
         </Fab>
       </Zoom>
     </Box>

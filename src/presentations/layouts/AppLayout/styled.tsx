@@ -14,8 +14,10 @@ export const MainContent = styled(Box)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   width: '100%',
-  marginTop: '64px', // ヘッダーの高さ分のマージン
   padding: theme.spacing(3),
+  [theme.breakpoints.up('md')]: {
+    marginTop: '64px', // デスクトップのみヘッダーの高さ分のマージン
+  },
   [theme.breakpoints.down('md')]: {
     padding: theme.spacing(2),
   },

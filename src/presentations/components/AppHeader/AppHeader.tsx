@@ -23,6 +23,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
       position="fixed"
       elevation={2}
       sx={{
+        position: { xs: 'static', md: 'fixed' },
         background: 'linear-gradient(135deg, #FF9800 0%, #FB8C00 100%)',
         height: 64,
         zIndex: (theme) => theme.zIndex.appBar,

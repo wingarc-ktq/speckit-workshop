@@ -21,6 +21,9 @@ export const AppHeader: React.FC<AppHeaderProps> = ({ onMenuToggle }) => {
       position="fixed"
       elevation={0}
       color="inherit"
+      sx={{
+        position: { xs: 'static', md: 'fixed' },
+      }}
     >
       <Toolbar>
         {/* Left Side */}

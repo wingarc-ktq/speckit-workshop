@@ -28,11 +28,13 @@ export const PaginationControls: React.FC<PaginationControlsProps> = ({
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
-        p: 2,
+        flexDirection: { xs: 'column', sm: 'row' },
+        gap: { xs: 1.5, sm: 0 },
+        p: { xs: 1.5, md: 2 },
         borderTop: '1px solid #e5e7eb',
       }}
     >
-      <Typography variant="body2" color="text.secondary">
+      <Typography variant="body2" color="text.secondary" sx={{ fontSize: { xs: '0.75rem', md: '0.875rem' } }}>
         {startItem}-{endItem} / {total}件
       </Typography>
       <Pagination
@@ -41,6 +43,9 @@ export const PaginationControls: React.FC<PaginationControlsProps> = ({
         onChange={(_, value) => onPageChange(value)}
         color="primary"
         shape="rounded"
+        size="small"
+        siblingCount={{ xs: 0, sm: 1 }}
+        boundaryCount={{ xs: 1, sm: 1 }}
       />
     </Box>
   );

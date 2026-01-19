@@ -112,10 +112,25 @@ export const FileUploadDialog: React.FC<FileUploadDialogProps> = ({ open, onClos
   const hasUploaded = Object.keys(uploadStatus).length > 0;
 
   return (
-    <Dialog open={open} onClose={handleClose} maxWidth="md" fullWidth>
+    <Dialog
+      open={open}
+      onClose={handleClose}
+      maxWidth="md"
+      fullWidth
+      fullScreen={false}
+      PaperProps={{
+        sx: {
+          m: { xs: 2, sm: 3 },
+          maxHeight: { xs: 'calc(100% - 32px)', sm: 'calc(100% - 64px)' },
+        },
+      }}
+    >
       <DialogTitle>
         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <Typography variant="h6" sx={{ fontWeight: 'bold', color: '#7e2a0c' }}>
+          <Typography
+            variant="h6"
+            sx={{ fontWeight: 'bold', color: '#7e2a0c', fontSize: { xs: '1.1rem', md: '1.25rem' } }}
+          >
             おたよりを追加
           </Typography>
           <IconButton onClick={handleClose} disabled={isUploading}>
@@ -125,7 +140,7 @@ export const FileUploadDialog: React.FC<FileUploadDialogProps> = ({ open, onClos
       </DialogTitle>
 
       <DialogContent>
-        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: { xs: 2, md: 3 } }}>
           {/* バリデーションエラー表示 */}
           {validationErrors.length > 0 && (
             <Box

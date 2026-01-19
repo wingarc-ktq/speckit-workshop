@@ -72,15 +72,32 @@ export const FileDetailDialog = ({
       }}
     >
       {/* ヘッダー */}
-      <DialogTitle sx={{ display: 'flex', alignItems: 'center', gap: 2, pr: 1 }}>
-        <Box sx={{ flex: 1, overflow: 'hidden', textOverflow: 'ellipsis' }}>
+      <DialogTitle
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: { xs: 1, md: 2 },
+          pr: 1,
+          flexWrap: { xs: 'wrap', lg: 'nowrap' },
+          pb: { xs: 1, md: 2 },
+        }}
+      >
+        <Box
+          sx={{
+            flex: { xs: '1 1 100%', lg: 1 },
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            fontSize: { xs: '1rem', md: '1.25rem' },
+          }}
+        >
           {file?.name ?? 'ファイル詳細'}
         </Box>
         <Button
           variant="outlined"
-          startIcon={<EditIcon />}
+          startIcon={<EditIcon sx={{ display: { xs: 'none', sm: 'block' } }} />}
           onClick={() => setEditOpen(true)}
           disabled={!file}
+          size={fullScreen ? 'small' : 'medium'}
           sx={{ flexShrink: 0 }}
         >
           編集
@@ -88,27 +105,25 @@ export const FileDetailDialog = ({
         <Button
           variant="outlined"
           color="error"
-          startIcon={<DeleteIcon />}
+          startIcon={<DeleteIcon sx={{ display: { xs: 'none', sm: 'block' } }} />}
           onClick={() => setDeleteOpen(true)}
           disabled={!file}
+          size={fullScreen ? 'small' : 'medium'}
           sx={{ flexShrink: 0 }}
         >
           削除
         </Button>
         <Button
           variant="contained"
-          startIcon={<DownloadIcon />}
+          startIcon={<DownloadIcon sx={{ display: { xs: 'none', sm: 'block' } }} />}
           onClick={handleDownload}
           disabled={!file}
+          size={fullScreen ? 'small' : 'medium'}
           sx={{ flexShrink: 0 }}
         >
           ダウンロード
         </Button>
-        <IconButton
-          aria-label="close"
-          onClick={onClose}
-          sx={{ flexShrink: 0 }}
-        >
+        <IconButton aria-label="close" onClick={onClose} sx={{ flexShrink: 0 }}>
           <CloseIcon />
         </IconButton>
       </DialogTitle>
