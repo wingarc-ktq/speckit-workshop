@@ -61,7 +61,7 @@ export function validateFiles(
   }
 
   // 各ファイルを検証
-  files.forEach((file, index) => {
+  files.forEach((file) => {
     // ファイルタイプチェック
     if (options.allowedTypes && !validateFileType(file, options.allowedTypes)) {
       errors.push(`${file.name}: サポートされていないファイル形式です`);

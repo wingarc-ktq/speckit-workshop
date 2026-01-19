@@ -13,12 +13,13 @@ import IconButton from '@mui/material/IconButton';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 
-import type { TagInfo } from '@/adapters/generated/files';
+import type { TagInfo } from '@/domain/models/files';
 import { useFileUpload } from '@/presentations/hooks/mutations/useFileUpload';
 import { useTags } from '@/presentations/hooks/queries/useTags';
 
 import { FileUploadDropzone } from './FileUploadDropzone';
 import { FileUploadProgress } from './FileUploadProgress';
+import { CreateTagDialog } from '../TagManagement/CreateTagDialog';
 
 interface FileUploadDialogProps {
   open: boolean;
@@ -29,6 +30,7 @@ export const FileUploadDialog: React.FC<FileUploadDialogProps> = ({ open, onClos
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [description, setDescription] = useState('');
   const [selectedTags, setSelectedTags] = useState<TagInfo[]>([]);
+  const [createTagOpen, setCreateTagOpen] = useState(false);
   const [validationErrors, setValidationErrors] = useState<string[]>([]);
   const [uploadProgress, setUploadProgress] = useState<Record<string, number>>({});
   const [uploadStatus, setUploadStatus] = useState<
@@ -95,10 +97,15 @@ export const FileUploadDialog: React.FC<FileUploadDialogProps> = ({ open, onClos
     setSelectedFiles([]);
     setDescription('');
     setSelectedTags([]);
+    setCreateTagOpen(false);
     setValidationErrors([]);
     setUploadProgress({});
     setUploadStatus({});
     onClose();
+  };
+
+  const handleTagCreated = (tag: TagInfo) => {
+    setSelectedTags((prev) => (prev.some((t) => t.id === tag.id) ? prev : [...prev, tag]));
   };
 
   const isUploading = Object.values(uploadStatus).some((status) => status === 'uploading');
@@ -182,38 +189,54 @@ export const FileUploadDialog: React.FC<FileUploadDialogProps> = ({ open, onClos
 
           {/* タグ選択 */}
           {!hasUploaded && (
-            <Autocomplete
-              multiple
-              options={tagsData?.tags || []}
-              getOptionLabel={(option) => option.name}
-              value={selectedTags}
-              onChange={(_, newValue) => setSelectedTags(newValue)}
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  label="タグ"
-                  placeholder="タグを選択..."
-                  sx={{
-                    '& .MuiOutlinedInput-root': {
-                      '& fieldset': { borderColor: '#ffd6a7' },
-                    },
-                  }}
-                />
-              )}
-              renderTags={(value, getTagProps) =>
-                value.map((option, index) => (
-                  <Chip
-                    label={option.name}
-                    {...getTagProps({ index })}
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <Typography variant="subtitle2" sx={{ fontWeight: 'bold', color: '#7e2a0c' }}>
+                  タグ
+                </Typography>
+                <Button
+                  size="small"
+                  onClick={() => setCreateTagOpen(true)}
+                  disabled={isUploading}
+                  sx={{ color: '#ff6900', fontWeight: 'bold' }}
+                >
+                  ＋ タグを作成
+                </Button>
+              </Box>
+
+              <Autocomplete
+                multiple
+                options={tagsData?.tags || []}
+                getOptionLabel={(option) => option.name}
+                value={selectedTags}
+                onChange={(_, newValue) => setSelectedTags(newValue)}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label={undefined}
+                    placeholder="タグを選択..."
                     sx={{
-                      bgcolor: '#e0e7ff',
-                      color: '#4338ca',
-                      fontWeight: 'bold',
+                      '& .MuiOutlinedInput-root': {
+                        '& fieldset': { borderColor: '#ffd6a7' },
+                      },
                     }}
                   />
-                ))
-              }
-            />
+                )}
+                renderTags={(value, getTagProps) =>
+                  value.map((option, index) => (
+                    <Chip
+                      label={option.name}
+                      {...getTagProps({ index })}
+                      sx={{
+                        bgcolor: '#e0e7ff',
+                        color: '#4338ca',
+                        fontWeight: 'bold',
+                      }}
+                    />
+                  ))
+                }
+              />
+            </Box>
           )}
         </Box>
       </DialogContent>
@@ -235,6 +258,12 @@ export const FileUploadDialog: React.FC<FileUploadDialogProps> = ({ open, onClos
           {isUploading ? 'アップロード中...' : 'アップロード'}
         </Button>
       </DialogActions>
+
+      <CreateTagDialog
+        open={createTagOpen}
+        onClose={() => setCreateTagOpen(false)}
+        onCreated={handleTagCreated}
+      />
     </Dialog>
   );
 };

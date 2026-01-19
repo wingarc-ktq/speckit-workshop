@@ -4,7 +4,7 @@ import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 
-import type { TagColor } from '@/adapters/generated/files';
+import type { TagColor } from '@/domain/models/files';
 
 interface TagColorPickerProps {
   value: TagColor;
@@ -44,23 +44,21 @@ export const TagColorPicker = ({ value, onChange }: TagColorPickerProps) => {
       <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
         {COLOR_OPTIONS.map((option) => {
           const isSelected = value === option.value;
-          return (
-            <Chip
-              key={option.value}
-              label={option.label}
-              onClick={() => onChange(option.value)}
-              icon={isSelected ? <CheckIcon fontSize="small" /> : undefined}
-              sx={{
+          const chipProps = {
+            label: option.label,
+            onClick: () => onChange(option.value),
+            icon: isSelected ? <CheckIcon fontSize="small" /> : undefined,
+            sx: {
+              bgcolor: COLOR_MAP[option.value],
+              color: 'white',
+              fontWeight: isSelected ? 'bold' : 'normal',
+              '&:hover': {
                 bgcolor: COLOR_MAP[option.value],
-                color: 'white',
-                fontWeight: isSelected ? 'bold' : 'normal',
-                '&:hover': {
-                  bgcolor: COLOR_MAP[option.value],
-                  opacity: 0.8,
-                },
-              }}
-            />
-          );
+                opacity: 0.8,
+              },
+            },
+          };
+          return <Chip key={option.value} {...chipProps} />;
         })}
       </Stack>
     </Box>

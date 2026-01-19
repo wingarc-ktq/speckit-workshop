@@ -45,3 +45,21 @@ export const RepositoryTestWrapper: React.FC<{
     </QueryClientProvider>
   );
 };
+
+export const createTestWrapper = (options?: {
+  override?: OverrideRepositories;
+  hasSuspense?: boolean;
+  queryClient?: QueryClient;
+}) => {
+  const Wrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => (
+    <RepositoryTestWrapper
+      override={options?.override}
+      hasSuspense={options?.hasSuspense}
+      queryClient={options?.queryClient}
+    >
+      {children}
+    </RepositoryTestWrapper>
+  );
+
+  return Wrapper;
+};

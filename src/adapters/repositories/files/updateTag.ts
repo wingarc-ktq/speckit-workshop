@@ -1,11 +1,11 @@
 import '@/adapters/axios';
 
 import { updateTag as updateTagApi } from '@/adapters/generated/files';
-import type { TagResponse } from '@/domain/models/files';
+import type { TagColor, TagResponse } from '@/domain/models/files';
 
 export type UpdateTagData = {
   name?: string;
-  color?: string;
+  color?: TagColor;
 };
 
 export type UpdateTag = (id: string, data: UpdateTagData) => Promise<TagResponse>;
@@ -21,7 +21,7 @@ export const updateTag: UpdateTag = async (
   data: UpdateTagData
 ): Promise<TagResponse> => {
   try {
-    const response = await updateTagApi(id, data);
+    const response = await updateTagApi(id, { name: data.name, color: data.color });
 
     return {
       tag: response.tag,

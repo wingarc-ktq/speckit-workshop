@@ -1,11 +1,11 @@
 import '@/adapters/axios';
 
 import { createTag as createTagApi } from '@/adapters/generated/files';
-import type { TagResponse } from '@/domain/models/files';
+import type { TagColor, TagResponse } from '@/domain/models/files';
 
 export type CreateTagData = {
   name: string;
-  color: string;
+  color: TagColor;
 };
 
 export type CreateTag = (data: CreateTagData) => Promise<TagResponse>;

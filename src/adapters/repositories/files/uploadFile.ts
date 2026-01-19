@@ -1,6 +1,4 @@
-import '@/adapters/axios';
-
-import { uploadFile as uploadFileApi } from '@/adapters/generated/files';
+import { customInstance } from '@/adapters/axios';
 import type { FileResponse, UploadFileData } from '@/domain/models/files';
 
 export type UploadFile = (data: UploadFileData) => Promise<FileResponse>;
@@ -12,23 +10,24 @@ export type UploadFile = (data: UploadFileData) => Promise<FileResponse>;
  */
 export const uploadFile: UploadFile = async (data: UploadFileData): Promise<FileResponse> => {
   try {
-    const response = await uploadFileApi({
-      file: data.file,
-      description: data.description,
+    // FormDataを直接作成してtagIdsを含める
+    const formData = new FormData();
+    formData.append('file', data.file);
+    if (data.description) {
+      formData.append('description', data.description);
+    }
+    if (data.tagIds && data.tagIds.length > 0) {
+      formData.append('tagIds', data.tagIds.join(','));
+    }
+
+    const response = await customInstance<FileResponse>({
+      url: '/files',
+      method: 'POST',
+      headers: { 'Content-Type': 'multipart/form-data' },
+      data: formData,
     });
 
-    return {
-      file: {
-        id: response.file.id,
-        name: response.file.name,
-        size: response.file.size,
-        mimeType: response.file.mimeType,
-        description: response.file.description,
-        uploadedAt: response.file.uploadedAt,
-        downloadUrl: response.file.downloadUrl,
-        tagIds: response.file.tagIds,
-      },
-    };
+    return response;
   } catch (error) {
     // TODO: エラーハンドリング
     throw error;

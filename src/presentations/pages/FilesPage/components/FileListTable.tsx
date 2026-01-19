@@ -13,7 +13,9 @@ import Typography from '@mui/material/Typography';
 
 import type { FileInfo } from '@/adapters/generated/files';
 import { formatFileSize } from '@/domain/models/files/FileInfo';
+import { TAG_COLOR_PALETTE } from '@/domain/models/files/TagInfo';
 import { FileIcon } from '@/presentations/components';
+import { useTags } from '@/presentations/hooks/queries/useTags';
 
 interface FileListTableProps {
   files: FileInfo[];
@@ -21,19 +23,9 @@ interface FileListTableProps {
   onFileClick?: (fileId: string) => void;
 }
 
-const TAG_COLORS: Record<string, string> = {
-  '成績表': '#2b7fff',
-  '学校行事': '#f6339a',
-  '保護者会': '#ad46ff',
-  '重要': '#fb2c36',
-  '宿題': '#f0b100',
-  '健康・安全': '#00c950',
-  '2024年度': '#615fff',
-  'お知らせ': '#ff6900',
-  '自動割り当て': '#00bba7',
-};
-
 export const FileListTable: React.FC<FileListTableProps> = ({ files, isLoading, onFileClick }) => {
+  const { data: tagsData } = useTags();
+  const tags = tagsData?.tags ?? [];
   if (isLoading) {
     return (
       <Box sx={{ display: 'flex', justifyContent: 'center', p: 8 }}>
@@ -100,17 +92,18 @@ export const FileListTable: React.FC<FileListTableProps> = ({ files, isLoading, 
             </TableCell>
             <TableCell>
               <Box sx={{ display: 'flex', gap: 0.75, flexWrap: 'wrap' }}>
-                {file.tagIds?.map((tagId, index) => {
-                  // tagIdをタグ名に変換する必要がありますが、ここではモックとして表示
-                  const tagName = `タグ${index + 1}`;
-                  const tagColor = TAG_COLORS[tagName] || '#d1d5dc';
+                {file.tagIds?.map((tagId) => {
+                  const tag = tags.find((t) => t.id === tagId);
+                  if (!tag) return null;
+
+                  const palette = TAG_COLOR_PALETTE[tag.color];
                   return (
                     <Chip
                       key={tagId}
-                      label={tagName}
+                      label={tag.name}
                       size="small"
                       sx={{
-                        bgcolor: tagColor,
+                        bgcolor: palette.main,
                         color: 'white',
                         fontWeight: 'bold',
                         fontSize: 12,

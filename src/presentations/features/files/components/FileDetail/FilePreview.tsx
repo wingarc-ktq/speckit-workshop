@@ -22,7 +22,6 @@ interface FilePreviewProps {
 export const FilePreview = ({ file }: FilePreviewProps) => {
   const { mimeType, downloadUrl, name } = file;
   const [numPages, setNumPages] = useState<number | null>(null);
-  const [pageNumber, setPageNumber] = useState(1);
 
   // PDFファイルの場合
   if (mimeType === 'application/pdf') {

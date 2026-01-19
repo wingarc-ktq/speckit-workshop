@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import AddIcon from '@mui/icons-material/Add';
 import FolderIcon from '@mui/icons-material/Folder';
 import GridViewIcon from '@mui/icons-material/GridView';
+import LabelIcon from '@mui/icons-material/Label';
 import TableRowsIcon from '@mui/icons-material/TableRows';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -18,6 +19,7 @@ import { FileSearchBar } from '@/presentations/features/files/components/FileSea
 import { FileSearchResults } from '@/presentations/features/files/components/FileSearch/FileSearchResults';
 import { FileUploadDialog } from '@/presentations/features/files/components/FileUpload/FileUploadDialog';
 import { FileDetailDialog } from '@/presentations/features/files/components/FileDetail/FileDetailDialog';
+import { TagManagementDialog } from '@/presentations/features/files/components/TagManagement/TagManagementDialog';
 
 import { useDebounce } from '../../hooks/useDebounce';
 import { useFiles } from '../../hooks/queries/useFiles';
@@ -40,6 +42,7 @@ export const FilesPage: React.FC = () => {
   const [page, setPage] = useState(1);
   const [uploadDialogOpen, setUploadDialogOpen] = useState(false);
   const [selectedFileId, setSelectedFileId] = useState<string | null>(null);
+  const [tagManagementOpen, setTagManagementOpen] = useState(false);
 
   // デバウンス処理を適用した検索クエリ
   const debouncedSearchQuery = useDebounce(searchQuery, 300);
@@ -94,20 +97,40 @@ export const FilesPage: React.FC = () => {
               {filesData?.total || 0}件のおたより
             </Typography>
           </Box>
-          <Button
-            variant="contained"
-            onClick={() => setUploadDialogOpen(true)}
-            startIcon={<AddIcon />}
-            sx={{
-              bgcolor: '#ff6900',
-              '&:hover': { bgcolor: '#e65f00' },
-              borderRadius: 2,
-              textTransform: 'none',
-              fontWeight: 'bold',
-            }}
-          >
-            おたよりを追加
-          </Button>
+          <Box sx={{ display: 'flex', gap: 1 }}>
+            <Button
+              variant="outlined"
+              onClick={() => setTagManagementOpen(true)}
+              startIcon={<LabelIcon />}
+              sx={{
+                borderColor: '#ffd6a7',
+                color: '#7e2a0c',
+                borderRadius: 2,
+                textTransform: 'none',
+                fontWeight: 'bold',
+                '&:hover': {
+                  borderColor: '#ff6900',
+                  bgcolor: '#fff7ed',
+                },
+              }}
+            >
+              タグ管理
+            </Button>
+            <Button
+              variant="contained"
+              onClick={() => setUploadDialogOpen(true)}
+              startIcon={<AddIcon />}
+              sx={{
+                bgcolor: '#ff6900',
+                '&:hover': { bgcolor: '#e65f00' },
+                borderRadius: 2,
+                textTransform: 'none',
+                fontWeight: 'bold',
+              }}
+            >
+              おたよりを追加
+            </Button>
+          </Box>
         </Box>
       </Paper>
 
@@ -244,6 +267,12 @@ export const FilesPage: React.FC = () => {
 
       {/* アップロードダイアログ */}
       <FileUploadDialog open={uploadDialogOpen} onClose={() => setUploadDialogOpen(false)} />
+
+      {/* タグ管理ダイアログ */}
+      <TagManagementDialog
+        open={tagManagementOpen}
+        onClose={() => setTagManagementOpen(false)}
+      />
 
       {/* ファイル詳細ダイアログ */}
       <FileDetailDialog

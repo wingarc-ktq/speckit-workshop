@@ -1,10 +1,10 @@
-import { useState } from 'react';
+import { useState, type ChangeEvent, type FormEvent } from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 
-import type { TagColor } from '@/adapters/generated/files';
+import type { TagColor } from '@/domain/models/files';
 import { TagColorPicker } from './TagColorPicker';
 
 interface TagFormProps {
@@ -41,7 +41,7 @@ export const TagForm = ({
     return undefined;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
 
     const nameError = validateName(name);
@@ -54,7 +54,7 @@ export const TagForm = ({
     onSubmit({ name: name.trim(), color });
   };
 
-  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleNameChange = (e: ChangeEvent<HTMLInputElement>) => {
     const newName = e.target.value;
     setName(newName);
     

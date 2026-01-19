@@ -8,13 +8,23 @@ import Typography from '@mui/material/Typography';
 
 import type { FileInfo } from '@/adapters/generated/files';
 import { formatFileSize } from '@/domain/models/files/FileInfo';
+import { TAG_COLOR_PALETTE } from '@/domain/models/files/TagInfo';
 import { FileIcon } from '@/presentations/components';
+import { useTags } from '@/presentations/hooks/queries/useTags';
 
 interface FileListItemProps {
   file: FileInfo;
 }
 
 export const FileListItem: React.FC<FileListItemProps> = ({ file }) => {
+  const { data: tagsData } = useTags();
+  const tags = tagsData?.tags ?? [];
+
+  // タグIDから実際のタグ情報を取得
+  const fileTags = file.tagIds
+    .map((tagId) => tags.find((tag) => tag.id === tagId))
+    .filter((tag): tag is NonNullable<typeof tag> => tag !== undefined);
+
   return (
     <Card
       elevation={0}
@@ -70,25 +80,28 @@ export const FileListItem: React.FC<FileListItemProps> = ({ file }) => {
           </Typography>
 
           {/* タグ */}
-          {file.tagIds && file.tagIds.length > 0 && (
+          {fileTags.length > 0 && (
             <Box sx={{ display: 'flex', gap: 0.5, flexWrap: 'wrap', justifyContent: 'center' }}>
-              {file.tagIds.slice(0, 3).map((tagId, index) => (
+              {fileTags.slice(0, 3).map((tag) => {
+                const palette = TAG_COLOR_PALETTE[tag.color];
+                return (
+                  <Chip
+                    key={tag.id}
+                    label={tag.name}
+                    size="small"
+                    sx={{
+                      bgcolor: palette.main,
+                      color: 'white',
+                      fontWeight: 'bold',
+                      fontSize: 11,
+                      height: 20,
+                    }}
+                  />
+                );
+              })}
+              {fileTags.length > 3 && (
                 <Chip
-                  key={tagId}
-                  label={`タグ${index + 1}`}
-                  size="small"
-                  sx={{
-                    bgcolor: '#e0e7ff',
-                    color: '#4338ca',
-                    fontWeight: 'bold',
-                    fontSize: 11,
-                    height: 20,
-                  }}
-                />
-              ))}
-              {file.tagIds.length > 3 && (
-                <Chip
-                  label={`+${file.tagIds.length - 3}`}
+                  label={`+${fileTags.length - 3}`}
                   size="small"
                   sx={{
                     bgcolor: '#f3f4f6',
