@@ -37,18 +37,18 @@
 
 **⚠️ CRITICAL**: このフェーズ完了まで、ユーザーストーリータスク開始不可
 
-- [ ] T008 [P] Define Document model interface in `src/domain/models/document/Document.ts`: id, fileName, fileSize, fileFormat (enum), uploadedAt, updatedAt, uploadedByUserId, tags (Tag[]), isDeleted, deletedAt
-- [ ] T009 [P] Define Tag model interface in `src/domain/models/tag/Tag.ts`: id, name, color (semantic: primary, secondary, error, success, warning, info), createdAt, updatedAt, createdByUserId
-- [ ] T010 [P] Define SearchCondition model in `src/domain/models/search/SearchCondition.ts`: searchKeyword, tagIds, dateRangeStart, dateRangeEnd
-- [ ] T011 Create Orval-generated API client code: run Orval generator to create `src/adapters/generated/files.ts` from `schema/files/openapi.yaml` for Document and Tag CRUD operations
-- [ ] T012 [P] Setup DocumentRepository interface in `src/adapters/repositories/DocumentRepository.ts` with methods: getDocuments(filters), uploadDocument(file, tags), getDocumentById(id), updateDocument(id, data), deleteDocument(id), restoreDocument(id)
-- [ ] T013 [P] Setup TagRepository interface in `src/adapters/repositories/TagRepository.ts` with methods: getTags(), createTag(name, color), updateTag(id, name, color), deleteTag(id)
-- [ ] T014 Create TanStack Query hooks setup in `src/presentations/hooks/queries/useDocuments.ts`: useGetDocuments(filters, page) hook using @tanstack/react-query
-- [ ] T015 [P] Create composition file in `src/adapters/repositories/index.ts` to export all repository classes
-- [ ] T016 [P] Create MSW document list handler in `src/adapters/mocks/handlers/fileHandlers.ts` handling GET /files with pagination, search, tag filtering
-- [ ] T017 [P] Create MSW upload handler in `src/adapters/mocks/handlers/fileHandlers.ts` handling POST /files with file validation (size, format)
-- [ ] T018 Add DocumentManagementPage route in `src/app/router/routes.tsx` at path `/documents` with ProtectedRoute wrapper
-- [ ] T019 [P] Setup error handling utilities in `src/domain/errors/DocumentException.ts`, `src/domain/errors/FileUploadException.ts` for file-specific errors
+- [x] T008 [P] Define Document model interface in `src/domain/models/document/Document.ts`: id, fileName, fileSize, fileFormat (enum), uploadedAt, updatedAt, uploadedByUserId, tags (Tag[]), isDeleted, deletedAt
+- [x] T009 [P] Define Tag model interface in `src/domain/models/tag/Tag.ts`: id, name, color (semantic: primary, secondary, error, success, warning, info), createdAt, updatedAt, createdByUserId
+- [x] T010 [P] Define SearchCondition model in `src/domain/models/search/SearchCondition.ts`: searchKeyword, tagIds, dateRangeStart, dateRangeEnd
+- [x] T011 Create Orval-generated API client code: run Orval generator to create `src/adapters/generated/files.ts` from `schema/files/openapi.yaml` for Document and Tag CRUD operations
+- [x] T012 [P] Setup DocumentRepository interface in `src/adapters/repositories/DocumentRepository.ts` with methods: getDocuments(filters), uploadDocument(file, tags), getDocumentById(id), updateDocument(id, data), deleteDocument(id), restoreDocument(id)
+- [x] T013 [P] Setup TagRepository interface in `src/adapters/repositories/TagRepository.ts` with methods: getTags(), createTag(name, color), updateTag(id, name, color), deleteTag(id)
+- [x] T014 Create TanStack Query hooks setup in `src/presentations/hooks/queries/useDocuments.ts`: useGetDocuments(filters, page) hook using @tanstack/react-query
+- [x] T015 [P] Create composition file in `src/adapters/repositories/index.ts` to export all repository classes
+- [x] T016 [P] Create MSW document list handler in `src/adapters/mocks/handlers/fileHandlers.ts` handling GET /files with pagination, search, tag filtering
+- [x] T017 [P] Create MSW upload handler in `src/adapters/mocks/handlers/fileHandlers.ts` handling POST /files with file validation (size, format)
+- [x] T018 Add DocumentManagementPage route in `src/app/router/routes.tsx` at path `/documents` with ProtectedRoute wrapper
+- [x] T019 [P] Setup error handling utilities in `src/domain/errors/DocumentException.ts`, `src/domain/errors/FileUploadException.ts` for file-specific errors
 
 **Checkpoint**: 基盤準備完了。以下のUSタスク並列実行可能。
 
