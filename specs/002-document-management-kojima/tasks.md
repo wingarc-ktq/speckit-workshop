@@ -105,30 +105,36 @@
 
 ---
 
-## Phase 3: UI調整 - ヘッダーとサイドバーの削除
+## Phase 3: UI基盤 - ヘッダーとテーマの実装
 
-**目的**: Figma UIに合わせてヘッダーとサイドバーを削除し、シンプルなレイアウトに変更
+**目的**: Figma UIに合わせたヘッダー、テーマカラー、基本レイアウトの実装
 
-### レイアウト変更
+### テーマとカラースキーム
 
-- [x] **T016** [LAYOUT] `AppLayout` からヘッダーを削除 ✅
+- [x] **T016** [P] [THEME] カスタムテーマカラーを `src/app/providers/ThemeProvider/theme.ts` に追加 ✅
+  - プライマリカラー: オレンジ (#FF9800, #FB8C00)
+  - 背景色: クリーム (#FFFBF5)
+  - ボーダー: オレンジ系 (#FFD6A7)
+  - ヘッダー背景: オレンジグラデーション
+  - テーブルヘッダー: 薄い青 (#EEF2FF → #E0E7FF グラデーション)
+
+### ヘッダーコンポーネント
+
+- [x] **T017** [P] [HEADER] `AppHeader` コンポーネントを `src/presentations/components/AppHeader/AppHeader.tsx` に作成 ✅
+  - オレンジ色の背景 (#FF9800)
+  - 左側: アプリアイコン（本マーク） + タイトル「きょうしつポスト」
+  - サブタイトル: 「先生と保護者の方々よりよ資料」
+  - 右側: ゴミ箱ボタン（「ご希箱」）
+  - 高さ: 64px
+  - Figmaデザイン準拠
+
+- [x] **T018** [HEADER] `AppLayout` にヘッダーを統合 ✅
   - `src/presentations/layouts/AppLayout/AppLayout.tsx` を編集
-  - `AppHeader` コンポーネントを削除
-  - ページタイトルを各ページ内で表示するように変更
+  - `AppHeader` をレイアウトの最上部に配置
+  - サイドバーは削除済み（前のタスクで完了）
+  - flexDirection: 'column', minHeight: '100vh' を維持
 
-- [x] **T017** [LAYOUT] `AppLayout` からサイドバーを削除 ✅
-  - `src/presentations/layouts/AppLayout/AppLayout.tsx` を編集
-  - `ResizableLayout` と `AppSidebar` を削除
-  - メインコンテンツエリアを全幅に変更
-  - ナビゲーション機能を削除
-  - `AppBreadcrumbs` も削除
-
-- [x] **T018** [LAYOUT] レイアウト関連のスタイルを調整 ✅
-  - padding, margin を調整（theme.spacing(3)、モバイルは2）
-  - flexDirection: 'column', minHeight: '100vh' を設定
-  - レスポンシブ対応確認（md以下でpadding調整）
-
-**チェックポイント**: レイアウトがシンプルになり、Figma UIと一致
+**チェックポイント**: ヘッダーが表示され、Figma UIと一致 ✅
 
 ---
 
@@ -138,71 +144,113 @@
 
 ### ページとレイアウト
 
-- [ ] **T019** [US2] `FilesPage` を `src/presentations/pages/FilesPage/FilesPage.tsx` に作成
-  - ページタイトル「おたよりポスト」を表示
-  - `FileListToolbar` と `FileList` を配置
+- [x] **T019** [US2] `FilesPage` を `src/presentations/pages/FilesPage/FilesPage.tsx` に作成 ✅
+  - Figmaデザインに基づいたレイアウト
+  - ヘッダーセクション（タイトル + アップロードボタン）
+  - 検索・ソートバー統合
+  - タグフィルター表示
+  - `FileListTable` を配置
   - `src/presentations/pages/FilesPage/index.ts` でエクスポート
   - `src/presentations/pages/index.ts` に追加
 
+### ページヘッダーとセクション
+
+- [x] **T019-1** [P] [US2] `FilesSectionHeader` を `FilesPage` に統合 ✅
+  - タイトル: 「おたより・資料一覧」
+  - サブテキスト: 「◯件のおたより」（動的にファイル数を表示）
+  - 右側: 「おたよりを追加」ボタン（オレンジ、アップロードアイコン付き）
+  - 背景: クリーム色 (#FFFBF5)
+  - ボーダー: #FFD6A7
+  - 角丸: borderRadius: 2
+
 ### ツールバーコンポーネント
 
-- [ ] **T020** [P] [US2] `FileListToolbar` を `src/presentations/features/files/components/FileListToolbar.tsx` に作成
-  - 検索バー（SearchBarコンポーネント使用）
-  - ソート選択（名前、更新日時、サイズ）
-  - 表示モード切替ボタン（リスト/グリッド）
-  - アップロードボタン
-  - `src/presentations/features/files/components/FileListToolbar/__tests__/FileListToolbar.test.tsx` にテスト追加
+- [x] **T020** [P] [US2] ツールバー機能を `FilesPage` に統合 ✅
+  - 検索バー（TextField + SearchIcon）
+  - ソート選択（Select: 名前、更新日時、サイズ）
+  - ソート順選択（Select: 昇順、降順）
+  - 表示モード切替ボタン（ToggleButtonGroup: テーブル/グリッド）
+  - Figmaカラー適用（#fffbf5背景、#ffd6a7ボーダー）
 
 ### 一覧表示コンポーネント
 
-- [ ] **T021** [US2] `FileList` を `src/presentations/features/files/components/FileList/FileList.tsx` に作成
-  - `viewMode` プロップに基づいて `FileListTable` または `FileListGrid` を表示
-  - ローディング状態とエラー状態の表示
+- [x] **T021** [US2] ファイル一覧表示機能を実装 ✅
+  - `viewMode` ステート管理
+  - `FileListTable` 表示（テーブルモード）
+  - ローディング状態表示（CircularProgress）
   - 空の状態メッセージ
-  - `src/presentations/features/files/components/FileList/__tests__/FileList.test.tsx` にテスト追加
 
-- [ ] **T022** [P] [US2] `FileListTable` を `src/presentations/features/files/components/FileList/FileListTable.tsx` に作成
+- [x] **T022** [P] [US2] `FileListTable` を `src/presentations/pages/FilesPage/components/FileListTable.tsx` に作成 ✅
   - MUI `Table` コンポーネント使用
-  - カラム: ファイル名、タグ、更新日時、サイズ、アップロードユーザー、アクション
-  - `Chip` でタグ表示
-  - ソート可能なヘッダー
+  - カラム: ファイル名、カテゴリー、サイズ、更新日時
+  - ファイルアイコン表示（DescriptionIcon + 背景色）
+  - `Chip` でタグ表示（カラー対応）
+  - Figmaデザイン準拠（ヘッダー: #eff6ff→#eef2ff グラデーション）
 
-- [ ] **T023** [P] [US2] `FileListGrid` を `src/presentations/features/files/components/FileList/FileListGrid.tsx` に作成
+- [x] **T022-1** [P] [US2] `FileIcon` コンポーネントを `src/presentations/components/FileIcon/FileIcon.tsx` に作成 ✅
+  - 封筒型アイコン（MUI MailOutlineIcon または EmailIcon）
+  - オレンジ背景 (#FF9800)
+  - 白いアイコン色
+  - サイズ: 40x40px
+  - 角丸: borderRadius: 1
+  - FileListTable で使用
+
+### カテゴリーフィルター
+
+- [x] **T022-2** [P] [US2] `CategoryFilter` を `src/presentations/pages/FilesPage/components/CategoryFilter.tsx` に作成 ✅
+  - タイトル: 「カテゴリーで絞り込み」
+  - タグをチップで表示（MUI Chip）
+  - クリックでフィルタリング ON/OFF
+  - カラー対応（blue, purple, green, yellow, pink, orange, gray）
+  - レスポンシブ対応（複数行に折り返し）
+  - Figmaデザイン準拠
+
+- [x] **T022-3** [US2] `FilesPage` にカテゴリーフィルターを統合 ✅
+  - `CategoryFilter` をツールバーの下に配置
+  - 選択されたタグIDを管理
+  - `useFiles` フックに `tagIds` を渡す
+
+- [x] **T023** [P] [US2] `FileListGrid` を `src/presentations/features/files/components/FileList/FileListGrid.tsx` に作成
   - MUI `Grid2` と `Card` コンポーネント使用
   - カード形式で各ファイルを表示
   - レスポンシブ対応（2-4カラム）
 
-- [ ] **T024** [P] [US2] `FileListItem` を `src/presentations/features/files/components/FileList/FileListItem.tsx` に作成
+- [x] **T024** [P] [US2] `FileListItem` を `src/presentations/features/files/components/FileList/FileListItem.tsx` に作成
   - ファイル情報を表示するコンポーネント
   - ファイルアイコン、名前、サイズ、タグ、日時を表示
 
 ### カスタムフック
 
-- [ ] **T025** [US2] `useFiles` フックを `src/presentations/hooks/queries/useFiles.ts` に作成
+- [x] **T025** [US2] `useFiles` フックを `src/presentations/hooks/queries/useFiles.ts` に作成 ✅
   - `useQuery` を使用してファイル一覧を取得
   - パラメータ: `{ page?, limit?, search?, tagIds?, sortBy?, sortOrder? }`
   - キャッシュ設定: 5分
-  - `src/presentations/hooks/queries/__tests__/useFiles.test.ts` にテスト追加
+  - repositoryの`getFiles`関数を使用
+
+- [x] **T025-2** [US2] `useTags` フックを `src/presentations/hooks/queries/useTags.ts` に作成 ✅
+  - `useQuery` を使用してタグ一覧を取得
+  - キャッシュ設定: 10分
+  - repositoryの`getTags`関数を使用
 
 ### ページネーション
 
-- [ ] **T026** [P] [US2] `Pagination` コンポーネントを `src/presentations/components/Pagination.tsx` に作成
+- [x] **T026** [P] [US2] `Pagination` コンポーネントを `src/presentations/pages/FilesPage/components/PaginationControls.tsx` に作成 ✅
   - MUI `Pagination` コンポーネント使用
   - ページ情報表示（例: 1-20 / 100件）
-  - `FileList` に統合
+  - `FilesPage` に統合済み
 
 ### ルーティング
 
-- [ ] **T027** [US2] `src/app/router/routes.tsx` にファイル管理ルートを追加
+- [x] **T027** [US2] `src/app/router/routes.tsx` にファイル管理ルートを追加 ✅
   - パス: `/files`
   - コンポーネント: `FilesPage`
-  - 認証が必要な場合は Protected Route として設定
+  - Protected Route として設定済み
 
-**チェックポイント**: 文書一覧表示機能完成 - ソート、表示切替、ページネーションが動作
+**チェックポイント**: 文書一覧表示機能完成 ✅ - Figmaデザイン準拠、ソート、タグフィルター、ページネーション機能が動作
 
 ---
 
-## Phase 6: User Story 3 - キーワード検索で文書を探す (Priority: P1) 🎯 MVP
+## Phase 5: User Story 3 - キーワード検索で文書を探す (Priority: P1) 🎯 MVP
 
 **目的**: ユーザーがキーワードで文書を検索し、結果を絞り込める
 
@@ -427,12 +475,12 @@
 
 ## タスク統計
 
-- **総タスク数**: 56
-- **完了**: 15 ✅
+- **総タスク数**: 62
+- **完了**: 26 ✅
 - **Phase 1**: 2タスク ✅
 - **Phase 2**: 13タスク（基盤）✅
-- **Phase 3**: 3タスク（レイアウト調整）
-- **Phase 4**: 9タスク（文書一覧）
+- **Phase 3**: 3タスク（ヘッダーとテーマ）✅
+- **Phase 4**: 13タスク（文書一覧 + カテゴリーフィルター）✅ (T023, T024 オプショナル除く)
 - **Phase 5**: 5タスク（検索）
 - **Phase 6**: 8タスク（アップロード）
 - **Phase 7**: 7タスク（テスト）

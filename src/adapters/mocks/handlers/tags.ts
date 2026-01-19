@@ -68,7 +68,7 @@ const MOCK_TAGS: TagInfo[] = [
  */
 export const getTagsHandlers = () => {
   // タグ一覧取得
-  const getTags = http.get('*/tags', async () => {
+  const getTags = http.get('*/api/tags', async () => {
     await delay(500);
 
     const response: TagListResponse = {

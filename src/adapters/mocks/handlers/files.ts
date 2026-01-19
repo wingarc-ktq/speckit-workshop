@@ -223,7 +223,7 @@ const MOCK_FILES = generateMockFiles();
  */
 export const getFilesHandlers = () => {
   // ファイル一覧取得
-  const getFiles = http.get('*/files', async ({ request }) => {
+  const getFiles = http.get('*/api/files', async ({ request }) => {
     await delay(800);
 
     const url = new URL(request.url);
@@ -270,7 +270,7 @@ export const getFilesHandlers = () => {
   });
 
   // ファイルアップロード
-  const uploadFile = http.post('*/files', async ({ request }) => {
+  const uploadFile = http.post('*/api/files', async ({ request }) => {
     await delay(1500);
 
     const formData = await request.formData();
@@ -325,7 +325,7 @@ export const getFilesHandlers = () => {
   });
 
   // 個別ファイル取得
-  const getFile = http.get('*/files/:id', async ({ params }) => {
+  const getFile = http.get('*/api/files/:id', async ({ params }) => {
     await delay(500);
 
     const { id } = params;
