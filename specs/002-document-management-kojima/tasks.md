@@ -359,7 +359,288 @@
 
 ---
 
-## Phase 7: テスト実装
+## Phase 7: User Story 5 - 文書の詳細表示とダウンロード (Priority: P2)
+
+**目的**: ユーザーがファイルの詳細を確認し、ダウンロードできるようにする
+
+### ユニットテスト（Vitest）
+
+- [ ] **T041** [P] [TEST] `useFiles.test.ts` の実装
+  - 正常系: ファイル一覧取得成功
+  - 検索フィルタリング
+  - ソート動作
+  - エラーハンドリング
+
+- [ ] **T042** [P] [TEST] `useFileUpload.test.ts` の実装
+  - 正常系: ファイルアップロード成功
+  - バリデーションエラー
+  - ネットワークエラー
+  - 進捗状態の確認
+
+- [ ] **T043** [P] [TEST] `useFileSearch.test.ts` の実装
+  - デバウンス動作確認
+  - 検索クエリ変更
+  - 検索結果更新
+
+### コンポーネントテスト（React Testing Library）
+
+- [ ] **T044** [P] [TEST] `FileList.test.tsx` の実装
+  - テーブルビュー/グリッドビュー切替
+  - ローディング状態
+  - エラー状態
+  - 空の状態
+
+- [ ] **T045** [P] [TEST] `FileUploadDialog.test.tsx` の実装
+  - ダイアログ開閉
+  - ファイル選択
+  - タグ選択
+  - アップロード実行
+  - バリデーションエラー表示
+
+- [ ] **T046** [P] [TEST] `FileSearchBar.test.tsx` の実装
+  - MUI `Dialog` コンポーネント使用（fullScreen対応）
+  - ヘッダー: ファイル名、閉じるボタン、ダウンロードボタン
+  - コンテンツエリア: `FilePreview` と `FileMetadata` を配置
+
+- [ ] **T058** [P] [US5] `FilePreview` を `src/presentations/features/files/components/FileDetail/FilePreview.tsx` に作成
+  - PDFプレビュー: `<iframe>` または `<object>` タグでPDF表示
+  - 画像プレビュー: `<img>` タグで画像表示
+  - プレビュー不可のファイル: アイコンとメッセージ表示
+
+- [ ] **T059** [P] [US5] `FileMetadata` を `src/presentations/features/files/components/FileDetail/FileMetadata.tsx` に作成
+  - ファイル名、サイズ、MIMEタイプ表示
+  - アップロード日時表示
+  - 説明文表示
+  - タグ一覧表示（Chip）
+
+### カスタムフック
+
+- [ ] **T060** [US5] `useFileDetail` フックを `src/presentations/hooks/queries/useFileDetail.ts` に作成
+  - `useQuery` を使用して個別ファイル情報を取得
+  - キャッシュ設定: 10分
+  - repositoryの`getFile`関数を使用
+
+### ダウンロード機能
+
+- [ ] **T061** [P] [US5] ダウンロード関数を `src/domain/utils/fileDownload.ts` に作成
+  - `downloadFile(url: string, filename: string): void`
+  - ブラウザのダウンロード機能を使用
+
+### 統合
+
+- [ ] **T062** [US5] `FilesPage` および `FileListTable` に詳細表示機能を統合
+  - ファイル行クリックで `FileDetailDialog` を開く
+  - ダイアログの表示/非表示制御
+
+**チェックポイント**: 詳細表示とダウンロード機能完成 - PDFプレビュー、メタデータ表示、ダウンロードが動作
+
+---
+
+## Phase 8: User Story 6 - タグの作成と管理 (Priority: P2)
+
+**目的**: ユーザーが自由にタグを作成・編集・削除できるようにする
+
+### OpenAPI拡張
+
+- [ ] **T063** [FOUND] `schema/files/openapi.yaml` にタグ管理エンドポイントを追加
+  - `POST /api/v1/tags` - タグ作成
+  - `PUT /api/v1/tags/{id}` - タグ更新
+  - `DELETE /api/v1/tags/{id}` - タグ削除
+  - `pnpm run gen:api` で型とAPI関数を再生成
+
+### MSWハンドラー拡張
+
+- [ ] **T064** [P] [FOUND] `src/adapters/mocks/handlers/tags.ts` にタグCRUD操作を追加
+  - `createTag` ハンドラー: 新規タグ作成
+  - `updateTag` ハンドラー: タグ更新
+  - `deleteTag` ハンドラー: タグ削除（使用中の場合はエラー）
+  - モックデータをミュータブルに変更
+
+### リポジトリ拡張
+
+- [ ] **T065** [P] [FOUND] タグ管理リポジトリ関数を `src/adapters/repositories/files/` に作成
+  - `createTag(data: CreateTagData): Promise<TagResponse>`
+  - `updateTag(id: string, data: UpdateTagData): Promise<TagResponse>`
+  - `deleteTag(id: string): Promise<void>`
+
+### タグ管理UIコンポーネント
+
+- [ ] **T066** [US6] `TagManagementDialog` を `src/presentations/features/files/components/TagManagement/TagManagementDialog.tsx` に作成
+  - タグ一覧表示
+  - 「新規タグ作成」ボタン
+  - 各タグの編集・削除ボタン
+
+- [ ] **T067** [P] [US6] `TagForm` を `src/presentations/features/files/components/TagManagement/TagForm.tsx` に作成
+  - タグ名入力フィールド
+  - カラーピッカー（プリセット: blue, red, yellow, green, purple, orange, gray）
+  - 保存・キャンセルボタン
+  - バリデーション
+
+- [ ] **T068** [P] [US6] `TagColorPicker` を `src/presentations/features/files/components/TagManagement/TagColorPicker.tsx` に作成
+  - カラープリセット表示
+  - 選択状態の表示
+
+### カスタムフック
+
+- [ ] **T069** [US6] `useCreateTag` フックを `src/presentations/hooks/mutations/useCreateTag.ts` に作成
+  - `useMutation` を使用してタグ作成
+  - 成功時に `tags` クエリを無効化
+
+- [ ] **T070** [US6] `useUpdateTag` フックを `src/presentations/hooks/mutations/useUpdateTag.ts` に作成
+  - `useMutation` を使用してタグ更新
+  - 成功時に `tags` と `files` クエリを無効化
+
+- [ ] **T071** [US6] `useDeleteTag` フックを `src/presentations/hooks/mutations/useDeleteTag.ts` に作成
+  - `useMutation` を使用してタグ削除
+  - 削除確認ダイアログ統合
+
+### 統合
+
+- [ ] **T072** [US6] タグ管理機能をヘッダーまたはサイドバーに統合
+  - タグ管理ボタン追加
+  - `TagManagementDialog` の表示/非表示制御
+
+**チェックポイント**: タグ管理機能完成 - タグ作成、編集、削除、カラー設定が動作
+
+---
+
+## Phase 9: User Story 7 - 文書のメタデータ編集 (Priority: P3)
+
+**目的**: ユーザーがアップロード後にファイル情報を編集できるようにする
+
+### OpenAPI拡張
+
+- [ ] **T073** [FOUND] `schema/files/openapi.yaml` にファイル更新エンドポイントを追加
+  - `PUT /api/v1/files/{id}` - ファイルメタデータ更新
+  - `pnpm run gen:api` で型とAPI関数を再生成
+
+### MSWハンドラー拡張
+
+- [ ] **T074** [P] [FOUND] `src/adapters/mocks/handlers/files.ts` にファイル更新ハンドラーを追加
+  - `updateFile` ハンドラー: ファイル名、説明、タグを更新
+  - モックデータを更新
+
+### リポジトリ拡張
+
+- [ ] **T075** [P] [FOUND] ファイル更新リポジトリ関数を `src/adapters/repositories/files/updateFile.ts` に作成
+  - `updateFile(id: string, data: UpdateFileData): Promise<FileResponse>`
+
+### 編集UIコンポーネント
+
+- [ ] **T076** [US7] `FileEditDialog` を `src/presentations/features/files/components/FileEdit/FileEditDialog.tsx` に作成
+  - 編集フォーム表示
+  - ファイル名入力フィールド
+  - 説明入力フィールド（複数行）
+  - タグ選択（Autocomplete）
+  - 保存・キャンセルボタン
+
+- [ ] **T077** [P] [US7] `FileEditForm` を `src/presentations/features/files/components/FileEdit/FileEditForm.tsx` に作成
+  - フォームバリデーション
+  - 変更検知
+
+### カスタムフック
+
+- [ ] **T078** [US7] `useUpdateFile` フックを `src/presentations/hooks/mutations/useUpdateFile.ts` に作成
+  - `useMutation` を使用してファイル更新
+  - 成功時に `files` クエリを無効化
+
+### 統合
+
+- [ ] **T079** [US7] `FileDetailDialog` に編集ボタンを追加
+  - 編集ボタンクリックで `FileEditDialog` を開く
+  - 編集完了後に詳細画面を更新
+
+**チェックポイント**: メタデータ編集機能完成 - ファイル名、説明、タグの編集が動作
+
+---
+
+## Phase 10: User Story 8 - 文書の削除とゴミ箱 (Priority: P3)
+
+**目的**: ユーザーが誤削除を復元できるゴミ箱機能を提供する
+
+### OpenAPI拡張
+
+- [ ] **T080** [FOUND] `schema/files/openapi.yaml` にゴミ箱エンドポイントを追加
+  - `DELETE /api/v1/files/{id}` - ファイルをゴミ箱に移動
+  - `GET /api/v1/trash` - ゴミ箱のファイル一覧取得
+  - `POST /api/v1/trash/{id}/restore` - ファイル復元
+  - `DELETE /api/v1/trash/{id}` - 完全削除
+  - `pnpm run gen:api` で型とAPI関数を再生成
+
+### MSWハンドラー拡張
+
+- [ ] **T081** [P] [FOUND] `src/adapters/mocks/handlers/trash.ts` を作成
+  - ゴミ箱用のモックデータ管理
+  - `deleteFile` ハンドラー: ファイルをゴミ箱に移動（deletedAtフィールド追加）
+  - `getTrash` ハンドラー: ゴミ箱のファイル一覧を返す
+  - `restoreFile` ハンドラー: ファイルを復元
+  - `permanentlyDeleteFile` ハンドラー: 完全削除
+  - 30日後の自動削除シミュレーション
+
+### リポジトリ拡張
+
+- [ ] **T082** [P] [FOUND] ゴミ箱リポジトリ関数を `src/adapters/repositories/files/` に作成
+  - `deleteFile(id: string): Promise<void>`
+  - `getTrash(): Promise<TrashListResponse>`
+  - `restoreFile(id: string): Promise<void>`
+  - `permanentlyDeleteFile(id: string): Promise<void>`
+
+### 削除UIコンポーネント
+
+- [ ] **T083** [P] [US8] `DeleteConfirmDialog` を `src/presentations/components/dialogs/DeleteConfirmDialog.tsx` に作成
+  - 削除確認メッセージ
+  - キャンセル・削除ボタン
+  - 警告アイコン
+
+### ゴミ箱ページ
+
+- [ ] **T084** [US8] `TrashPage` を `src/presentations/pages/TrashPage/TrashPage.tsx` に作成
+  - ゴミ箱ファイル一覧表示
+  - 復元ボタン
+  - 完全削除ボタン
+  - 空のゴミ箱メッセージ
+
+- [ ] **T085** [P] [US8] `TrashFileList` を `src/presentations/pages/TrashPage/components/TrashFileList.tsx` に作成
+  - テーブル形式で表示
+  - ファイル名、削除日時、復元・削除アクション
+
+### カスタムフック
+
+- [ ] **T086** [US8] `useDeleteFile` フックを `src/presentations/hooks/mutations/useDeleteFile.ts` に作成
+  - `useMutation` を使用してファイル削除
+  - 成功時に `files` クエリを無効化
+
+- [ ] **T087** [US8] `useTrash` フックを `src/presentations/hooks/queries/useTrash.ts` に作成
+  - `useQuery` を使用してゴミ箱ファイル一覧を取得
+
+- [ ] **T088** [US8] `useRestoreFile` フックを `src/presentations/hooks/mutations/useRestoreFile.ts` に作成
+  - `useMutation` を使用してファイル復元
+  - 成功時に `trash` と `files` クエリを無効化
+
+- [ ] **T089** [US8] `usePermanentlyDeleteFile` フックを `src/presentations/hooks/mutations/usePermanentlyDeleteFile.ts` に作成
+  - `useMutation` を使用して完全削除
+  - 成功時に `trash` クエリを無効化
+
+### ルーティング
+
+- [ ] **T090** [US8] `src/app/router/routes.tsx` にゴミ箱ルートを追加
+  - パス: `/trash`
+  - コンポーネント: `TrashPage`
+
+### 統合
+
+- [ ] **T091** [US8] `FileListTable` と `FileDetailDialog` に削除ボタンを追加
+  - 削除ボタンクリックで `DeleteConfirmDialog` を表示
+  - 確認後にファイル削除を実行
+
+- [ ] **T092** [US8] ヘッダーに「ご希箱」（ゴミ箱）ボタンを追加
+  - クリックで `/trash` ページに遷移
+
+**チェックポイント**: 削除とゴミ箱機能完成 - ファイル削除、ゴミ箱一覧、復元、完全削除が動作
+
+---
+
+## Phase 11: テスト実装
 
 **目的**: 品質保証のための包括的なテスト
 
@@ -414,7 +695,7 @@
 
 ---
 
-## Phase 8: 統合とデバッグ
+## Phase 12: 統合とデバッグ
 
 **目的**: すべての機能を統合し、品質を最終確認
 
@@ -462,13 +743,13 @@
 - [ ] **T056** [POLISH] アクセシビリティチェック
   - キーボードナビゲーション
 
-**チェックポイント**: MVP完成 - 本番デプロイ可能な状態
+**チェックポイント**: 全機能完成 - 本番デプロイ可能な状態
 
 ---
 
 ## タスク統計
 
-- **総タスク数**: 62
+- **総タスク数**: 92
 - **完了**: 41 ✅
 - **Phase 1**: 2タスク ✅
 - **Phase 2**: 13タスク（基盤）✅
@@ -476,9 +757,12 @@
 - **Phase 4**: 10タスク（文書一覧 + カテゴリーフィルター）✅
 - **Phase 5**: 5タスク（検索）✅
 - **Phase 6**: 8タスク（アップロード）✅
-- **Phase 7**: 7タスク（テスト）
-- **Phase 8**: 10タスク（統合）
-
+- **Phase 7**: 6タスク（詳細表示とダウンロード - US5）
+- **Phase 8**: 10タスク（タグ管理 - US6）
+- **Phase 9**: 7タスク（メタデータ編集 - US7）
+- **Phase 10**: 13タスク（削除とゴミ箱 - US8）
+- **Phase 11**: 7タスク（テスト）
+- **Phase 12**: 10タスク（統合とデバッグ）
 
 ---
 
@@ -489,16 +773,21 @@ Phase 1 (SETUP) ✅
   └─> Phase 2 (FOUND) - 基盤実装 ✅
         └─> Phase 3 (HEADER) - ヘッダーとテーマ ✅
               ├─> Phase 4 (US2) - 文書一覧 ✅
-              ├─> Phase 5 (US3) - 検索 ✅ [Phase 4に依存]
-              └─> Phase 6 (US1) - アップロード [並列可能]
-                    └─> Phase 7 (TEST) - テスト実装
-                          └─> Phase 8 (POLISH) - 統合とデバッグ
+              ├─> Phase 5 (US3) - 検索 ✅
+              ├─> Phase 6 (US1) - アップロード ✅
+              ├─> Phase 7 (US5) - 詳細表示とダウンロード [Phase 4に依存]
+              ├─> Phase 8 (US6) - タグ管理 [Phase 2に依存]
+              ├─> Phase 9 (US7) - メタデータ編集 [Phase 7, 8に依存]
+              └─> Phase 10 (US8) - 削除とゴミ箱 [Phase 4に依存]
+                    └─> Phase 11 (TEST) - テスト実装
+                          └─> Phase 12 (POLISH) - 統合とデバッグ
 ```
 
 **推奨実装順序**:
-1. Phase 1, 2（必須）✅
-2. Phase 3（レイアウト調整）← 次のステップ
-3. Phase 4 + Phase 6（並列可能）
-4. Phase 5（Phase 4完了後）
-5. Phase 7
-6. Phase 8
+1. Phase 1-6（完了済み）✅
+2. Phase 7（詳細表示）← 次のステップ
+3. Phase 8（タグ管理）[Phase 7と並列可能]
+4. Phase 9（メタデータ編集）[Phase 7, 8完了後]
+5. Phase 10（削除とゴミ箱）[Phase 4完了後、並列可能]
+6. Phase 11（テスト）
+7. Phase 12（ポリッシュ）
