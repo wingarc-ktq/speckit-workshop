@@ -18,6 +18,7 @@ import { FileIcon } from '@/presentations/components';
 interface FileListTableProps {
   files: FileInfo[];
   isLoading: boolean;
+  onFileClick?: (fileId: string) => void;
 }
 
 const TAG_COLORS: Record<string, string> = {
@@ -32,7 +33,7 @@ const TAG_COLORS: Record<string, string> = {
   '自動割り当て': '#00bba7',
 };
 
-export const FileListTable: React.FC<FileListTableProps> = ({ files, isLoading }) => {
+export const FileListTable: React.FC<FileListTableProps> = ({ files, isLoading, onFileClick }) => {
   if (isLoading) {
     return (
       <Box sx={{ display: 'flex', justifyContent: 'center', p: 8 }}>
@@ -76,7 +77,19 @@ export const FileListTable: React.FC<FileListTableProps> = ({ files, isLoading }
       </TableHead>
       <TableBody>
         {files.map((file) => (
-          <TableRow key={file.id} sx={{ borderBottom: '1px solid #dbeafe' }}>
+          <TableRow
+            key={file.id}
+            sx={{
+              borderBottom: '1px solid #dbeafe',
+              cursor: onFileClick ? 'pointer' : 'default',
+              '&:hover': onFileClick
+                ? {
+                    bgcolor: 'action.hover',
+                  }
+                : {},
+            }}
+            onClick={() => onFileClick?.(file.id)}
+          >
             <TableCell>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
                 <FileIcon size={36} />

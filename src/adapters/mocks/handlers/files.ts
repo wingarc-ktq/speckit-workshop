@@ -3,6 +3,82 @@ import { delay, http, HttpResponse } from 'msw';
 import { HTTP_STATUS_CLIENT_ERROR, HTTP_STATUS_SUCCESS } from '@/domain/constants';
 import type { FileInfo, FileListResponse } from '@/domain/models/files';
 
+// アップロードされたファイルのデータを保存するMap
+const uploadedFilesData = new Map<string, Blob>();
+
+/**
+ * 表示可能なモックPDFを生成する関数
+ * 実際に表示できるPDFバイナリを返す
+ */
+const generateMockPdf = (filename: string): Uint8Array => {
+  // シンプルな有効なPDFを生成（テキストを含む1ページのPDF）
+  const pdfContent = `%PDF-1.4
+1 0 obj
+<<
+/Type /Catalog
+/Pages 2 0 R
+>>
+endobj
+2 0 obj
+<<
+/Type /Pages
+/Kids [3 0 R]
+/Count 1
+>>
+endobj
+3 0 obj
+<<
+/Type /Page
+/Parent 2 0 R
+/Resources <<
+/Font <<
+/F1 <<
+/Type /Font
+/Subtype /Type1
+/BaseFont /Helvetica
+>>
+>>
+>>
+/MediaBox [0 0 612 792]
+/Contents 4 0 R
+>>
+endobj
+4 0 obj
+<<
+/Length 120
+>>
+stream
+BT
+/F1 24 Tf
+50 750 Td
+(Mock PDF: ${filename}) Tj
+0 -30 Td
+/F1 12 Tf
+(This is a mock PDF file for preview.) Tj
+ET
+endstream
+endobj
+xref
+0 5
+0000000000 65535 f
+0000000009 00000 n
+0000000058 00000 n
+0000000115 00000 n
+0000000314 00000 n
+trailer
+<<
+/Size 5
+/Root 1 0 R
+>>
+startxref
+484
+%%EOF`;
+
+  // 文字列をUint8Arrayに変換
+  const encoder = new TextEncoder();
+  return encoder.encode(pdfContent);
+};
+
 // モックデータ生成
 const generateMockFiles = (): FileInfo[] => {
   const tags = [
@@ -26,7 +102,7 @@ const generateMockFiles = (): FileInfo[] => {
       mimeType: 'application/pdf',
       description: '2024年1月分の請求書',
       uploadedAt: '2026-01-15T09:30:00Z',
-      downloadUrl: 'https://example.com/files/file-001',
+      downloadUrl: '/api/files/file-001/download',
       tagIds: tags[0],
     },
     {
@@ -36,7 +112,7 @@ const generateMockFiles = (): FileInfo[] => {
       mimeType: 'application/pdf',
       description: '2月の学校だより',
       uploadedAt: '2026-01-14T10:00:00Z',
-      downloadUrl: 'https://example.com/files/file-002',
+      downloadUrl: '/api/files/file-002/download',
       tagIds: tags[1],
     },
     {
@@ -46,7 +122,7 @@ const generateMockFiles = (): FileInfo[] => {
       mimeType: 'application/pdf',
       description: '春の運動会について',
       uploadedAt: '2026-01-13T14:20:00Z',
-      downloadUrl: 'https://example.com/files/file-003',
+      downloadUrl: '/api/files/file-003/download',
       tagIds: tags[2],
     },
     {
@@ -56,7 +132,7 @@ const generateMockFiles = (): FileInfo[] => {
       mimeType: 'application/pdf',
       description: 'リフォーム工事の見積書',
       uploadedAt: '2026-01-12T11:45:00Z',
-      downloadUrl: 'https://example.com/files/file-004',
+      downloadUrl: '/api/files/file-004/download',
       tagIds: tags[3],
     },
     {
@@ -65,7 +141,7 @@ const generateMockFiles = (): FileInfo[] => {
       size: 384000,
       mimeType: 'application/pdf',
       uploadedAt: '2026-01-11T08:15:00Z',
-      downloadUrl: 'https://example.com/files/file-005',
+      downloadUrl: '/api/files/file-005/download',
       tagIds: tags[4],
     },
     {
@@ -75,7 +151,7 @@ const generateMockFiles = (): FileInfo[] => {
       mimeType: 'application/pdf',
       description: '2023年12月分の領収書',
       uploadedAt: '2026-01-10T16:30:00Z',
-      downloadUrl: 'https://example.com/files/file-006',
+      downloadUrl: '/api/files/file-006/download',
       tagIds: tags[5],
     },
     {
@@ -85,7 +161,7 @@ const generateMockFiles = (): FileInfo[] => {
       mimeType: 'application/pdf',
       description: '6年生修学旅行のしおり',
       uploadedAt: '2026-01-09T13:00:00Z',
-      downloadUrl: 'https://example.com/files/file-007',
+      downloadUrl: '/api/files/file-007/download',
       tagIds: tags[6],
     },
     {
@@ -95,7 +171,7 @@ const generateMockFiles = (): FileInfo[] => {
       mimeType: 'image/jpeg',
       description: '家族写真',
       uploadedAt: '2026-01-08T18:00:00Z',
-      downloadUrl: 'https://example.com/files/file-008',
+      downloadUrl: '/api/files/file-008/download',
       tagIds: tags[7],
     },
     {
@@ -104,7 +180,7 @@ const generateMockFiles = (): FileInfo[] => {
       size: 128000,
       mimeType: 'image/png',
       uploadedAt: '2026-01-07T09:00:00Z',
-      downloadUrl: 'https://example.com/files/file-009',
+      downloadUrl: '/api/files/file-009/download',
       tagIds: tags[8],
     },
     {
@@ -114,7 +190,7 @@ const generateMockFiles = (): FileInfo[] => {
       mimeType: 'application/pdf',
       description: '1月の給食献立',
       uploadedAt: '2026-01-06T12:00:00Z',
-      downloadUrl: 'https://example.com/files/file-010',
+      downloadUrl: '/api/files/file-010/download',
       tagIds: tags[9],
     },
     {
@@ -124,7 +200,7 @@ const generateMockFiles = (): FileInfo[] => {
       mimeType: 'application/pdf',
       description: '賃貸契約書',
       uploadedAt: '2026-01-05T10:30:00Z',
-      downloadUrl: 'https://example.com/files/file-011',
+      downloadUrl: '/api/files/file-011/download',
       tagIds: ['tag-001'],
     },
     {
@@ -133,7 +209,7 @@ const generateMockFiles = (): FileInfo[] => {
       size: 896000,
       mimeType: 'application/pdf',
       uploadedAt: '2026-01-04T15:00:00Z',
-      downloadUrl: 'https://example.com/files/file-012',
+      downloadUrl: '/api/files/file-012/download',
       tagIds: ['tag-003'],
     },
     {
@@ -142,7 +218,7 @@ const generateMockFiles = (): FileInfo[] => {
       size: 512000,
       mimeType: 'image/jpeg',
       uploadedAt: '2026-01-03T11:20:00Z',
-      downloadUrl: 'https://example.com/files/file-013',
+      downloadUrl: '/api/files/file-013/download',
       tagIds: ['tag-005'],
     },
     {
@@ -151,7 +227,7 @@ const generateMockFiles = (): FileInfo[] => {
       size: 320000,
       mimeType: 'application/pdf',
       uploadedAt: '2026-01-02T14:45:00Z',
-      downloadUrl: 'https://example.com/files/file-014',
+      downloadUrl: '/api/files/file-014/download',
       tagIds: ['tag-003'],
     },
     {
@@ -160,7 +236,7 @@ const generateMockFiles = (): FileInfo[] => {
       size: 192000,
       mimeType: 'image/png',
       uploadedAt: '2026-01-01T09:15:00Z',
-      downloadUrl: 'https://example.com/files/file-015',
+      downloadUrl: '/api/files/file-015/download',
       tagIds: ['tag-002'],
     },
     {
@@ -170,7 +246,7 @@ const generateMockFiles = (): FileInfo[] => {
       mimeType: 'application/pdf',
       description: '卒業式についてのお知らせ',
       uploadedAt: '2025-12-31T16:00:00Z',
-      downloadUrl: 'https://example.com/files/file-016',
+      downloadUrl: '/api/files/file-016/download',
       tagIds: ['tag-003', 'tag-004'],
     },
     {
@@ -179,7 +255,7 @@ const generateMockFiles = (): FileInfo[] => {
       size: 1280000,
       mimeType: 'application/pdf',
       uploadedAt: '2025-12-30T10:00:00Z',
-      downloadUrl: 'https://example.com/files/file-017',
+      downloadUrl: '/api/files/file-017/download',
       tagIds: ['tag-001'],
     },
     {
@@ -189,7 +265,7 @@ const generateMockFiles = (): FileInfo[] => {
       mimeType: 'application/pdf',
       description: '夏休みの過ごし方',
       uploadedAt: '2025-12-29T13:30:00Z',
-      downloadUrl: 'https://example.com/files/file-018',
+      downloadUrl: '/api/files/file-018/download',
       tagIds: ['tag-003'],
     },
     {
@@ -198,7 +274,7 @@ const generateMockFiles = (): FileInfo[] => {
       size: 256000,
       mimeType: 'image/jpeg',
       uploadedAt: '2025-12-28T11:00:00Z',
-      downloadUrl: 'https://example.com/files/file-019',
+      downloadUrl: '/api/files/file-019/download',
       tagIds: ['tag-005'],
     },
     {
@@ -208,7 +284,7 @@ const generateMockFiles = (): FileInfo[] => {
       mimeType: 'application/pdf',
       description: '秋の遠足について',
       uploadedAt: '2025-12-27T14:00:00Z',
-      downloadUrl: 'https://example.com/files/file-020',
+      downloadUrl: '/api/files/file-020/download',
       tagIds: ['tag-003', 'tag-004'],
     },
   ];
@@ -312,16 +388,20 @@ export const getFilesHandlers = () => {
     // タグIDをパース
     const tagIds = tagIdsString ? tagIdsString.split(',').filter(Boolean) : [];
 
+    const fileId = `file-${Date.now()}`;
     const newFile: FileInfo = {
-      id: `file-${Date.now()}`,
+      id: fileId,
       name: file.name,
       size: file.size,
       mimeType: file.type,
       description: description || undefined,
       uploadedAt: new Date().toISOString(),
-      downloadUrl: `https://example.com/files/file-${Date.now()}`,
+      downloadUrl: `/api/files/${fileId}/download`,
       tagIds,
     };
+
+    // 実際のファイルデータを保存
+    uploadedFilesData.set(fileId, file);
 
     // モック配列の先頭に追加（最新ファイルが先頭に来るように）
     MOCK_FILES.unshift(newFile);
@@ -349,5 +429,79 @@ export const getFilesHandlers = () => {
     return HttpResponse.json({ file }, { status: HTTP_STATUS_SUCCESS.OK });
   });
 
-  return [getFiles, uploadFile, getFile];
+  // ファイルダウンロード
+  const downloadFile = http.get('*/api/files/:id/download', async ({ params }) => {
+    await delay(500);
+
+    const { id } = params;
+    const file = MOCK_FILES.find((f) => f.id === id);
+
+    // ファイルが見つからない場合、フォールバック用のコンテンツを返す
+    if (!file) {
+      // エラー表示用のシンプルなPDFを返す
+      const errorPdfContent = generateMockPdf('ファイルが見つかりません');
+      return new HttpResponse(errorPdfContent, {
+        status: HTTP_STATUS_SUCCESS.OK,
+        headers: {
+          'Content-Type': 'application/pdf',
+          'Content-Disposition': 'inline; filename="file-not-found.pdf"',
+        },
+      });
+    }
+
+    // アップロードされた実際のファイルがある場合、それを返す
+    const uploadedFile = uploadedFilesData.get(id as string);
+    if (uploadedFile) {
+      return new HttpResponse(uploadedFile, {
+        status: HTTP_STATUS_SUCCESS.OK,
+        headers: {
+          'Content-Type': file.mimeType,
+          'Content-Disposition': `inline; filename="${encodeURIComponent(file.name)}"; filename*=UTF-8''${encodeURIComponent(file.name)}`,
+        },
+      });
+    }
+
+    // モックPDFまたは画像データを返す
+    if (file.mimeType === 'application/pdf') {
+      // 実際に表示可能なPDFを生成
+      const pdfContent = generateMockPdf(file.name);
+      return new HttpResponse(pdfContent, {
+        status: HTTP_STATUS_SUCCESS.OK,
+        headers: {
+          'Content-Type': 'application/pdf',
+          'Content-Disposition': `inline; filename="${encodeURIComponent(file.name)}"; filename*=UTF-8''${encodeURIComponent(file.name)}`,
+        },
+      });
+    }
+
+    if (file.mimeType.startsWith('image/')) {
+      // 1x1の透明PNG
+      const pngData = new Uint8Array([
+        0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a, 0x00, 0x00, 0x00, 0x0d,
+        0x49, 0x48, 0x44, 0x52, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x01,
+        0x08, 0x06, 0x00, 0x00, 0x00, 0x1f, 0x15, 0xc4, 0x89, 0x00, 0x00, 0x00,
+        0x0a, 0x49, 0x44, 0x41, 0x54, 0x78, 0x9c, 0x63, 0x00, 0x01, 0x00, 0x00,
+        0x05, 0x00, 0x01, 0x0d, 0x0a, 0x2d, 0xb4, 0x00, 0x00, 0x00, 0x00, 0x49,
+        0x45, 0x4e, 0x44, 0xae, 0x42, 0x60, 0x82,
+      ]);
+      return new HttpResponse(pngData, {
+        status: HTTP_STATUS_SUCCESS.OK,
+        headers: {
+          'Content-Type': file.mimeType,
+          'Content-Disposition': `inline; filename="${encodeURIComponent(file.name)}"; filename*=UTF-8''${encodeURIComponent(file.name)}`,
+        },
+      });
+    }
+
+    // その他のファイル
+    return new HttpResponse('Mock file content', {
+      status: HTTP_STATUS_SUCCESS.OK,
+      headers: {
+        'Content-Type': file.mimeType,
+        'Content-Disposition': `attachment; filename="${encodeURIComponent(file.name)}"; filename*=UTF-8''${encodeURIComponent(file.name)}`,
+      },
+    });
+  });
+
+  return [getFiles, uploadFile, getFile, downloadFile];
 };

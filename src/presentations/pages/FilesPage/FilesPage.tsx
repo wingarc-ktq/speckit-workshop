@@ -17,6 +17,7 @@ import type { GetFilesParams } from '@/domain/models/files';
 import { FileSearchBar } from '@/presentations/features/files/components/FileSearch/FileSearchBar';
 import { FileSearchResults } from '@/presentations/features/files/components/FileSearch/FileSearchResults';
 import { FileUploadDialog } from '@/presentations/features/files/components/FileUpload/FileUploadDialog';
+import { FileDetailDialog } from '@/presentations/features/files/components/FileDetail/FileDetailDialog';
 
 import { useDebounce } from '../../hooks/useDebounce';
 import { useFiles } from '../../hooks/queries/useFiles';
@@ -38,6 +39,7 @@ export const FilesPage: React.FC = () => {
   const [sortOrder, setSortOrder] = useState<SortOrder>('desc');
   const [page, setPage] = useState(1);
   const [uploadDialogOpen, setUploadDialogOpen] = useState(false);
+  const [selectedFileId, setSelectedFileId] = useState<string | null>(null);
 
   // デバウンス処理を適用した検索クエリ
   const debouncedSearchQuery = useDebounce(searchQuery, 300);
@@ -223,7 +225,11 @@ export const FilesPage: React.FC = () => {
         />
 
         {/* ファイル一覧 */}
-        <FileListTable files={filesData?.files || []} isLoading={isLoading} />
+        <FileListTable
+          files={filesData?.files || []}
+          isLoading={isLoading}
+          onFileClick={(fileId) => setSelectedFileId(fileId)}
+        />
 
         {/* ページネーション */}
         {filesData && filesData.total > 0 && (
@@ -238,6 +244,13 @@ export const FilesPage: React.FC = () => {
 
       {/* アップロードダイアログ */}
       <FileUploadDialog open={uploadDialogOpen} onClose={() => setUploadDialogOpen(false)} />
+
+      {/* ファイル詳細ダイアログ */}
+      <FileDetailDialog
+        fileId={selectedFileId}
+        open={selectedFileId !== null}
+        onClose={() => setSelectedFileId(null)}
+      />
       </Paper>
     </Box>
   );

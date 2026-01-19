@@ -363,51 +363,19 @@
 
 **目的**: ユーザーがファイルの詳細を確認し、ダウンロードできるようにする
 
-### ユニットテスト（Vitest）
+### 詳細表示コンポーネント
 
-- [ ] **T041** [P] [TEST] `useFiles.test.ts` の実装
-  - 正常系: ファイル一覧取得成功
-  - 検索フィルタリング
-  - ソート動作
-  - エラーハンドリング
-
-- [ ] **T042** [P] [TEST] `useFileUpload.test.ts` の実装
-  - 正常系: ファイルアップロード成功
-  - バリデーションエラー
-  - ネットワークエラー
-  - 進捗状態の確認
-
-- [ ] **T043** [P] [TEST] `useFileSearch.test.ts` の実装
-  - デバウンス動作確認
-  - 検索クエリ変更
-  - 検索結果更新
-
-### コンポーネントテスト（React Testing Library）
-
-- [ ] **T044** [P] [TEST] `FileList.test.tsx` の実装
-  - テーブルビュー/グリッドビュー切替
-  - ローディング状態
-  - エラー状態
-  - 空の状態
-
-- [ ] **T045** [P] [TEST] `FileUploadDialog.test.tsx` の実装
-  - ダイアログ開閉
-  - ファイル選択
-  - タグ選択
-  - アップロード実行
-  - バリデーションエラー表示
-
-- [ ] **T046** [P] [TEST] `FileSearchBar.test.tsx` の実装
+- [x] **T057** [P] [US5] `FileDetailDialog` を `src/presentations/features/files/components/FileDetail/FileDetailDialog.tsx` に作成 ✅
   - MUI `Dialog` コンポーネント使用（fullScreen対応）
   - ヘッダー: ファイル名、閉じるボタン、ダウンロードボタン
   - コンテンツエリア: `FilePreview` と `FileMetadata` を配置
 
-- [ ] **T058** [P] [US5] `FilePreview` を `src/presentations/features/files/components/FileDetail/FilePreview.tsx` に作成
+- [x] **T058** [P] [US5] `FilePreview` を `src/presentations/features/files/components/FileDetail/FilePreview.tsx` に作成 ✅
   - PDFプレビュー: `<iframe>` または `<object>` タグでPDF表示
   - 画像プレビュー: `<img>` タグで画像表示
   - プレビュー不可のファイル: アイコンとメッセージ表示
 
-- [ ] **T059** [P] [US5] `FileMetadata` を `src/presentations/features/files/components/FileDetail/FileMetadata.tsx` に作成
+- [x] **T059** [P] [US5] `FileMetadata` を `src/presentations/features/files/components/FileDetail/FileMetadata.tsx` に作成 ✅
   - ファイル名、サイズ、MIMEタイプ表示
   - アップロード日時表示
   - 説明文表示
@@ -415,20 +383,20 @@
 
 ### カスタムフック
 
-- [ ] **T060** [US5] `useFileDetail` フックを `src/presentations/hooks/queries/useFileDetail.ts` に作成
+- [x] **T060** [US5] `useFileDetail` フックを `src/presentations/hooks/queries/useFileDetail.ts` に作成 ✅
   - `useQuery` を使用して個別ファイル情報を取得
   - キャッシュ設定: 10分
   - repositoryの`getFile`関数を使用
 
 ### ダウンロード機能
 
-- [ ] **T061** [P] [US5] ダウンロード関数を `src/domain/utils/fileDownload.ts` に作成
+- [x] **T061** [P] [US5] ダウンロード関数を `src/domain/utils/fileDownload.ts` に作成 ✅
   - `downloadFile(url: string, filename: string): void`
   - ブラウザのダウンロード機能を使用
 
 ### 統合
 
-- [ ] **T062** [US5] `FilesPage` および `FileListTable` に詳細表示機能を統合
+- [x] **T062** [US5] `FilesPage` および `FileListTable` に詳細表示機能を統合 ✅
   - ファイル行クリックで `FileDetailDialog` を開く
   - ダイアログの表示/非表示制御
 
