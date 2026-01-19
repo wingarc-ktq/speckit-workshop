@@ -54,8 +54,23 @@ export const FileDetailsModal: React.FC<FileDetailsModalProps> = ({
 
   const downloadMutation = useDownloadFile();
 
+  // Mock PDF data (base64 encoded minimal PDF)
+  const MOCK_PDF_BASE64 = `JVBERi0xLjQKJeLjz9MNCjEgMCBvYmo8PC9UeXBlL0NhdGFsb2cvUGFnZXMgMiAwIFI+PmVu
+ZG9ibjoyIDAgb2JqPDwvVHlwZS9QYWdlcy9LaWRzWzMgMCBSXS9Db3VudCAxPj5lbmRvYmoK
+MyAwIG9iajw8L1R5cGUvUGFnZS9QYXJlbnQgMiAwIFIvUmVzb3VyY2VzPDwvRm9udDw8L0Yx
+IDQgMCBSPj4+Pi9NZWRpYUJveFswIDAgNjEyIDc5Ml0vQ29udGVudHMgNSAwIFI+PmVuZG9i
+ago0IDAgb2JqPDwvVHlwZS9Gb250L1N1YnR5cGUvVHlwZTEvQmFzZUZvbnQvSGVsdmV0aWNhPj5l
+bmRvYmoKNSAwIG9iajw8L0xlbmd0aCAzOD4+c3RyZWFtCkJUCi9GMSAxMiBUZgoxMDAgNzAwIFRkCihIZWxsbyBQREYpIFRqCkVUCmVuZHN0cmVhbQplbmRvYmoKeHJlZgowIDYKMDAwMDAwMDAwMCA2NTUzNSBmIAowMDAwMDAwMDA5IDAwMDAwIG4gCjAwMDAwMDA1OCAwMDAwMCBuIAowMDAwMDAwMTE1IDAwMDAwIG4gCjAwMDAwMDAyNzggMDAwMDAgbiAKMDAwMDAwMDM4MiAwMDAwMCBuIAp0cmFpbGVyPDwvU2l6ZSA2L1Jvb3QgMSAwIFI+PgpzdGFydHhyZWYKNDY3CiUlRU9G`;
+
   const downloadUrl = useMemo(() => {
     if (!document) return undefined;
+    
+    // For PDF files, return data URI
+    if (document.fileFormat === 'pdf') {
+      return `data:application/pdf;base64,${MOCK_PDF_BASE64.replace(/\n/g, '')}`;
+    }
+    
+    // For other files, use the API endpoint
     return repositoryComposition.document.getDownloadUrl(document.id);
   }, [document]);
 

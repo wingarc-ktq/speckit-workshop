@@ -8,6 +8,125 @@ import type { Tag } from '@/domain/models/tag';
 const API_BASE_URL = 'http://localhost:3000/api';
 
 /**
+ * Mock PDF (base64 encoded minimal PDF)
+ * This is a valid PDF document that can be rendered by react-pdf
+ */
+const MOCK_PDF_BASE64 = `JVBERi0xLjQKJeLjz9MNCjEgMCBvYmo8PC9UeXBlL0NhdGFsb2cvUGFnZXMgMiAwIFI+PmVu
+ZG9ibjoyIDAgb2JqPDwvVHlwZS9QYWdlcy9LaWRzWzMgMCBSXS9Db3VudCAxPj5lbmRvYmoK
+MyAwIG9iajw8L1R5cGUvUGFnZS9QYXJlbnQgMiAwIFIvUmVzb3VyY2VzPDwvRm9udDw8L0Yx
+IDQgMCBSPj4+Pi9NZWRpYUJveFswIDAgNjEyIDc5Ml0vQ29udGVudHMgNSAwIFI+PmVuZG9i
+ago0IDAgb2JqPDwvVHlwZS9Gb250L1N1YnR5cGUvVHlwZTEvQmFzZUZvbnQvSGVsdmV0aWNhPj5l
+bmRvYmoKNSAwIG9iajw8L0xlbmd0aCAzOD4+c3RyZWFtCkJUCi9GMSAxMiBUZgoxMDAgNzAwIFRkCihIZWxsbyBQREYpIFRqCkVUCmVuZHN0cmVhbQplbmRvYmoKeHJlZgowIDYKMDAwMDAwMDAwMCA2NTUzNSBmIAowMDAwMDAwMDA5IDAwMDAwIG4gCjAwMDAwMDA1OCAwMDAwMCBuIAowMDAwMDAwMTE1IDAwMDAwIG4gCjAwMDAwMDAyNzggMDAwMDAgbiAKMDAwMDAwMDM4MiAwMDAwMCBuIAp0cmFpbGVyPDwvU2l6ZSA2L1Jvb3QgMSAwIFI+PgpzdGFydHhyZWYKNDY3CiUlRU9G`;
+
+/**
+ * Helper to convert base64 to Uint8Array
+ */
+function base64ToUint8Array(base64String: string): Uint8Array {
+  // Remove whitespace
+  const cleanBase64 = base64String.replace(/\s/g, '');
+  const binaryString = atob(cleanBase64);
+  const bytes = new Uint8Array(binaryString.length);
+  for (let i = 0; i < binaryString.length; i++) {
+    bytes[i] = binaryString.charCodeAt(i);
+  }
+  return bytes;
+}
+
+/**
+ * Mock tags data store
+ */
+let mockTags: Tag[] = [
+  {
+    id: 'tag-doc-001',
+    name: '請求書',
+    color: 'primary',
+    createdAt: '2025-01-10T08:00:00Z',
+    updatedAt: '2025-01-10T08:00:00Z',
+    createdByUserId: 'user-123',
+  },
+  {
+    id: 'tag-doc-002',
+    name: '契約書',
+    color: 'secondary',
+    createdAt: '2025-01-10T08:00:00Z',
+    updatedAt: '2025-01-10T08:00:00Z',
+    createdByUserId: 'user-123',
+  },
+  {
+    id: 'tag-doc-003',
+    name: '議事録',
+    color: 'warning',
+    createdAt: '2025-01-10T08:00:00Z',
+    updatedAt: '2025-01-10T08:00:00Z',
+    createdByUserId: 'user-123',
+  },
+  {
+    id: 'tag-doc-004',
+    name: '提案書',
+    color: 'success',
+    createdAt: '2025-01-10T08:00:00Z',
+    updatedAt: '2025-01-10T08:00:00Z',
+    createdByUserId: 'user-123',
+  },
+  {
+    id: 'tag-doc-005',
+    name: '見積書',
+    color: 'error',
+    createdAt: '2025-01-10T08:00:00Z',
+    updatedAt: '2025-01-10T08:00:00Z',
+    createdByUserId: 'user-123',
+  },
+  {
+    id: 'tag-doc-006',
+    name: '仕様書',
+    color: 'info',
+    createdAt: '2025-01-10T08:00:00Z',
+    updatedAt: '2025-01-10T08:00:00Z',
+    createdByUserId: 'user-123',
+  },
+  {
+    id: 'tag-doc-007',
+    name: 'マニュアル',
+    color: 'warning',
+    createdAt: '2025-01-10T08:00:00Z',
+    updatedAt: '2025-01-10T08:00:00Z',
+    createdByUserId: 'user-123',
+  },
+  {
+    id: 'tag-prog-001',
+    name: '完了',
+    color: 'info',
+    createdAt: '2025-01-10T08:00:00Z',
+    updatedAt: '2025-01-10T08:00:00Z',
+    createdByUserId: 'user-123',
+  },
+  {
+    id: 'tag-prog-002',
+    name: '未完了',
+    color: 'error',
+    createdAt: '2025-01-10T08:00:00Z',
+    updatedAt: '2025-01-10T08:00:00Z',
+    createdByUserId: 'user-123',
+  },
+  {
+    id: 'tag-prog-003',
+    name: '進行中',
+    color: 'success',
+    createdAt: '2025-01-10T08:00:00Z',
+    updatedAt: '2025-01-10T08:00:00Z',
+    createdByUserId: 'user-123',
+  },
+];
+
+/**
+ * Helper to map tag IDs to Tag objects
+ */
+const getTagsByIds = (tagIds: string[]): Tag[] =>
+  tagIds
+    .map((id) => mockTags.find((tag) => tag.id === id))
+    .filter((tag): tag is Tag => Boolean(tag));
+
+/**
  * Mock documents data store
  */
 let mockDocuments: Document[] = [
@@ -19,16 +138,7 @@ let mockDocuments: Document[] = [
     uploadedAt: '2025-01-10T08:30:00Z',
     updatedAt: '2025-01-10T08:30:00Z',
     uploadedByUserId: 'user-123',
-    tags: [
-      {
-        id: 'tag-001',
-        name: '請求書',
-        color: 'error',
-        createdAt: '2025-01-10T08:00:00Z',
-        updatedAt: '2025-01-10T08:00:00Z',
-        createdByUserId: 'user-123',
-      },
-    ],
+    tags: getTagsByIds(['tag-doc-001', 'tag-prog-003']),
     isDeleted: false,
     deletedAt: null,
   },
@@ -40,40 +150,105 @@ let mockDocuments: Document[] = [
     uploadedAt: '2025-01-08T14:15:00Z',
     updatedAt: '2025-01-08T14:15:00Z',
     uploadedByUserId: 'user-456',
-    tags: [
-      {
-        id: 'tag-002',
-        name: '契約書',
-        color: 'success',
-        createdAt: '2025-01-10T08:00:00Z',
-        updatedAt: '2025-01-10T08:00:00Z',
-        createdByUserId: 'user-123',
-      },
-    ],
+    tags: getTagsByIds(['tag-doc-002', 'tag-prog-002']),
     isDeleted: false,
     deletedAt: null,
   },
-];
-
-/**
- * Mock tags data store
- */
-let mockTags: Tag[] = [
   {
-    id: 'tag-001',
-    name: '請求書',
-    color: 'error',
-    createdAt: '2025-01-10T08:00:00Z',
-    updatedAt: '2025-01-10T08:00:00Z',
-    createdByUserId: 'user-123',
+    id: 'doc-003',
+    fileName: '議事録_20250105.pdf',
+    fileSize: 1548576,
+    fileFormat: 'pdf',
+    uploadedAt: '2025-01-05T09:00:00Z',
+    updatedAt: '2025-01-05T09:00:00Z',
+    uploadedByUserId: 'user-789',
+    tags: getTagsByIds(['tag-doc-003', 'tag-prog-001']),
+    isDeleted: false,
+    deletedAt: null,
   },
   {
-    id: 'tag-002',
-    name: '契約書',
-    color: 'success',
-    createdAt: '2025-01-10T08:00:00Z',
-    updatedAt: '2025-01-10T08:00:00Z',
-    createdByUserId: 'user-123',
+    id: 'doc-004',
+    fileName: '提案書_A社.pptx',
+    fileSize: 1848576,
+    fileFormat: 'pptx',
+    uploadedAt: '2025-01-04T11:20:00Z',
+    updatedAt: '2025-01-04T11:20:00Z',
+    uploadedByUserId: 'user-321',
+    tags: getTagsByIds(['tag-doc-004', 'tag-prog-003']),
+    isDeleted: false,
+    deletedAt: null,
+  },
+  {
+    id: 'doc-005',
+    fileName: '見積書_B社.xlsx',
+    fileSize: 1248576,
+    fileFormat: 'xlsx',
+    uploadedAt: '2025-01-06T13:45:00Z',
+    updatedAt: '2025-01-06T13:45:00Z',
+    uploadedByUserId: 'user-654',
+    tags: getTagsByIds(['tag-doc-005', 'tag-prog-002']),
+    isDeleted: false,
+    deletedAt: null,
+  },
+  {
+    id: 'doc-006',
+    fileName: '仕様書_C機能.pdf',
+    fileSize: 2248576,
+    fileFormat: 'pdf',
+    uploadedAt: '2025-01-02T10:00:00Z',
+    updatedAt: '2025-01-02T10:00:00Z',
+    uploadedByUserId: 'user-987',
+    tags: getTagsByIds(['tag-doc-006', 'tag-prog-001']),
+    isDeleted: false,
+    deletedAt: null,
+  },
+  {
+    id: 'doc-007',
+    fileName: '請求書_20250112.pdf',
+    fileSize: 1848576,
+    fileFormat: 'pdf',
+    uploadedAt: '2025-01-12T08:30:00Z',
+    updatedAt: '2025-01-12T08:30:00Z',
+    uploadedByUserId: 'user-123',
+    tags: getTagsByIds(['tag-doc-001', 'tag-prog-002']),
+    isDeleted: false,
+    deletedAt: null,
+  },
+  {
+    id: 'doc-008',
+    fileName: '契約書_20250115.docx',
+    fileSize: 1324576,
+    fileFormat: 'docx',
+    uploadedAt: '2025-01-15T14:15:00Z',
+    updatedAt: '2025-01-15T14:15:00Z',
+    uploadedByUserId: 'user-456',
+    tags: getTagsByIds(['tag-doc-002', 'tag-prog-001']),
+    isDeleted: false,
+    deletedAt: null,
+  },
+  {
+    id: 'doc-009',
+    fileName: '議事録_20250116.pdf',
+    fileSize: 1428576,
+    fileFormat: 'pdf',
+    uploadedAt: '2025-01-16T09:00:00Z',
+    updatedAt: '2025-01-16T09:00:00Z',
+    uploadedByUserId: 'user-789',
+    tags: getTagsByIds(['tag-doc-003', 'tag-prog-003']),
+    isDeleted: false,
+    deletedAt: null,
+  },
+  {
+    id: 'doc-010',
+    fileName: '提案書_D社.pptx',
+    fileSize: 1648576,
+    fileFormat: 'pptx',
+    uploadedAt: '2025-01-17T11:20:00Z',
+    updatedAt: '2025-01-17T11:20:00Z',
+    uploadedByUserId: 'user-321',
+    tags: getTagsByIds(['tag-doc-004', 'tag-prog-001']),
+    isDeleted: false,
+    deletedAt: null,
   },
 ];
 
@@ -263,7 +438,7 @@ function handleUploadDocument() {
  * GET /files/:id - ファイル詳細取得
  */
 function handleGetDocumentById() {
-  return http.get(`${API_BASE_URL}/files/:id`, ({ params }) => {
+  return http.get(`${API_BASE_URL}/files/:id`, ({ params, request }) => {
     const { id } = params;
     const doc = mockDocuments.find((d) => d.id === id);
 
@@ -282,7 +457,7 @@ function handleGetDocumentById() {
  * GET /files/:id/download - ファイルダウンロード
  */
 function handleDownloadDocument() {
-  return http.get(`${API_BASE_URL}/files/:id/download`, ({ params }) => {
+  return http.get(`${API_BASE_URL}/files/:id/download`, ({ params, request }) => {
     const { id } = params;
     const doc = mockDocuments.find((d) => d.id === id);
 
@@ -293,15 +468,15 @@ function handleDownloadDocument() {
       );
     }
 
-    const blob = new Blob(['dummy file content'], {
-      type: 'application/octet-stream',
-    });
-
-    return new HttpResponse(blob, {
+    // Convert base64 PDF to ArrayBuffer
+    const pdfBytes = base64ToUint8Array(MOCK_PDF_BASE64);
+    
+    return new HttpResponse(pdfBytes.buffer, {
       status: 200,
       headers: {
-        'Content-Type': 'application/octet-stream',
-        'Content-Disposition': `attachment; filename="${doc.fileName}"`,
+        'Content-Type': 'application/pdf',
+        'Content-Length': String(pdfBytes.buffer.byteLength),
+        'Content-Disposition': `inline; filename="${doc.fileName}"`,
       },
     });
   });

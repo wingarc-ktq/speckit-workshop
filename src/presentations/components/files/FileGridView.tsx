@@ -6,7 +6,6 @@ import {
   CardContent,
   Skeleton,
   Box,
-  Chip,
   Checkbox,
   Typography,
 } from '@mui/material';
@@ -20,6 +19,10 @@ import {
 } from '@mui/icons-material';
 import type { Document } from '@/domain/models/document';
 import { highlightMatch } from '@/presentations/utils/highlightMatch';
+import { TagChip } from '@/presentations/components/tags/TagChip';
+
+const DOCUMENT_TAG_NAMES = ['請求書', '契約書', '議事録', '提案書', '見積書', '仕様書'];
+const PROGRESS_TAG_NAMES = ['完了', '未完了', '進行中'];
 
 // MUI v7 Grid コンポーネントの型互換性を確保
 const Grid = MuiGrid as any;
@@ -190,23 +193,28 @@ export function FileGridView({ documents, isLoading, searchKeyword, onCardClick 
 
                 {/* タグ */}
                 <Box sx={{ display: 'flex', gap: 0.5, flexWrap: 'wrap', justifyContent: 'center', mb: 1, minHeight: 24 }}>
-                  {document.tags.map((tag) => (
-                    <Chip
-                      key={tag.id}
-                      label={tag.name}
-                      size="small"
-                      sx={{
-                        height: '20px',
-                        fontSize: '0.7rem',
-                        fontWeight: 500,
-                      }}
-                    />
-                  ))}
+                  {document.tags.map((tag) => {
+                    const isProgress = PROGRESS_TAG_NAMES.includes(tag.name);
+                    const tone = isProgress ? 'progress' : 'document';
+                    const variant = isProgress ? 'filled' : 'outlined';
+                    return (
+                      <TagChip
+                        key={tag.id}
+                        tag={tag}
+                        tone={tone}
+                        variant={variant}
+                        size="small"
+                      />
+                    );
+                  })}
                 </Box>
 
-                {/* 日付とファイルサイズ */}
+                {/* 日付、ファイルサイズ、アップロードユーザー */}
                 <Typography variant="caption" color="textSecondary" sx={{ fontSize: '0.7rem' }}>
                   {formatDate(document.uploadedAt)} • {formatFileSize(document.fileSize)}
+                </Typography>
+                <Typography variant="caption" color="textSecondary" sx={{ fontSize: '0.7rem', display: 'block', mt: 0.5 }}>
+                  {document.uploadedByUserId}
                 </Typography>
               </CardContent>
             </Card>

@@ -13,6 +13,7 @@ import {
   DateRangeFilter,
   TagFilter,
   FileDetailsModal,
+  SelectionToolbar,
 } from '@/presentations/components';
 import { FilterStatusBar } from '@/presentations/components/files/FilterStatusBar';
 import { SearchResultsStatus } from '@/presentations/components/search/SearchResultsStatus';
@@ -36,6 +37,7 @@ export function DocumentManagementPage() {
   const [searchKeyword, setSearchKeyword] = useState('');
   const [selectedDocument, setSelectedDocument] = useState<Document | null>(null);
   const [showDetailsModal, setShowDetailsModal] = useState(false);
+  const [selectedDocumentIds, setSelectedDocumentIds] = useState<string[]>([]);
   const { selectedTagIds, setTagIds, clearTagIds } = useTagFilter();
   const { data: allTags } = useTags();
 
@@ -109,6 +111,14 @@ export function DocumentManagementPage() {
 
   const documents = data?.data || [];
   const totalCount = data?.pagination.total || 0;
+  const tagCounts = useMemo(() => {
+    return documents.reduce<Record<string, number>>((acc, doc) => {
+      doc.tags.forEach((tag) => {
+        acc[tag.id] = (acc[tag.id] || 0) + 1;
+      });
+      return acc;
+    }, {});
+  }, [documents]);
 
   return (
     <Container maxWidth="lg">
@@ -147,6 +157,7 @@ export function DocumentManagementPage() {
               <TagFilter
                 selectedTagIds={selectedTagIds}
                 onTagsChange={setTagIds}
+                tagCounts={tagCounts}
               />
 
               {/* 日付フィルター */}
@@ -179,6 +190,22 @@ export function DocumentManagementPage() {
             totalCount={totalCount}
             searchKeyword={searchKeyword}
             isSearchActive={!!searchKeyword}
+          />
+
+          {/* チェックボックス選択時の操作バー */}
+          <SelectionToolbar
+            selectedCount={selectedDocumentIds.length}
+            onDelete={() => {
+              // 削除処理（将来実装）
+              console.log('Delete selected:', selectedDocumentIds);
+            }}
+            onDownload={() => {
+              // 一括ダウンロード処理（将来実装）
+              console.log('Download selected:', selectedDocumentIds);
+            }}
+            onClearSelection={() => {
+              setSelectedDocumentIds([]);
+            }}
           />
 
           {/* タグフィルター状態バー */}
@@ -235,6 +262,7 @@ export function DocumentManagementPage() {
                 setSelectedDocument(doc);
                 setShowDetailsModal(true);
               }}
+              onSelectionChange={setSelectedDocumentIds}
               onSort={(by, order) => {
                 setSortBy(by);
                 setSortOrder(order);

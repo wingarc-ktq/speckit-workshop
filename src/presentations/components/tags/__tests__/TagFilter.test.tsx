@@ -35,7 +35,7 @@ describe('TagFilter', () => {
       expect(screen.getByRole('progressbar', { hidden: true })).toBeInTheDocument();
     });
 
-    it('タグ一覧が表示される', () => {
+    it('タグ一覧が表示される（件数つき）', () => {
       vi.mocked(useTags).mockReturnValue({
         data: [
           { id: 'tag-001', name: '請求書', color: 'error', createdAt: '2025-01-01', updatedAt: '2025-01-01', createdByUserId: 'user-123' },
@@ -47,12 +47,12 @@ describe('TagFilter', () => {
 
       render(
         <RepositoryTestWrapper>
-          <TagFilter />
+          <TagFilter tagCounts={{ 'tag-001': 2, 'tag-002': 1 }} />
         </RepositoryTestWrapper>
       );
 
-      expect(screen.getByText('請求書')).toBeInTheDocument();
-      expect(screen.getByText('契約書')).toBeInTheDocument();
+      expect(screen.getByText('請求書 2')).toBeInTheDocument();
+      expect(screen.getByText('契約書 1')).toBeInTheDocument();
     });
 
     it('タグが0件の場合は「タグなし」と表示', () => {
@@ -91,7 +91,7 @@ describe('TagFilter', () => {
         </RepositoryTestWrapper>
       );
 
-      const invoiceChip = screen.getByText('請求書');
+      const invoiceChip = screen.getByTestId('tag-chip-tag-001');
       fireEvent.click(invoiceChip);
 
       expect(mockOnTagsChange).toHaveBeenCalledWith(['tag-001']);
@@ -114,7 +114,7 @@ describe('TagFilter', () => {
         </RepositoryTestWrapper>
       );
 
-      const invoiceChip = screen.getByText('請求書');
+      const invoiceChip = screen.getByTestId('tag-chip-tag-001');
       fireEvent.click(invoiceChip);
 
       expect(mockOnTagsChange).toHaveBeenCalledWith([]);
@@ -139,7 +139,7 @@ describe('TagFilter', () => {
       );
 
       // 最初のタグを選択
-      fireEvent.click(screen.getByText('請求書'));
+      fireEvent.click(screen.getByTestId('tag-chip-tag-001'));
       expect(mockOnTagsChange).toHaveBeenCalledWith(['tag-001']);
 
       // 2つ目のタグを選択
@@ -149,13 +149,13 @@ describe('TagFilter', () => {
         </RepositoryTestWrapper>
       );
 
-      fireEvent.click(screen.getByText('契約書'));
+      fireEvent.click(screen.getByTestId('tag-chip-tag-002'));
       expect(mockOnTagsChange).toHaveBeenCalledWith(['tag-001', 'tag-002']);
     });
   });
 
   describe('T059: フィルター適用とリセット', () => {
-    it('選択中のタグは filled variant で表示される', () => {
+    it('ドキュメント種別タグは outlined のまま表示される', () => {
       vi.mocked(useTags).mockReturnValue({
         data: [
           { id: 'tag-001', name: '請求書', color: 'error', createdAt: '2025-01-01', updatedAt: '2025-01-01', createdByUserId: 'user-123' },
@@ -174,11 +174,37 @@ describe('TagFilter', () => {
       const invoiceChip = screen.getByTestId('tag-chip-tag-001');
       const contractChip = screen.getByTestId('tag-chip-tag-002');
 
-      // 選択中のタグは filled (class に MuiChip-filled が含まれる)
-      expect(invoiceChip.className).toContain('MuiChip-filled');
-      
-      // 未選択のタグは outlined
+      expect(invoiceChip.className).toContain('MuiChip-outlined');
       expect(contractChip.className).toContain('MuiChip-outlined');
+    });
+
+    it('進捗ステータスタグは未選択時 outlined、選択時 filled を適用', () => {
+      vi.mocked(useTags).mockReturnValue({
+        data: [
+          { id: 'tag-001', name: '請求書', color: 'error', createdAt: '2025-01-01', updatedAt: '2025-01-01', createdByUserId: 'user-123' },
+          { id: 'tag-002', name: '未完了', color: 'warning', createdAt: '2025-01-01', updatedAt: '2025-01-01', createdByUserId: 'user-123' },
+        ],
+        isLoading: false,
+        error: null,
+      } as any);
+
+      const { rerender } = render(
+        <RepositoryTestWrapper>
+          <TagFilter selectedTagIds={[]} />
+        </RepositoryTestWrapper>
+      );
+
+      const progressChip = screen.getByTestId('tag-chip-tag-002');
+      expect(progressChip.className).toContain('MuiChip-outlined');
+
+      rerender(
+        <RepositoryTestWrapper>
+          <TagFilter selectedTagIds={['tag-002']} />
+        </RepositoryTestWrapper>
+      );
+
+      const selectedProgressChip = screen.getByTestId('tag-chip-tag-002');
+      expect(selectedProgressChip.className).toContain('MuiChip-filled');
     });
 
     it('全てのタグを選択解除してフィルターをリセット', () => {
@@ -200,7 +226,7 @@ describe('TagFilter', () => {
       );
 
       // 1つ目を解除
-      fireEvent.click(screen.getByText('請求書'));
+      fireEvent.click(screen.getByTestId('tag-chip-tag-001'));
       expect(mockOnTagsChange).toHaveBeenCalledWith(['tag-002']);
 
       // 2つ目も解除
@@ -210,7 +236,7 @@ describe('TagFilter', () => {
         </RepositoryTestWrapper>
       );
 
-      fireEvent.click(screen.getByText('契約書'));
+      fireEvent.click(screen.getByTestId('tag-chip-tag-002'));
       expect(mockOnTagsChange).toHaveBeenCalledWith([]);
     });
   });

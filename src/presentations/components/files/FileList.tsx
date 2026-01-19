@@ -9,14 +9,14 @@ import {
   Paper,
   Skeleton,
   Box,
-  Chip,
-  IconButton,
-  Tooltip,
   Checkbox,
 } from '@mui/material';
-import { Download as DownloadIcon, Edit as EditIcon, Delete as DeleteIcon } from '@mui/icons-material';
 import type { Document } from '@/domain/models/document';
 import { highlightMatch } from '@/presentations/utils/highlightMatch';
+import { TagChip } from '@/presentations/components/tags/TagChip';
+
+const DOCUMENT_TAG_NAMES = ['請求書', '契約書', '議事録', '提案書', '見積書', '仕様書'];
+const PROGRESS_TAG_NAMES = ['完了', '未完了', '進行中'];
 
 interface FileListProps {
   documents: Document[];
@@ -111,10 +111,10 @@ export function FileList({
               </TableCell>
               <TableCell width="30%">ファイル名</TableCell>
               <TableCell width="15%">タグ</TableCell>
-              <TableCell width="15%">アップロード日</TableCell>
-              <TableCell width="15%">ファイルサイズ</TableCell>
-              <TableCell width="10%" align="center">
-                アクション
+              <TableCell width="15%">アップロード日時</TableCell>
+              <TableCell width="15%">サイズ</TableCell>
+              <TableCell width="15%">
+                アップロードユーザー
               </TableCell>
             </TableRow>
           </TableHead>
@@ -137,7 +137,7 @@ export function FileList({
                   <Skeleton variant="text" />
                 </TableCell>
                 <TableCell>
-                  <Skeleton variant="circular" width={32} height={32} />
+                  <Skeleton variant="text" />
                 </TableCell>
               </TableRow>
             ))}
@@ -197,12 +197,12 @@ export function FileList({
                 data-testid="select-all-checkbox"
               />
             </TableCell>
-            <TableCell width="35%">ファイル名</TableCell>
+            <TableCell width="30%">ファイル名</TableCell>
             <TableCell width="20%">タグ</TableCell>
-            <TableCell width="15%">サイズ</TableCell>
             <TableCell width="15%">アップロード日時</TableCell>
-            <TableCell width="10%" align="center">
-              アクション
+            <TableCell width="15%">サイズ</TableCell>
+            <TableCell width="15%">
+              アップロードユーザー
             </TableCell>
           </TableRow>
         </TableHead>
@@ -235,18 +235,14 @@ export function FileList({
               <TableCell>
                 <Box sx={{ display: 'flex', gap: 0.5, flexWrap: 'wrap' }}>
                   {document.tags.length > 0 ? (
-                    document.tags.map((tag) => (
-                      <Chip
-                        key={tag.id}
-                        label={tag.name}
-                        size="small"
-                        variant="outlined"
-                        sx={{
-                          borderColor: 'rgba(0, 0, 0, 0.12)',
-                          height: '24px',
-                        }}
-                      />
-                    ))
+                    document.tags.map((tag) => {
+                      const isProgress = PROGRESS_TAG_NAMES.includes(tag.name);
+                      const isDocument = DOCUMENT_TAG_NAMES.includes(tag.name);
+                      const tone = isProgress ? 'progress' : 'document';
+                      const variant = isProgress ? 'filled' : 'outlined';
+
+                      return <TagChip key={tag.id} tag={tag} tone={tone} variant={variant} />;
+                    })
                   ) : (
                     <span style={{ color: '#999', fontSize: '0.875rem' }}>-</span>
                   )}
@@ -254,43 +250,7 @@ export function FileList({
               </TableCell>
               <TableCell>{formatDate(document.uploadedAt)}</TableCell>
               <TableCell>{formatFileSize(document.fileSize)}</TableCell>
-              <TableCell align="center">
-                <Box sx={{ display: 'flex', gap: 0.5, justifyContent: 'center' }}>
-                  <Tooltip title="ダウンロード">
-                    <IconButton
-                      size="small"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                      }}
-                      data-testid={`download-button-${document.id}`}
-                    >
-                      <DownloadIcon fontSize="small" />
-                    </IconButton>
-                  </Tooltip>
-                  <Tooltip title="編集">
-                    <IconButton
-                      size="small"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                      }}
-                      data-testid={`edit-button-${document.id}`}
-                    >
-                      <EditIcon fontSize="small" />
-                    </IconButton>
-                  </Tooltip>
-                  <Tooltip title="削除">
-                    <IconButton
-                      size="small"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                      }}
-                      data-testid={`delete-button-${document.id}`}
-                    >
-                      <DeleteIcon fontSize="small" />
-                    </IconButton>
-                  </Tooltip>
-                </Box>
-              </TableCell>
+              <TableCell>{document.uploadedByUserId}</TableCell>
             </TableRow>
           ))}
         </TableBody>

@@ -1,6 +1,10 @@
-import { Box, Chip, Typography, Button } from '@mui/material';
+import { Box, Typography, Button } from '@mui/material';
 import { Close as CloseIcon } from '@mui/icons-material';
 import type { Tag } from '@/domain/models/tag';
+import { TagChip } from '@/presentations/components/tags/TagChip';
+
+const DOCUMENT_TAG_NAMES = ['請求書', '契約書', '議事録', '提案書', '見積書', '仕様書'];
+const PROGRESS_TAG_NAMES = ['完了', '未完了', '進行中'];
 
 interface FilterStatusBarProps {
   selectedTags: Tag[];
@@ -46,18 +50,24 @@ export function FilterStatusBar({ selectedTags, onRemoveTag, onClearAll }: Filte
       </Typography>
       
       <Box sx={{ display: 'flex', gap: 0.5, flexWrap: 'wrap', flex: 1 }}>
-        {selectedTags.map((tag) => (
-          <Chip
-            key={tag.id}
-            label={tag.name}
-            color={tag.color}
-            size="small"
-            onDelete={() => onRemoveTag(tag.id)}
-            deleteIcon={<CloseIcon />}
-            sx={{ fontWeight: 500 }}
-            data-testid={`filter-chip-${tag.id}`}
-          />
-        ))}
+        {selectedTags.map((tag) => {
+          const isProgress = PROGRESS_TAG_NAMES.includes(tag.name);
+          const tone = isProgress ? 'progress' : 'document';
+          const variant = isProgress ? 'filled' : 'outlined';
+
+          return (
+            <TagChip
+              key={tag.id}
+              tag={tag}
+              tone={tone}
+              variant={variant}
+              selected
+              size="small"
+              onDelete={() => onRemoveTag(tag.id)}
+              data-testid={`filter-chip-${tag.id}`}
+            />
+          );
+        })}
       </Box>
 
       <Button

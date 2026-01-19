@@ -11,8 +11,9 @@ import {
 } from '@mui/material';
 import { Document as PdfDocument, Page, pdfjs } from 'react-pdf';
 
+// Setup PDF worker using local file
 if (!pdfjs.GlobalWorkerOptions.workerSrc) {
-  pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
+  pdfjs.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.js';
 }
 
 export interface PDFViewerProps {
@@ -41,7 +42,8 @@ export const PDFViewer: React.FC<PDFViewerProps> = ({ fileUrl, height = 480 }) =
     setError(null);
   };
 
-  const handleLoadError = () => {
+  const handleLoadError = (error: Error) => {
+    console.error('PDF loading error:', error);
     setError('PDFプレビューを読み込めませんでした');
   };
 

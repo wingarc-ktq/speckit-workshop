@@ -76,7 +76,7 @@ export interface IDocumentRepository {
    * @returns ダウンロード URL
    * @throws DocumentNotFoundException
    */
-  getDownloadUrl(id: string): Promise<string>;
+  getDownloadUrl(id: string): string;
 }
 
 /**
@@ -168,7 +168,13 @@ export class DocumentRepository implements IDocumentRepository {
     return response.data as DocumentListResponse;
   }
 
-  async getDownloadUrl(id: string): Promise<string> {
+  /**
+   * ダウンロード用の URL を取得
+   * @param id - 文書 ID
+   * @returns ダウンロード URL
+   * @throws DocumentNotFoundException
+   */
+  getDownloadUrl(id: string): string {
     return `${(this.axiosInstance as any).defaults.baseURL}/files/${id}/download`;
   }
 }
