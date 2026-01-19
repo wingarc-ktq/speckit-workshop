@@ -216,7 +216,8 @@ const generateMockFiles = (): FileInfo[] => {
   return files;
 };
 
-const MOCK_FILES = generateMockFiles();
+// モックファイルをミュータブルな配列として保持
+let MOCK_FILES = generateMockFiles();
 
 /**
  * ファイル管理APIのMSWハンドラー
@@ -276,6 +277,7 @@ export const getFilesHandlers = () => {
     const formData = await request.formData();
     const file = formData.get('file') as File;
     const description = formData.get('description') as string;
+    const tagIdsString = formData.get('tagIds') as string;
 
     if (!file) {
       return HttpResponse.json(
@@ -307,6 +309,9 @@ export const getFilesHandlers = () => {
       );
     }
 
+    // タグIDをパース
+    const tagIds = tagIdsString ? tagIdsString.split(',').filter(Boolean) : [];
+
     const newFile: FileInfo = {
       id: `file-${Date.now()}`,
       name: file.name,
@@ -315,8 +320,11 @@ export const getFilesHandlers = () => {
       description: description || undefined,
       uploadedAt: new Date().toISOString(),
       downloadUrl: `https://example.com/files/file-${Date.now()}`,
-      tagIds: [],
+      tagIds,
     };
+
+    // モック配列の先頭に追加（最新ファイルが先頭に来るように）
+    MOCK_FILES.unshift(newFile);
 
     return HttpResponse.json(
       { file: newFile },

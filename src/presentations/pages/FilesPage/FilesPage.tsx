@@ -16,6 +16,7 @@ import Typography from '@mui/material/Typography';
 import type { GetFilesParams } from '@/domain/models/files';
 import { FileSearchBar } from '@/presentations/features/files/components/FileSearch/FileSearchBar';
 import { FileSearchResults } from '@/presentations/features/files/components/FileSearch/FileSearchResults';
+import { FileUploadDialog } from '@/presentations/features/files/components/FileUpload/FileUploadDialog';
 
 import { useDebounce } from '../../hooks/useDebounce';
 import { useFiles } from '../../hooks/queries/useFiles';
@@ -36,6 +37,7 @@ export const FilesPage: React.FC = () => {
   const [sortBy, setSortBy] = useState<SortBy>('uploadedAt');
   const [sortOrder, setSortOrder] = useState<SortOrder>('desc');
   const [page, setPage] = useState(1);
+  const [uploadDialogOpen, setUploadDialogOpen] = useState(false);
 
   // デバウンス処理を適用した検索クエリ
   const debouncedSearchQuery = useDebounce(searchQuery, 300);
@@ -92,6 +94,7 @@ export const FilesPage: React.FC = () => {
           </Box>
           <Button
             variant="contained"
+            onClick={() => setUploadDialogOpen(true)}
             startIcon={<AddIcon />}
             sx={{
               bgcolor: '#ff6900',
@@ -232,6 +235,9 @@ export const FilesPage: React.FC = () => {
             itemsPerPage={20}
           />
         )}
+
+      {/* アップロードダイアログ */}
+      <FileUploadDialog open={uploadDialogOpen} onClose={() => setUploadDialogOpen(false)} />
       </Paper>
     </Box>
   );

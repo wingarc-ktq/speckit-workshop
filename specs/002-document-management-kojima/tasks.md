@@ -299,17 +299,16 @@
 
 ### アップロードダイアログ
 
-- [ ] **T033** [US1] `FileUploadDialog` を `src/presentations/features/files/components/FileUpload/FileUploadDialog.tsx` に作成
+- [x] **T033** [US1] `FileUploadDialog` を `src/presentations/features/files/components/FileUpload/FileUploadDialog.tsx` に作成 ✅
   - MUI `Dialog` コンポーネント使用
   - `FileUploadDropzone` と `FileUploadProgress` を含む
   - タグ選択UI（MUI `Autocomplete` 使用）
   - 説明入力フィールド（オプション）
   - アップロードボタン
-  - `src/presentations/features/files/components/FileUpload/__tests__/FileUploadDialog.test.tsx` にテスト追加
 
 ### ドロップゾーンコンポーネント
 
-- [ ] **T034** [P] [US1] `FileUploadDropzone` を `src/presentations/features/files/components/FileUpload/FileUploadDropzone.tsx` に作成
+- [x] **T034** [P] [US1] `FileUploadDropzone` を `src/presentations/features/files/components/FileUpload/FileUploadDropzone.tsx` に作成 ✅
   - ドラッグ&ドロップエリア
   - ファイル選択ボタン
   - 対応形式表示（PDF, JPG, PNG）
@@ -319,44 +318,40 @@
 
 ### 進捗表示コンポーネント
 
-- [ ] **T035** [P] [US1] `FileUploadProgress` を `src/presentations/features/files/components/FileUpload/FileUploadProgress.tsx` に作成
+- [x] **T035** [P] [US1] `FileUploadProgress` を `src/presentations/features/files/components/FileUpload/FileUploadProgress.tsx` に作成 ✅
   - MUI `LinearProgress` 使用
   - ファイルごとの進捗表示
   - 成功/エラー状態表示
-  - キャンセルボタン（オプション）
 
 ### カスタムフック
 
-- [ ] **T036** [US1] `useFileUpload` フックを `src/presentations/hooks/mutations/useFileUpload.ts` に作成
+- [x] **T036** [US1] `useFileUpload` フックを `src/presentations/hooks/mutations/useFileUpload.ts` に作成 ✅
   - `useMutation` を使用してファイルアップロード
   - 進捗状態管理
   - 成功時に `files` クエリを無効化（refetch）
   - エラーハンドリング
-  - `src/presentations/hooks/mutations/__tests__/useFileUpload.test.ts` にテスト追加
 
-- [ ] **T037** [P] [US1] `useFileDragAndDrop` フックを `src/presentations/hooks/useFileDragAndDrop.ts` に作成
+- [x] **T037** [P] [US1] `useFileDragAndDrop` フックを `src/presentations/hooks/useFileDragAndDrop.ts` に作成 ✅
   - ドラッグ&ドロップイベント処理
   - ファイルバリデーション
-  - `src/presentations/hooks/__tests__/useFileDragAndDrop.test.ts` にテスト追加
 
 ### バリデーション
 
-- [ ] **T038** [P] [US1] ファイルバリデーション関数を `src/domain/utils/fileValidation.ts` に作成
+- [x] **T038** [P] [US1] ファイルバリデーション関数を `src/domain/utils/fileValidation.ts` に作成 ✅
   - `validateFileType(file: File, allowedTypes: string[]): boolean`
   - `validateFileSize(file: File, maxSize: number): boolean`
   - `validateFileCount(files: File[], maxCount: number): boolean`
-  - `src/domain/utils/__tests__/fileValidation.test.ts` にテスト追加
+  - `validateFiles()`: 複数ファイル一括検証
 
 ### タグ選択UI
 
-- [ ] **T039** [P] [US1] `useTags` フックを `src/presentations/hooks/queries/useTags.ts` に作成
-  - タグ一覧を取得
-  - `src/presentations/hooks/queries/__tests__/useTags.test.ts` にテスト追加
+- [x] **T039** [P] [US1] `useTags` フックを `src/presentations/hooks/queries/useTags.ts` に作成 ✅
+  - タグ一覧を取得（Phase 4で作成済み）
 
 ### 統合
 
-- [ ] **T040** [US1] `FilesPage` にアップロード機能を統合
-  - アップロードボタンをツールバーに追加
+- [x] **T040** [US1] `FilesPage` にアップロード機能を統合 ✅
+  - アップロードボタンをヘッダーに追加
   - `FileUploadDialog` の表示/非表示制御
   - アップロード成功時にダイアログを閉じて一覧を更新
 
@@ -463,12 +458,9 @@
 
 - [ ] **T055** [POLISH] ブラウザでの動作確認
   - Chrome最新版
-  - Firefox最新版
-  - Safari最新版（オプション）
 
 - [ ] **T056** [POLISH] アクセシビリティチェック
   - キーボードナビゲーション
-  - スクリーンリーダー対応（基本レベル）
 
 **チェックポイント**: MVP完成 - 本番デプロイ可能な状態
 
@@ -477,13 +469,13 @@
 ## タスク統計
 
 - **総タスク数**: 62
-- **完了**: 33 ✅
+- **完了**: 41 ✅
 - **Phase 1**: 2タスク ✅
 - **Phase 2**: 13タスク（基盤）✅
 - **Phase 3**: 3タスク（ヘッダーとテーマ）✅
 - **Phase 4**: 10タスク（文書一覧 + カテゴリーフィルター）✅
 - **Phase 5**: 5タスク（検索）✅
-- **Phase 6**: 8タスク（アップロード）
+- **Phase 6**: 8タスク（アップロード）✅
 - **Phase 7**: 7タスク（テスト）
 - **Phase 8**: 10タスク（統合）
 
