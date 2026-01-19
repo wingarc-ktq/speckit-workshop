@@ -1,6 +1,6 @@
 import { Box, Container, Stack, Dialog, DialogTitle, DialogContent } from '@mui/material';
-import { useState, useEffect } from 'react';
-import { useDocuments } from '@/presentations/hooks/queries';
+import { useState, useEffect, useMemo } from 'react';
+import { useDocuments, useTagFilter, useTags } from '@/presentations/hooks/queries';
 import { useDocumentHeader } from '@/presentations/layouts/AppLayout/contexts';
 import {
   FileUploadArea,
@@ -12,6 +12,7 @@ import {
   DateRangeFilter,
   TagFilter,
 } from '@/presentations/components';
+import { FilterStatusBar } from '@/presentations/components/files/FilterStatusBar';
 import { SearchResultsStatus } from '@/presentations/components/search/SearchResultsStatus';
 
 /**
@@ -28,10 +29,16 @@ export function DocumentManagementPage() {
   const [pageSize, setPageSize] = useState(20);
   const [sortBy, setSortBy] = useState('uploadedAt');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
-  const [selectedTagIds, setSelectedTagIds] = useState<string[]>([]);
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
   const [searchKeyword, setSearchKeyword] = useState('');
+  const { selectedTagIds, setTagIds, clearTagIds } = useTagFilter();
+  const { data: allTags } = useTags();
+
+  const selectedTags = useMemo(() => {
+    if (!allTags) return [];
+    return allTags.filter((tag) => selectedTagIds.includes(tag.id));
+  }, [allTags, selectedTagIds]);
 
   // ヘッダーツールを有効化し、コールバックを登録
   useEffect(() => {
@@ -74,6 +81,7 @@ export function DocumentManagementPage() {
     page: currentPage,
     limit: pageSize,
     search: searchKeyword,
+    tagIds: selectedTagIds,
   });
 
   if (error) {
@@ -134,7 +142,7 @@ export function DocumentManagementPage() {
               {/* タグフィルター */}
               <TagFilter
                 selectedTagIds={selectedTagIds}
-                onTagsChange={setSelectedTagIds}
+                onTagsChange={setTagIds}
               />
 
               {/* 日付フィルター */}
@@ -155,6 +163,15 @@ export function DocumentManagementPage() {
             totalCount={totalCount}
             searchKeyword={searchKeyword}
             isSearchActive={!!searchKeyword}
+          />
+
+          {/* タグフィルター状態バー */}
+          <FilterStatusBar
+            selectedTags={selectedTags}
+            onRemoveTag={(tagId) => {
+              setTagIds(selectedTagIds.filter((id) => id !== tagId));
+            }}
+            onClearAll={clearTagIds}
           />
 
           {/* アップロード日で絞り込み表示 */}

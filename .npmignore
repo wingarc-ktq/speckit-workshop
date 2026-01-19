@@ -1,0 +1,36 @@
+# Dependencies
+node_modules/
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Build outputs
+dist/
+dist-ssr/
+build/
+coverage/
+
+# Generated artifacts
+src/adapters/generated/
+playwright-report/
+playwright/test-results/
+blob-report/
+test-results/
+
+# Source and docs not published
+specs/
+docs/
+schema/
+public/
+playwright/
+.vscode/
+.idea/
+.specify/
+.github/
+.playwright-mcp/
+.mcp.json
+
+# Env and logs
+.env
+.env.*
+*.log

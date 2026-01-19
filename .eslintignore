@@ -1,0 +1,13 @@
+node_modules/
+dist/
+build/
+coverage/
+public/
+schema/
+src/adapters/generated/
+playwright-report/
+playwright/test-results/
+blob-report/
+.vscode/
+.idea/
+.DS_Store

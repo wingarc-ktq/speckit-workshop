@@ -148,19 +148,19 @@
 
 ### Tests for User Story 4 ⚠️
 
-- [ ] T058 [P] [US4] Write contract test for GET /files with tagIds param in `playwright/tests/specs/document-management/filter.spec.ts`: test single tag filter, test multiple tag AND logic, test filter clear
-- [ ] T059 [P] [US4] Write component test for TagFilter in `src/presentations/components/tags/__tests__/TagFilter.test.tsx`: test tag selection state, test filter application, test filter reset
+- [X] T058 [P] [US4] Write contract test for GET /files with tagIds param in `playwright/tests/specs/document-management/filter.spec.ts`: test single tag filter, test multiple tag AND logic, test filter clear
+- [X] T059 [P] [US4] Write component test for TagFilter in `src/presentations/components/tags/__tests__/TagFilter.test.tsx`: test tag selection state, test filter application, test filter reset
 
 ### Implementation for User Story 4
 
-- [ ] T060 [P] [US4] Create TagFilter component in `src/presentations/components/tags/TagFilter.tsx`: Material-UI Checkbox group or FilterList showing all available tags with color chips, multi-select support
-- [ ] T061 [US4] Create useTagFilter custom hook in `src/presentations/hooks/queries/useTagFilter.ts`: manage selected tag state, sync with URL searchParams, trigger query refetch
-- [ ] T062 [US4] Update useDocuments hook in `src/presentations/hooks/queries/useDocuments.ts` to accept tagIds param and pass to GET /files
-- [ ] T063 [P] [US4] Create TagChip component in `src/presentations/components/tags/TagChip.tsx`: display Tag with Material-UI Chip using semantic color mapping
-- [ ] T064 [P] [US4] Update MSW handler in `src/adapters/mocks/handlers/fileHandlers.ts` to filter by tagIds with AND logic (all selected tags must be present)
-- [ ] T065 [US4] Integrate TagFilter into DocumentManagementPage in `src/presentations/pages/DocumentManagementPage.tsx` as sidebar or collapsible panel
-- [ ] T066 [US4] Create FilterStatusBar component in `src/presentations/components/files/FilterStatusBar.tsx`: show active tag filters with remove button per tag, show clear all button
-- [ ] T067 [US4] Test date range filter placeholder: add task description for future P2 implementation in `src/presentations/components/files/DateRangeFilter.tsx`
+- [X] T060 [P] [US4] Create TagFilter component in `src/presentations/components/tags/TagFilter.tsx`: Material-UI Checkbox group or FilterList showing all available tags with color chips, multi-select support
+ - [X] T061 [US4] Create useTagFilter custom hook in `src/presentations/hooks/queries/useTagFilter.ts`: manage selected tag state, sync with URL searchParams, trigger query refetch
+- [X] T062 [US4] Update useDocuments hook in `src/presentations/hooks/queries/useDocuments.ts` to accept tagIds param and pass to GET /files
+- [X] T063 [P] [US4] Create TagChip component in `src/presentations/components/tags/TagChip.tsx`: display Tag with Material-UI Chip using semantic color mapping
+- [X] T064 [P] [US4] Update MSW handler in `src/adapters/mocks/handlers/fileHandlers.ts` to filter by tagIds with AND logic (all selected tags must be present)
+- [X] T065 [US4] Integrate TagFilter into DocumentManagementPage in `src/presentations/pages/DocumentManagementPage.tsx` as sidebar or collapsible panel
+- [X] T066 [US4] Create FilterStatusBar component in `src/presentations/components/files/FilterStatusBar.tsx`: show active tag filters with remove button per tag, show clear all button
+- [X] T067 [US4] Test date range filter placeholder: add task description for future P2 implementation in `src/presentations/components/files/DateRangeFilter.tsx`
 
 **Checkpoint**: US4 完全機能。タグフィルタ、複数タグ AND ロジック、フィルタ状態表示が動作。
 

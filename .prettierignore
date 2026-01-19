@@ -1,0 +1,16 @@
+node_modules/
+dist/
+build/
+coverage/
+src/adapters/generated/
+schema/
+public/
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+playwright-report/
+playwright/test-results/
+blob-report/
+.vscode/
+.idea/
+.DS_Store
