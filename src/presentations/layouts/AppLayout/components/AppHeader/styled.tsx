@@ -10,7 +10,8 @@ export const HeaderContent = styled(Box)(() => ({
   display: 'flex',
   alignItems: 'center',
   gap: 16,
-  flexGrow: 1,
+  width: 240,
+  flexShrink: 0,
 }));
 
 export const LogoSection = styled(Box)(() => ({

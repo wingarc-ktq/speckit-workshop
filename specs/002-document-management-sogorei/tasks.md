@@ -90,22 +90,22 @@
 
 ### Tests for User Story 2 ⚠️
 
-- [ ] T032 [P] [US2] Write contract test for GET /files endpoint in `playwright/tests/specs/document-management/list.spec.ts`: test list retrieval with pagination, test sorting by filename/date/size, test empty list message
-- [ ] T033 [P] [US2] Write component test for FileList in `src/presentations/components/files/__tests__/FileList.test.tsx`: test document rendering with metadata display, test sort control change, test pagination navigation
-- [ ] T034 [P] [US2] Write component test for FileGridView in `src/presentations/components/files/__tests__/FileGridView.test.tsx`: test card layout rendering, test responsive grid behavior, test view toggle interaction
+- [X] T032 [P] [US2] Write contract test for GET /files endpoint in `playwright/tests/specs/document-management/list.spec.ts`: test list retrieval with pagination, test sorting by filename/date/size, test empty list message
+- [X] T033 [P] [US2] Write component test for FileList in `src/presentations/components/files/__tests__/FileList.test.tsx`: test document rendering with metadata display, test sort control change, test pagination navigation
+- [X] T034 [P] [US2] Write component test for FileGridView in `src/presentations/components/files/__tests__/FileGridView.test.tsx`: test card layout rendering, test responsive grid behavior, test view toggle interaction
 
 ### Implementation for User Story 2
 
-- [ ] T035 [P] [US2] Create FileList component in `src/presentations/components/files/FileList.tsx`: MUI Table/List displaying fileName, tags, uploadedAt, fileSize, uploadedByUserName with data-testid attributes
-- [ ] T036 [P] [US2] Create FileGridView component in `src/presentations/components/files/FileGridView.tsx`: MUI Grid/Card layout with file metadata summary
-- [ ] T037 [US2] Create ViewToggle component in `src/presentations/components/files/ViewToggle.tsx`: Material-UI ToggleButton switching between list and grid views, save preference to localStorage
-- [ ] T038 [US2] Create SortControl component in `src/presentations/components/files/SortControl.tsx`: Material-UI Select for sort options (filename asc/desc, date new/old, size large/small)
-- [ ] T039 [US2] Create DocumentPagination component in `src/presentations/components/files/DocumentPagination.tsx`: MUI Pagination component handling page change, display total records, items per page
-- [ ] T040 [US2] Update useDocuments hook in `src/presentations/hooks/queries/useDocuments.ts` to support sort and view preferences stored in URL params and localStorage
-- [ ] T041 [US2] Create DocumentListPage integration in `src/presentations/pages/DocumentManagementPage.tsx`: compose FileUploadArea, ViewToggle, SortControl, FileList/FileGridView, Pagination
-- [ ] T042 [P] [US2] Update MSW handler in `src/adapters/mocks/handlers/fileHandlers.ts` to support sort query params (sortBy, sortOrder) and return correct pagination data
-- [ ] T043 [US2] Implement empty state UI in `src/presentations/components/files/DocumentEmptyState.tsx`: MUI Box with illustration and message "Upload documents to get started"
-- [ ] T044 [US2] Test loading state: create MUI Skeleton loaders in FileList and FileGridView with data-testid for testing
+- [X] T035 [P] [US2] Create FileList component in `src/presentations/components/files/FileList.tsx`: MUI Table/List displaying fileName, tags, uploadedAt, fileSize, uploadedByUserName with data-testid attributes
+- [X] T036 [P] [US2] Create FileGridView component in `src/presentations/components/files/FileGridView.tsx`: MUI Grid/Card layout with file metadata summary
+- [X] T037 [US2] Create ViewToggle component in `src/presentations/components/files/ViewToggle.tsx`: Material-UI ToggleButton switching between list and grid views, save preference to localStorage
+- [X] T038 [US2] Create SortControl component in `src/presentations/components/files/SortControl.tsx`: Material-UI Select for sort options (filename asc/desc, date new/old, size large/small)
+- [X] T039 [US2] Create DocumentPagination component in `src/presentations/components/files/DocumentPagination.tsx`: MUI Pagination component handling page change, display total records, items per page
+- [X] T040 [US2] Update useDocuments hook in `src/presentations/hooks/queries/useDocuments.ts` to support sort and view preferences stored in URL params and localStorage
+- [X] T041 [US2] Create DocumentListPage integration in `src/presentations/pages/DocumentManagementPage.tsx`: compose FileUploadArea, ViewToggle, SortControl, FileList/FileGridView, Pagination
+- [X] T042 [P] [US2] Update MSW handler in `src/adapters/mocks/handlers/fileHandlers.ts` to support sort query params (sortBy, sortOrder) and return correct pagination data
+- [X] T043 [US2] Implement empty state UI in `src/presentations/components/files/DocumentEmptyState.tsx`: MUI Box with illustration and message "Upload documents to get started"
+- [X] T044 [US2] Test loading state: create MUI Skeleton loaders in FileList and FileGridView with data-testid for testing
 
 **Checkpoint**: US2 完全機能。一覧表示、ビュー切り替え、ソート、ページネーション全て動作。
 

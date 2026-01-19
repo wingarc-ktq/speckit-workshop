@@ -8,4 +8,7 @@ export { ViewToggle } from './files/ViewToggle';
 export { SortControl } from './files/SortControl';
 export { DocumentPagination } from './files/DocumentPagination';
 export { DocumentEmptyState } from './files/DocumentEmptyState';
+export { DateRangeFilter } from './files/DateRangeFilter';
+export { TagFilter } from './files/TagFilter';
+export { SearchBar } from './search/SearchBar';
 export { TagSelector } from './tags/TagSelector';

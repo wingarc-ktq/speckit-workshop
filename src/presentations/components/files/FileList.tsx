@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import {
   Table,
   TableBody,
@@ -12,6 +12,7 @@ import {
   Chip,
   IconButton,
   Tooltip,
+  Checkbox,
 } from '@mui/material';
 import { Download as DownloadIcon, Edit as EditIcon, Delete as DeleteIcon } from '@mui/icons-material';
 import type { Document } from '@/domain/models/document';
@@ -22,6 +23,7 @@ interface FileListProps {
   onSort?: (sortBy: string, sortOrder: 'asc' | 'desc') => void;
   onPageChange?: (page: number) => void;
   onRowClick?: (document: Document) => void;
+  onSelectionChange?: (selectedIds: string[]) => void;
   totalCount?: number;
   currentPage?: number;
   pageSize?: number;
@@ -51,10 +53,13 @@ export function FileList({
   onSort: _onSort,
   onPageChange: _onPageChange,
   onRowClick,
+  onSelectionChange,
   totalCount: _totalCount,
   currentPage: _currentPage,
   pageSize: _pageSize,
 }: FileListProps) {
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
+
   // ローディング中のスケルトン行を生成
   const skeletonRows = useMemo(() => {
     return isLoading ? Array.from({ length: 5 }).map((_, i) => ({ id: `skeleton-${i}` })) : [];
@@ -66,16 +71,45 @@ export function FileList({
     }
   };
 
+  const handleSelectAll = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.checked) {
+      const newSelectedIds = documents.map((doc) => doc.id);
+      setSelectedIds(newSelectedIds);
+      onSelectionChange?.(newSelectedIds);
+    } else {
+      setSelectedIds([]);
+      onSelectionChange?.([]);
+    }
+  };
+
+  const handleSelectRow = (documentId: string, event: React.ChangeEvent<HTMLInputElement>) => {
+    event.stopPropagation();
+    let newSelectedIds: string[];
+    if (event.target.checked) {
+      newSelectedIds = [...selectedIds, documentId];
+    } else {
+      newSelectedIds = selectedIds.filter((id) => id !== documentId);
+    }
+    setSelectedIds(newSelectedIds);
+    onSelectionChange?.(newSelectedIds);
+  };
+
+  const isAllSelected = documents.length > 0 && selectedIds.length === documents.length;
+  const isIndeterminate = selectedIds.length > 0 && selectedIds.length < documents.length;
+
   if (isLoading && documents.length === 0) {
     return (
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
             <TableRow sx={{ backgroundColor: '#f5f5f5' }}>
-              <TableCell width="40%">ファイル名</TableCell>
-              <TableCell width="20%">タグ</TableCell>
-              <TableCell width="15%">サイズ</TableCell>
-              <TableCell width="15%">アップロード日時</TableCell>
+              <TableCell width="5%" padding="checkbox">
+                <Checkbox disabled />
+              </TableCell>
+              <TableCell width="30%">ファイル名</TableCell>
+              <TableCell width="15%">タグ</TableCell>
+              <TableCell width="15%">アップロード日</TableCell>
+              <TableCell width="15%">ファイルサイズ</TableCell>
               <TableCell width="10%" align="center">
                 アクション
               </TableCell>
@@ -84,6 +118,9 @@ export function FileList({
           <TableBody>
             {skeletonRows.map((row) => (
               <TableRow key={row.id} data-testid="skeleton-loader">
+                <TableCell padding="checkbox">
+                  <Checkbox disabled />
+                </TableCell>
                 <TableCell>
                   <Skeleton variant="text" />
                 </TableCell>
@@ -149,7 +186,15 @@ export function FileList({
       <Table>
         <TableHead>
           <TableRow sx={{ backgroundColor: '#f5f5f5' }}>
-            <TableCell width="40%">ファイル名</TableCell>
+            <TableCell width="5%" padding="checkbox">
+              <Checkbox
+                indeterminate={isIndeterminate}
+                checked={isAllSelected}
+                onChange={handleSelectAll}
+                data-testid="select-all-checkbox"
+              />
+            </TableCell>
+            <TableCell width="35%">ファイル名</TableCell>
             <TableCell width="20%">タグ</TableCell>
             <TableCell width="15%">サイズ</TableCell>
             <TableCell width="15%">アップロード日時</TableCell>
@@ -164,9 +209,20 @@ export function FileList({
               key={document.id}
               data-testid={`document-item-${document.id}`}
               hover
-              sx={{ cursor: 'pointer', '&:hover': { backgroundColor: '#f9f9f9' } }}
+              sx={{
+                cursor: 'pointer',
+                backgroundColor: selectedIds.includes(document.id) ? '#f0f7ff' : 'transparent',
+                '&:hover': { backgroundColor: selectedIds.includes(document.id) ? '#e8f4fd' : '#f9f9f9' },
+              }}
               onClick={() => handleRowClick(document)}
             >
+              <TableCell padding="checkbox" onClick={(e) => e.stopPropagation()}>
+                <Checkbox
+                  checked={selectedIds.includes(document.id)}
+                  onChange={(e) => handleSelectRow(document.id, e)}
+                  data-testid={`checkbox-${document.id}`}
+                />
+              </TableCell>
               <TableCell sx={{ fontWeight: 500 }}>{document.fileName}</TableCell>
               <TableCell>
                 <Box sx={{ display: 'flex', gap: 0.5, flexWrap: 'wrap' }}>
@@ -188,8 +244,8 @@ export function FileList({
                   )}
                 </Box>
               </TableCell>
-              <TableCell>{formatFileSize(document.fileSize)}</TableCell>
               <TableCell>{formatDate(document.uploadedAt)}</TableCell>
+              <TableCell>{formatFileSize(document.fileSize)}</TableCell>
               <TableCell align="center">
                 <Box sx={{ display: 'flex', gap: 0.5, justifyContent: 'center' }}>
                   <Tooltip title="ダウンロード">

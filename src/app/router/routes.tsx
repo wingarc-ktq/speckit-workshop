@@ -3,7 +3,6 @@ import { createBrowserRouter } from 'react-router-dom';
 import { AppLayout } from '@/presentations/layouts';
 import {
   DocumentManagementPage,
-  HomePage,
   LoginPage,
   NotFoundPage,
 } from '@/presentations/pages';
@@ -40,10 +39,6 @@ export const routes = [
         children: [
           {
             index: true,
-            lazy: async () => ({ Component: HomePage }),
-          },
-          {
-            path: ROUTE_PATH.DOCUMENTS,
             lazy: async () => ({
               Component: DocumentManagementPage,
             }),

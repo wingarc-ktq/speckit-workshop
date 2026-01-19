@@ -5,7 +5,7 @@ export const ja = {
     logout: 'ログアウト',
   },
   navigation: {
-    home: 'ホーム',
+    home: '',//ホームを消去
     dashboard: 'ダッシュボード',
   },
   actions: {
