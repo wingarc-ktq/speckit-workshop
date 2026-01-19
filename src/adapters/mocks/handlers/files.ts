@@ -429,6 +429,62 @@ export const getFilesHandlers = () => {
     return HttpResponse.json({ file }, { status: HTTP_STATUS_SUCCESS.OK });
   });
 
+  // ファイル更新
+  const updateFile = http.put('*/api/files/:id', async ({ params, request }) => {
+    await delay(500);
+
+    const { id } = params;
+    const fileIndex = MOCK_FILES.findIndex((f) => f.id === id);
+
+    if (fileIndex === -1) {
+      return HttpResponse.json(
+        { message: 'ファイルが見つかりません', code: 'FILE_NOT_FOUND' },
+        { status: HTTP_STATUS_CLIENT_ERROR.NOT_FOUND }
+      );
+    }
+
+    const body = (await request.json()) as {
+      name?: string;
+      description?: string;
+      tagIds?: string[];
+    };
+
+    if (body.name !== undefined) {
+      const trimmedName = body.name.trim();
+      if (!trimmedName) {
+        return HttpResponse.json(
+          { message: 'ファイル名は必須です', code: 'INVALID_NAME' },
+          { status: HTTP_STATUS_CLIENT_ERROR.BAD_REQUEST }
+        );
+      }
+      if (trimmedName.length > 255) {
+        return HttpResponse.json(
+          { message: 'ファイル名は255文字以内です', code: 'INVALID_NAME_LENGTH' },
+          { status: HTTP_STATUS_CLIENT_ERROR.BAD_REQUEST }
+        );
+      }
+    }
+
+    if (body.description !== undefined && body.description.length > 500) {
+      return HttpResponse.json(
+        { message: '説明は500文字以内です', code: 'INVALID_DESCRIPTION_LENGTH' },
+        { status: HTTP_STATUS_CLIENT_ERROR.BAD_REQUEST }
+      );
+    }
+
+    const current = MOCK_FILES[fileIndex];
+    const updated: FileInfo = {
+      ...current,
+      name: body.name !== undefined ? body.name : current.name,
+      description: body.description !== undefined ? body.description : current.description,
+      tagIds: body.tagIds !== undefined ? body.tagIds : current.tagIds,
+    };
+
+    MOCK_FILES[fileIndex] = updated;
+
+    return HttpResponse.json({ file: updated }, { status: HTTP_STATUS_SUCCESS.OK });
+  });
+
   // ファイルダウンロード
   const downloadFile = http.get('*/api/files/:id/download', async ({ params }) => {
     await delay(500);
@@ -503,5 +559,5 @@ export const getFilesHandlers = () => {
     });
   });
 
-  return [getFiles, uploadFile, getFile, downloadFile];
+  return [getFiles, uploadFile, getFile, updateFile, downloadFile];
 };

@@ -1,4 +1,5 @@
 import CloseIcon from '@mui/icons-material/Close';
+import EditIcon from '@mui/icons-material/Edit';
 import DownloadIcon from '@mui/icons-material/Download';
 import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
@@ -10,10 +11,12 @@ import DialogTitle from '@mui/material/DialogTitle';
 import IconButton from '@mui/material/IconButton';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
+import React from 'react';
 
 import { downloadFile } from '@/domain/utils/fileDownload';
 import { useFileDetail } from '@/presentations/hooks/queries/useFileDetail';
 
+import { FileEditDialog } from '../FileEdit/FileEditDialog';
 import { FileMetadata } from './FileMetadata';
 import { FilePreview } from './FilePreview';
 
@@ -31,8 +34,15 @@ export const FileDetailDialog = ({
   open,
   onClose,
 }: FileDetailDialogProps) => {
+  const [editOpen, setEditOpen] = React.useState(false);
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
+
+  React.useEffect(() => {
+    if (!open) {
+      setEditOpen(false);
+    }
+  }, [open]);
 
   // ファイル詳細情報を取得
   const { data: file, isLoading, error } = useFileDetail(fileId ?? undefined, open);
@@ -60,6 +70,15 @@ export const FileDetailDialog = ({
         <Box sx={{ flex: 1, overflow: 'hidden', textOverflow: 'ellipsis' }}>
           {file?.name ?? 'ファイル詳細'}
         </Box>
+        <Button
+          variant="outlined"
+          startIcon={<EditIcon />}
+          onClick={() => setEditOpen(true)}
+          disabled={!file}
+          sx={{ flexShrink: 0 }}
+        >
+          編集
+        </Button>
         <Button
           variant="contained"
           startIcon={<DownloadIcon />}
@@ -135,6 +154,8 @@ export const FileDetailDialog = ({
           </Box>
         )}
       </DialogContent>
+
+      <FileEditDialog open={editOpen} file={file ?? null} onClose={() => setEditOpen(false)} />
     </Dialog>
   );
 };

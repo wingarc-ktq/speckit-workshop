@@ -223,17 +223,21 @@ export const FileUploadDialog: React.FC<FileUploadDialogProps> = ({ open, onClos
                   />
                 )}
                 renderTags={(value, getTagProps) =>
-                  value.map((option, index) => (
-                    <Chip
-                      label={option.name}
-                      {...getTagProps({ index })}
-                      sx={{
-                        bgcolor: '#e0e7ff',
-                        color: '#4338ca',
-                        fontWeight: 'bold',
-                      }}
-                    />
-                  ))
+                  value.map((option, index) => {
+                    const { key, ...tagProps } = getTagProps({ index });
+                    return (
+                      <Chip
+                        key={key}
+                        label={option.name}
+                        {...tagProps}
+                        sx={{
+                          bgcolor: '#e0e7ff',
+                          color: '#4338ca',
+                          fontWeight: 'bold',
+                        }}
+                      />
+                    );
+                  })
                 }
               />
             </Box>

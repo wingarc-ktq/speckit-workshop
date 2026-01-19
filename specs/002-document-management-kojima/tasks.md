@@ -410,7 +410,7 @@
 
 ### OpenAPI拡張
 
-- [ ] **T063** [FOUND] `schema/files/openapi.yaml` にタグ管理エンドポイントを追加
+- [x] **T063** [FOUND] `schema/files/openapi.yaml` にタグ管理エンドポイントを追加
   - `POST /api/v1/tags` - タグ作成
   - `PUT /api/v1/tags/{id}` - タグ更新
   - `DELETE /api/v1/tags/{id}` - タグ削除
@@ -418,7 +418,7 @@
 
 ### MSWハンドラー拡張
 
-- [ ] **T064** [P] [FOUND] `src/adapters/mocks/handlers/tags.ts` にタグCRUD操作を追加
+- [x] **T064** [P] [FOUND] `src/adapters/mocks/handlers/tags.ts` にタグCRUD操作を追加
   - `createTag` ハンドラー: 新規タグ作成
   - `updateTag` ハンドラー: タグ更新
   - `deleteTag` ハンドラー: タグ削除（使用中の場合はエラー）
@@ -426,45 +426,45 @@
 
 ### リポジトリ拡張
 
-- [ ] **T065** [P] [FOUND] タグ管理リポジトリ関数を `src/adapters/repositories/files/` に作成
+- [x] **T065** [P] [FOUND] タグ管理リポジトリ関数を `src/adapters/repositories/files/` に作成
   - `createTag(data: CreateTagData): Promise<TagResponse>`
   - `updateTag(id: string, data: UpdateTagData): Promise<TagResponse>`
   - `deleteTag(id: string): Promise<void>`
 
 ### タグ管理UIコンポーネント
 
-- [ ] **T066** [US6] `TagManagementDialog` を `src/presentations/features/files/components/TagManagement/TagManagementDialog.tsx` に作成
+- [x] **T066** [US6] `TagManagementDialog` を `src/presentations/features/files/components/TagManagement/TagManagementDialog.tsx` に作成
   - タグ一覧表示
   - 「新規タグ作成」ボタン
   - 各タグの編集・削除ボタン
 
-- [ ] **T067** [P] [US6] `TagForm` を `src/presentations/features/files/components/TagManagement/TagForm.tsx` に作成
+- [x] **T067** [P] [US6] `TagForm` を `src/presentations/features/files/components/TagManagement/TagForm.tsx` に作成
   - タグ名入力フィールド
   - カラーピッカー（プリセット: blue, red, yellow, green, purple, orange, gray）
   - 保存・キャンセルボタン
   - バリデーション
 
-- [ ] **T068** [P] [US6] `TagColorPicker` を `src/presentations/features/files/components/TagManagement/TagColorPicker.tsx` に作成
+- [x] **T068** [P] [US6] `TagColorPicker` を `src/presentations/features/files/components/TagManagement/TagColorPicker.tsx` に作成
   - カラープリセット表示
   - 選択状態の表示
 
 ### カスタムフック
 
-- [ ] **T069** [US6] `useCreateTag` フックを `src/presentations/hooks/mutations/useCreateTag.ts` に作成
+- [x] **T069** [US6] `useCreateTag` フックを `src/presentations/hooks/mutations/useCreateTag.ts` に作成
   - `useMutation` を使用してタグ作成
   - 成功時に `tags` クエリを無効化
 
-- [ ] **T070** [US6] `useUpdateTag` フックを `src/presentations/hooks/mutations/useUpdateTag.ts` に作成
+- [x] **T070** [US6] `useUpdateTag` フックを `src/presentations/hooks/mutations/useUpdateTag.ts` に作成
   - `useMutation` を使用してタグ更新
   - 成功時に `tags` と `files` クエリを無効化
 
-- [ ] **T071** [US6] `useDeleteTag` フックを `src/presentations/hooks/mutations/useDeleteTag.ts` に作成
+- [x] **T071** [US6] `useDeleteTag` フックを `src/presentations/hooks/mutations/useDeleteTag.ts` に作成
   - `useMutation` を使用してタグ削除
   - 削除確認ダイアログ統合
 
 ### 統合
 
-- [ ] **T072** [US6] タグ管理機能をヘッダーまたはサイドバーに統合
+- [x] **T072** [US6] タグ管理機能をヘッダーまたはサイドバーに統合
   - タグ管理ボタン追加
   - `TagManagementDialog` の表示/非表示制御
 
@@ -478,43 +478,43 @@
 
 ### OpenAPI拡張
 
-- [ ] **T073** [FOUND] `schema/files/openapi.yaml` にファイル更新エンドポイントを追加
+- [x] **T073** [FOUND] `schema/files/openapi.yaml` にファイル更新エンドポイントを追加
   - `PUT /api/v1/files/{id}` - ファイルメタデータ更新
   - `pnpm run gen:api` で型とAPI関数を再生成
 
 ### MSWハンドラー拡張
 
-- [ ] **T074** [P] [FOUND] `src/adapters/mocks/handlers/files.ts` にファイル更新ハンドラーを追加
+- [x] **T074** [P] [FOUND] `src/adapters/mocks/handlers/files.ts` にファイル更新ハンドラーを追加
   - `updateFile` ハンドラー: ファイル名、説明、タグを更新
   - モックデータを更新
 
 ### リポジトリ拡張
 
-- [ ] **T075** [P] [FOUND] ファイル更新リポジトリ関数を `src/adapters/repositories/files/updateFile.ts` に作成
+- [x] **T075** [P] [FOUND] ファイル更新リポジトリ関数を `src/adapters/repositories/files/updateFile.ts` に作成
   - `updateFile(id: string, data: UpdateFileData): Promise<FileResponse>`
 
 ### 編集UIコンポーネント
 
-- [ ] **T076** [US7] `FileEditDialog` を `src/presentations/features/files/components/FileEdit/FileEditDialog.tsx` に作成
+- [x] **T076** [US7] `FileEditDialog` を `src/presentations/features/files/components/FileEdit/FileEditDialog.tsx` に作成
   - 編集フォーム表示
   - ファイル名入力フィールド
   - 説明入力フィールド（複数行）
   - タグ選択（Autocomplete）
   - 保存・キャンセルボタン
 
-- [ ] **T077** [P] [US7] `FileEditForm` を `src/presentations/features/files/components/FileEdit/FileEditForm.tsx` に作成
+- [x] **T077** [P] [US7] `FileEditForm` を `src/presentations/features/files/components/FileEdit/FileEditForm.tsx` に作成
   - フォームバリデーション
   - 変更検知
 
 ### カスタムフック
 
-- [ ] **T078** [US7] `useUpdateFile` フックを `src/presentations/hooks/mutations/useUpdateFile.ts` に作成
+- [x] **T078** [US7] `useUpdateFile` フックを `src/presentations/hooks/mutations/useUpdateFile.ts` に作成
   - `useMutation` を使用してファイル更新
   - 成功時に `files` クエリを無効化
 
 ### 統合
 
-- [ ] **T079** [US7] `FileDetailDialog` に編集ボタンを追加
+- [x] **T079** [US7] `FileDetailDialog` に編集ボタンを追加
   - 編集ボタンクリックで `FileEditDialog` を開く
   - 編集完了後に詳細画面を更新
 
