@@ -2,7 +2,6 @@ import React, { useCallback } from 'react';
 
 import DescriptionIcon from '@mui/icons-material/Description';
 import Avatar from '@mui/material/Avatar';
-import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import {
   DataGrid,
@@ -14,6 +13,7 @@ import {
 import { format } from 'date-fns';
 
 import type { DocumentFile } from '@/domain/models/file';
+import { DataGridCellContent } from '@/presentations/components/dataGrid/DataGridCellContent';
 import { TagChips } from '@/presentations/components/tags/TagChips/TagChips';
 import { useTags } from '@/presentations/hooks/queries/tags/useTags';
 import { formatFileSize } from '@/presentations/utils/fileFormatters';
@@ -64,12 +64,14 @@ export const FileListTable: React.FC<FileListTableProps> = ({
         flex: 1,
         minWidth: 300,
         renderCell: (params) => (
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+          <DataGridCellContent>
             <Avatar sx={{ width: 32, height: 32, bgcolor: 'info.main' }}>
               <DescriptionIcon sx={{ fontSize: 24 }} />
             </Avatar>
-            <Typography variant="body2">{params.value}</Typography>
-          </Box>
+            <Typography variant="body2" noWrap>
+              {params.value}
+            </Typography>
+          </DataGridCellContent>
         ),
       },
       {
@@ -78,8 +80,11 @@ export const FileListTable: React.FC<FileListTableProps> = ({
         flex: 1,
         minWidth: 200,
         sortable: false,
+        align: 'center',
         renderCell: (params) => (
-          <TagChips tags={getFileTags(params.value)} size="small" />
+          <DataGridCellContent>
+            <TagChips tags={getFileTags(params.value)} size="small" />
+          </DataGridCellContent>
         ),
       },
       {
@@ -87,22 +92,14 @@ export const FileListTable: React.FC<FileListTableProps> = ({
         headerName: 'Last Modified',
         flex: 1,
         minWidth: 200,
-        renderCell: (params) => (
-          <Typography variant="body2" color="text.secondary">
-            {format(params.value, 'yyyy/MM/dd HH:mm')}
-          </Typography>
-        ),
+        valueFormatter: (value) => format(value, 'yyyy/MM/dd HH:mm'),
       },
       {
         field: 'size',
         headerName: 'File Size',
         flex: 1,
         minWidth: 150,
-        renderCell: (params) => (
-          <Typography variant="body2" color="text.secondary">
-            {formatFileSize(params.value)}
-          </Typography>
-        ),
+        valueFormatter: (value) => formatFileSize(value),
       },
     ],
     [getFileTags]
@@ -119,6 +116,7 @@ export const FileListTable: React.FC<FileListTableProps> = ({
 
   return (
     <DataGrid
+      autoHeight
       rows={files}
       columns={columns}
       paginationMode="server"
@@ -131,16 +129,6 @@ export const FileListTable: React.FC<FileListTableProps> = ({
       checkboxSelection
       disableRowSelectionOnClick
       pageSizeOptions={[5, 10, 25]}
-      sx={{
-        '& .MuiDataGrid-cell': {
-          display: 'flex',
-          alignItems: 'center',
-        },
-        '& .MuiDataGrid-columnHeader': {
-          display: 'flex',
-          alignItems: 'center',
-        },
-      }}
     />
   );
 };
