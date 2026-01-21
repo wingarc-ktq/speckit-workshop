@@ -13,8 +13,8 @@ export const useUploadFile = () => {
   return useMutation({
     mutationFn: uploadFile,
     onSuccess: () => {
-      // ファイル一覧を再取得｀
-      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.FILES.LIST()] });
+      // ファイル一覧を再取得
+      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.FILES.LIST() });
     },
   });
 };

@@ -67,7 +67,11 @@ export const FileUploadItem: React.FC<FileUploadItemProps> = ({
       </S.FileInfoContainer>
 
       {status !== FileUploadStatusConst.UPLOADING && (
-        <S.RemoveButton size="small" onClick={() => onRemove(id)} data-testid="deleteButton">
+        <S.RemoveButton
+          size="small"
+          onClick={() => onRemove(id)}
+          data-testid="deleteButton"
+        >
           <CloseIcon fontSize="small" />
         </S.RemoveButton>
       )}

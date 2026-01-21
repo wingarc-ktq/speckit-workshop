@@ -25,11 +25,11 @@
 
 **Purpose**: プロジェクト初期化と基本構造の作成
 
-- [X] T001 依存パッケージのインストール `pnpm add @mui/x-data-grid react-dropzone date-fns`
-- [X] T002 [P] OpenAPI仕様を `schema/files/openapi.yaml` にコピー
-- [X] T003 [P] orval設定を `schema/orval.config.ts` に追加(filesエンドポイント用)
-- [X] T004 APIクライアントコードを生成 `pnpm gen:api` → `src/adapters/generated/files.ts`
-- [X] T005 [P] MSWハンドラーを `src/adapters/mocks/handlers/index.ts` に追加
+- [x] T001 依存パッケージのインストール `pnpm add @mui/x-data-grid react-dropzone date-fns`
+- [x] T002 [P] OpenAPI仕様を `schema/files/openapi.yaml` にコピー
+- [x] T003 [P] orval設定を `schema/orval.config.ts` に追加(filesエンドポイント用)
+- [x] T004 APIクライアントコードを生成 `pnpm gen:api` → `src/adapters/generated/files.ts`
+- [x] T005 [P] MSWハンドラーを `src/adapters/mocks/handlers/index.ts` に追加
 
 ---
 
@@ -41,65 +41,65 @@
 
 ### ドメインモデルの実装
 
-- [X] T006 [P] File関連の型定義を作成 `src/domain/models/file/type.ts`
-- [X] T007 [P] File型のエクスポート設定 `src/domain/models/file/index.ts`
-- [X] T008 [P] Tag関連の型定義を作成 `src/domain/models/tag/type.ts`
-- [X] T009 [P] Tag型のエクスポート設定 `src/domain/models/tag/index.ts`
+- [x] T006 [P] File関連の型定義を作成 `src/domain/models/file/type.ts`
+- [x] T007 [P] File型のエクスポート設定 `src/domain/models/file/index.ts`
+- [x] T008 [P] Tag関連の型定義を作成 `src/domain/models/tag/type.ts`
+- [x] T009 [P] Tag型のエクスポート設定 `src/domain/models/tag/index.ts`
 
 ### Adapterレイヤーの実装
 
-- [X] T010 [P] ファイル取得リポジトリ `src/adapters/repositories/files/getFiles.ts`
-- [X] T011 [P] ファイル詳細取得リポジトリ `src/adapters/repositories/files/getFileById.ts`
-- [X] T012 [P] ファイルアップロードリポジトリ `src/adapters/repositories/files/uploadFile.ts`
-- [X] T013 [P] ファイル更新リポジトリ `src/adapters/repositories/files/updateFile.ts`
-- [X] T014 [P] ファイル削除リポジトリ `src/adapters/repositories/files/deleteFile.ts`
-- [X] T015 [P] ファイル一括削除リポジトリ `src/adapters/repositories/files/bulkDeleteFiles.ts`
-- [X] T016 [P] ファイルダウンロードリポジトリ `src/adapters/repositories/files/downloadFile.ts`
-- [X] T017 ファイルリポジトリのエクスポート `src/adapters/repositories/files/index.ts`
-- [X] T018 [P] タグ取得リポジトリ `src/adapters/repositories/tags/getTags.ts`
-- [X] T019 [P] タグ作成リポジトリ `src/adapters/repositories/tags/createTag.ts`
-- [X] T020 [P] タグ更新リポジトリ `src/adapters/repositories/tags/updateTag.ts`
-- [X] T021 [P] タグ削除リポジトリ `src/adapters/repositories/tags/deleteTag.ts`
-- [X] T022 タグリポジトリのエクスポート `src/adapters/repositories/tags/index.ts`
-- [X] T023 repositoryCompositionに files, tags を追加 `src/adapters/repositories/repositoryComposition.ts`
+- [x] T010 [P] ファイル取得リポジトリ `src/adapters/repositories/files/getFiles.ts`
+- [x] T011 [P] ファイル詳細取得リポジトリ `src/adapters/repositories/files/getFileById.ts`
+- [x] T012 [P] ファイルアップロードリポジトリ `src/adapters/repositories/files/uploadFile.ts`
+- [x] T013 [P] ファイル更新リポジトリ `src/adapters/repositories/files/updateFile.ts`
+- [x] T014 [P] ファイル削除リポジトリ `src/adapters/repositories/files/deleteFile.ts`
+- [x] T015 [P] ファイル一括削除リポジトリ `src/adapters/repositories/files/bulkDeleteFiles.ts`
+- [x] T016 [P] ファイルダウンロードリポジトリ `src/adapters/repositories/files/downloadFile.ts`
+- [x] T017 ファイルリポジトリのエクスポート `src/adapters/repositories/files/index.ts`
+- [x] T018 [P] タグ取得リポジトリ `src/adapters/repositories/tags/getTags.ts`
+- [x] T019 [P] タグ作成リポジトリ `src/adapters/repositories/tags/createTag.ts`
+- [x] T020 [P] タグ更新リポジトリ `src/adapters/repositories/tags/updateTag.ts`
+- [x] T021 [P] タグ削除リポジトリ `src/adapters/repositories/tags/deleteTag.ts`
+- [x] T022 タグリポジトリのエクスポート `src/adapters/repositories/tags/index.ts`
+- [x] T023 repositoryCompositionに files, tags を追加 `src/adapters/repositories/repositoryComposition.ts`
 
 ### TanStack Queryフックの実装
 
-- [X] T024 クエリキー定数を追加 `src/presentations/hooks/queries/constants.ts` に FILES, TAGS キー追加
-- [X] T025 [P] useFilesフック `src/presentations/hooks/queries/files/useFiles.ts`
-- [X] T026 [P] useFileByIdフック `src/presentations/hooks/queries/files/useFileById.ts`
-- [X] T027 [P] useUploadFileフック `src/presentations/hooks/queries/files/useUploadFile.ts`
-- [X] T028 [P] useUpdateFileフック `src/presentations/hooks/queries/files/useUpdateFile.ts`
-- [X] T029 [P] useDeleteFileフック `src/presentations/hooks/queries/files/useDeleteFile.ts`
-- [X] T030 [P] useBulkDeleteFilesフック `src/presentations/hooks/queries/files/useBulkDeleteFiles.ts`
-- [X] T031 [P] useTagsフック `src/presentations/hooks/queries/tags/useTags.ts`
-- [X] T032 [P] useCreateTagフック `src/presentations/hooks/queries/tags/useCreateTag.ts`
-- [X] T033 [P] useUpdateTagフック `src/presentations/hooks/queries/tags/useUpdateTag.ts`
-- [X] T034 [P] useDeleteTagフック `src/presentations/hooks/queries/tags/useDeleteTag.ts`
+- [x] T024 クエリキー定数を追加 `src/presentations/hooks/queries/constants.ts` に FILES, TAGS キー追加
+- [x] T025 [P] useFilesフック `src/presentations/hooks/queries/files/useFiles.ts`
+- [x] T026 [P] useFileByIdフック `src/presentations/hooks/queries/files/useFileById.ts`
+- [x] T027 [P] useUploadFileフック `src/presentations/hooks/queries/files/useUploadFile.ts`
+- [x] T028 [P] useUpdateFileフック `src/presentations/hooks/queries/files/useUpdateFile.ts`
+- [x] T029 [P] useDeleteFileフック `src/presentations/hooks/queries/files/useDeleteFile.ts`
+- [x] T030 [P] useBulkDeleteFilesフック `src/presentations/hooks/queries/files/useBulkDeleteFiles.ts`
+- [x] T031 [P] useTagsフック `src/presentations/hooks/queries/tags/useTags.ts`
+- [x] T032 [P] useCreateTagフック `src/presentations/hooks/queries/tags/useCreateTag.ts`
+- [x] T033 [P] useUpdateTagフック `src/presentations/hooks/queries/tags/useUpdateTag.ts`
+- [x] T034 [P] useDeleteTagフック `src/presentations/hooks/queries/tags/useDeleteTag.ts`
 
 ### ユーティリティ関数の実装
 
-- [X] T035 [P] ファイルフォーマッター関数 `src/presentations/utils/fileFormatters.ts`（formatFileSize, getFileType, isSupportedFileType, exceedsMaxUploadSize）
+- [x] T035 [P] ファイルフォーマッター関数 `src/presentations/utils/fileFormatters.ts`（formatFileSize, getFileType, isSupportedFileType, exceedsMaxUploadSize）
 
 ### 共通UIコンポーネントの実装
 
-- [X] T036 [P] TagChipsコンポーネント `src/presentations/components/tags/TagChips/TagChips.tsx`
-- [X] T037 [P] TagSelectorコンポーネント `src/presentations/components/tags/TagSelector/TagSelector.tsx`
+- [x] T036 [P] TagChipsコンポーネント `src/presentations/components/tags/TagChips/TagChips.tsx`
+- [x] T037 [P] TagSelectorコンポーネント `src/presentations/components/tags/TagSelector/TagSelector.tsx`
 
 ### レイアウトの実装
 
-- [X] T038 AppLayoutコンポーネント `src/presentations/layouts/AppLayout/AppLayout.tsx`
-- [X] T039 [P] AppSidebarコンポーネント `src/presentations/layouts/AppLayout/components/AppSidebar/AppSidebar.tsx`
-- [X] T040 [P] AppHeaderコンポーネント `src/presentations/layouts/AppLayout/components/AppHeader/AppHeader.tsx`
+- [x] T038 AppLayoutコンポーネント `src/presentations/layouts/AppLayout/AppLayout.tsx`
+- [x] T039 [P] AppSidebarコンポーネント `src/presentations/layouts/AppLayout/components/AppSidebar/AppSidebar.tsx`
+- [x] T040 [P] AppHeaderコンポーネント `src/presentations/layouts/AppLayout/components/AppHeader/AppHeader.tsx`
 
 ### 国際化（i18n）の設定
 
-- [X] T041 [P] 日本語翻訳を追加 `src/i18n/locales/ja.json` に filesPage セクション追加
-- [X] T042 [P] 英語翻訳を追加 `src/i18n/locales/en.json` に filesPage セクション追加
+- [x] T041 [P] 日本語翻訳を追加 `src/i18n/locales/ja.json` に filesPage セクション追加
+- [x] T042 [P] 英語翻訳を追加 `src/i18n/locales/en.json` に filesPage セクション追加
 
 ### ルーティングの設定
 
-- [X] T043 FilesPageルートを追加 `src/app/router/routes.tsx`
+- [x] T043 FilesPageルートを追加 `src/app/router/routes.tsx`
 
 **Checkpoint**: 基盤準備完了 - ユーザーストーリーの実装を並列で開始可能
 
@@ -113,11 +113,11 @@
 
 ### Implementation for User Story 1
 
-- [X] T044 [P] [US1] FileUploadZoneコンポーネント `src/presentations/pages/FilesPage/components/UploadSection/components/FileUploadZone/FileUploadZone.tsx`
-- [X] T045 [US1] UploadSectionコンポーネント `src/presentations/pages/FilesPage/components/UploadSection/UploadSection.tsx`
-- [X] T046 [US1] アップロードプログレスバー表示の実装（UploadSection内）
-- [X] T047 [US1] ファイルサイズ・形式バリデーションのエラーハンドリング実装
-- [X] T048 [US1] 複数ファイル同時アップロード機能の実装（最大20ファイル）
+- [x] T044 [P] [US1] FileUploadZoneコンポーネント `src/presentations/pages/FilesPage/components/UploadSection/components/FileUploadZone/FileUploadZone.tsx`
+- [x] T045 [US1] UploadSectionコンポーネント `src/presentations/pages/FilesPage/components/UploadSection/UploadSection.tsx`
+- [x] T046 [US1] アップロードプログレスバー表示の実装（UploadSection内）
+- [x] T047 [US1] ファイルサイズ・形式バリデーションのエラーハンドリング実装
+- [x] T048 [US1] 複数ファイル同時アップロード機能の実装（最大20ファイル）
 
 **Checkpoint**: User Story 1が独立して機能し、テスト可能な状態
 
@@ -131,11 +131,11 @@
 
 ### Implementation for User Story 2
 
-- [X] T049 [P] [US2] FileListTableコンポーネント（MUI DataGrid使用） `src/presentations/pages/FilesPage/components/MyFilesSection/components/FileListTable/FileListTable.tsx`
-- [X] T050 [US2] MyFilesSectionコンポーネント `src/presentations/pages/FilesPage/components/MyFilesSection/MyFilesSection.tsx`
-- [X] T051 [US2] リスト/グリッドビュー切り替え機能の実装
-- [X] T052 [US2] ソート機能の実装（ファイル名、更新日時、ファイルサイズ）
-- [X] T053 [US2] ページネーション機能の実装（サーバーサイド）
+- [x] T049 [P] [US2] FileListTableコンポーネント（MUI DataGrid使用） `src/presentations/pages/FilesPage/components/MyFilesSection/components/FileListTable/FileListTable.tsx`
+- [x] T050 [US2] MyFilesSectionコンポーネント `src/presentations/pages/FilesPage/components/MyFilesSection/MyFilesSection.tsx`
+- [x] T051 [US2] リスト/グリッドビュー切り替え機能の実装
+- [x] T052 [US2] ソート機能の実装（ファイル名、更新日時、ファイルサイズ）
+- [x] T053 [US2] ページネーション機能の実装（サーバーサイド）
 
 **Checkpoint**: User Story 2が独立して機能し、テスト可能な状態
 
@@ -149,10 +149,10 @@
 
 ### Implementation for User Story 3
 
-- [X] T054 [US3] 検索バーコンポーネントをAppHeaderに追加し、URLパラメータと連携 `src/presentations/layouts/AppLayout/components/AppHeader/AppHeader.tsx`
-- [X] T055 [US3] 検索デバウンス処理の実装（300ms）`src/presentations/hooks/useDebounce.ts`
-- [X] T056 [US3] 検索に合致したファイルが表示されることを確認（ハイライト不要）
-- [X] T057 [US3] 検索結果ゼロ件時のメッセージ表示 `src/presentations/pages/FilesPage/components/MyFilesSection/MyFilesSection.tsx`
+- [x] T054 [US3] 検索バーコンポーネントをAppHeaderに追加し、URLパラメータと連携 `src/presentations/layouts/AppLayout/components/AppHeader/AppHeader.tsx`
+- [x] T055 [US3] 検索デバウンス処理の実装（300ms）`src/presentations/hooks/useDebounce.ts`
+- [x] T056 [US3] 検索に合致したファイルが表示されることを確認（ハイライト不要）
+- [x] T057 [US3] 検索結果ゼロ件時のメッセージ表示 `src/presentations/pages/FilesPage/components/MyFilesSection/MyFilesSection.tsx`
 
 **Checkpoint**: User Story 3が独立して機能し、テスト可能な状態
 
@@ -166,10 +166,10 @@
 
 ### Implementation for User Story 4
 
-- [X] T058 [US4] サイドメニューのタグにクリックイベントを追加し、単一タグフィルタを実装
-- [X] T059 [US4] ヘッダーに詳細検索ポップオーバーを実装(TuneIcon + Popover + TagSelector)
-- [X] T060 [US4] 複数タグ選択によるANDフィルタリング機能の実装(URLクエリパラメータ管理含む)
-- [X] T061 [US4] フィルタクリア機能の実装(ポップオーバー内とサイドメニュー選択解除)
+- [x] T058 [US4] サイドメニューのタグにクリックイベントを追加し、単一タグフィルタを実装
+- [x] T059 [US4] ヘッダーに詳細検索ポップオーバーを実装(TuneIcon + Popover + TagSelector)
+- [x] T060 [US4] 複数タグ選択によるANDフィルタリング機能の実装(URLクエリパラメータ管理含む)
+- [x] T061 [US4] フィルタクリア機能の実装(ポップオーバー内とサイドメニュー選択解除)
 
 **Checkpoint**: User Story 4が独立して機能し、テスト可能な状態
 
@@ -183,11 +183,11 @@
 
 ### Implementation for User Story 5
 
-- [ ] T062 [P] [US5] FileDetailDialogコンポーネント `src/presentations/pages/FilesPage/components/MyFilesSection/components/FileDetailDialog/FileDetailDialog.tsx`
-- [ ] T063 [US5] PDFプレビュー表示機能の実装
-- [ ] T064 [US5] 画像プレビュー表示機能の実装
-- [ ] T065 [US5] 単一ファイルダウンロード機能の実装
-- [ ] T066 [US5] 複数ファイル一括ダウンロード機能の実装（ZIP形式）
+- [x] T062 [P] [US5] FileDetailDialogコンポーネント `src/presentations/pages/FilesPage/components/MyFilesSection/components/FileDetailDialog/FileDetailDialog.tsx`
+- [x] T063 [US5] PDFプレビュー表示機能の実装
+- [x] T064 [US5] 画像プレビュー表示機能の実装
+- [x] T065 [US5] 単一ファイルダウンロード機能の実装
+- [x] T066 [US5] 複数ファイル一括ダウンロード機能の実装（ZIP形式）
 
 **Checkpoint**: User Story 5が独立して機能し、テスト可能な状態
 
@@ -267,9 +267,9 @@
 
 **Purpose**: Recent Filesセクションの実装とFilesPageの完成
 
-- [X] T085 [P] FileCardコンポーネント `src/presentations/pages/FilesPage/components/RecentFilesSection/components/FileCard/FileCard.tsx`
-- [X] T086 RecentFilesSectionコンポーネント `src/presentations/pages/FilesPage/components/RecentFilesSection/RecentFilesSection.tsx`
-- [X] T087 FilesPageの完成 `src/presentations/pages/FilesPage/FilesPage.tsx`（全セクション統合）
+- [x] T085 [P] FileCardコンポーネント `src/presentations/pages/FilesPage/components/RecentFilesSection/components/FileCard/FileCard.tsx`
+- [x] T086 RecentFilesSectionコンポーネント `src/presentations/pages/FilesPage/components/RecentFilesSection/RecentFilesSection.tsx`
+- [x] T087 FilesPageの完成 `src/presentations/pages/FilesPage/FilesPage.tsx`（全セクション統合）
 
 ---
 

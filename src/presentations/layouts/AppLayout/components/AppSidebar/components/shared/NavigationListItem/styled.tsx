@@ -5,12 +5,10 @@ import ListItemButton, {
 import { styled } from '@mui/material/styles';
 import { NavLink, type NavLinkProps } from 'react-router-dom';
 
-export const StyledListItem: React.FC<ListItemProps> = styled(ListItem)(
-  () => ({
-    paddingLeft: 0,
-    paddingRight: 0,
-  })
-);
+export const StyledListItem: React.FC<ListItemProps> = styled(ListItem)(() => ({
+  paddingLeft: 0,
+  paddingRight: 0,
+}));
 
 export const NavigationLink: React.FC<NavLinkProps> = styled(NavLink)(() => ({
   textDecoration: 'none',

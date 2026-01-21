@@ -104,15 +104,21 @@ describe('uploadFile', () => {
       }
     );
 
-    test.concurrent('tagIdsがAPIレスポンスから正しくマッピングされること', async () => {
-      const mockDataWithTags = mockFileResponseVariations.withTagIds(['tag-001', 'tag-002']);
-      mocked.mockResolvedValue(mockDataWithTags);
+    test.concurrent(
+      'tagIdsがAPIレスポンスから正しくマッピングされること',
+      async () => {
+        const mockDataWithTags = mockFileResponseVariations.withTagIds([
+          'tag-001',
+          'tag-002',
+        ]);
+        mocked.mockResolvedValue(mockDataWithTags);
 
-      const result = await uploadFile(mockUploadFileRequest);
+        const result = await uploadFile(mockUploadFileRequest);
 
-      expect(result.tagIds).toEqual(['tag-001', 'tag-002']);
-      expect(Array.isArray(result.tagIds)).toBe(true);
-    });
+        expect(result.tagIds).toEqual(['tag-001', 'tag-002']);
+        expect(Array.isArray(result.tagIds)).toBe(true);
+      }
+    );
   });
 
   describe('異常系', () => {

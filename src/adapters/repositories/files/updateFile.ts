@@ -1,5 +1,9 @@
 import { updateFile as updateFileApi } from '@/adapters/generated/files';
-import type { DocumentFile, FileId, UpdateFileRequest } from '@/domain/models/file';
+import type {
+  DocumentFile,
+  FileId,
+  UpdateFileRequest,
+} from '@/domain/models/file';
 
 export async function updateFile(
   fileId: FileId,

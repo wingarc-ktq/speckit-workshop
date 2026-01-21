@@ -1,106 +1,76 @@
-import { faker } from '@faker-js/faker';
+import { http } from 'msw';
 
-import { mockExtendedFileListApi } from '@/__fixtures__/files';
 import {
-  getBulkDeleteFilesMockHandler,
   getCreateTagMockHandler,
-  getDeleteFileMockHandler,
   getDeleteTagMockHandler,
-  getDownloadFileMockHandler,
-  getGetFileByIdMockHandler,
-  getGetFilesMockHandler,
   getGetTagsMockHandler,
-  getUpdateFileMockHandler,
   getUpdateTagMockHandler,
-  getUploadFileMockHandler,
   type FileInfo,
   type FileListResponse,
   type TagListResponse,
 } from '@/adapters/generated/files';
 
-// Generate a stable list of mock files with meaningful tags
-// First 5 files are from fixtures for consistency with tests
-const ADDITIONAL_FILES_COUNT = 40; // Additional files count
-const additionalMockFiles = Array.from(
-  { length: ADDITIONAL_FILES_COUNT },
-  (_, index) => {
-    // Distribute tags meaningfully across files
-    let tagIds: string[] = [];
-    if (index % 5 === 0) {
-      tagIds = ['tag-001'];
-    } else if (index % 5 === 1) {
-      tagIds = ['tag-002'];
-    } else if (index % 5 === 2) {
-      tagIds = ['tag-003'];
-    } else if (index % 5 === 3) {
-      tagIds = ['tag-002', 'tag-005'];
-    } else {
-      tagIds = ['tag-001', 'tag-002'];
-    }
+// Mutable mock files store - starts empty, only contains uploaded files
+let mockFiles: FileInfo[] = [];
 
-    const fileIndex = index;
-    return {
-      id: `file-${String(fileIndex).padStart(3, '0')}`,
-      name: `Document_${fileIndex}.pdf`,
-      size: faker.number.int({ min: 1024, max: 10485760 }), // 1KB to 10MB
-      mimeType: 'application/pdf',
-      description: faker.lorem.sentence(),
-      uploadedAt: faker.date.past().toISOString(),
-      downloadUrl: `/api/files/file-${String(fileIndex).padStart(3, '0')}/download`,
-      tagIds,
-    };
-  }
-);
+// Store uploaded file blobs by fileId
+const uploadedFileBlobs = new Map<string, Blob>();
 
-const mockFiles = [...additionalMockFiles, ...mockExtendedFileListApi];
+// Generate unique file ID
+let fileIdCounter = 100;
 
 // Custom handler for getFiles with pagination and search support
-const getFilesWithPaginationHandler = getGetFilesMockHandler(
-  (info): FileListResponse => {
-    const url = new URL(info.request.url);
-    const page = parseInt(url.searchParams.get('page') || '1', 10);
-    const limit = parseInt(url.searchParams.get('limit') || '10', 10);
-    const search = url.searchParams.get('search') || undefined;
-    const tagIdsParam = url.searchParams.get('tagIds') || undefined;
+const getFilesWithPaginationHandler = http.get('*/files', async ({ request }) => {
+  await new Promise((resolve) => setTimeout(resolve, 300));
 
-    // Filter files by search query and tags
-    let filteredFiles: FileInfo[] = mockFiles;
+  const url = new URL(request.url);
+  const page = parseInt(url.searchParams.get('page') || '1', 10);
+  const limit = parseInt(url.searchParams.get('limit') || '10', 10);
+  const search = url.searchParams.get('search') || undefined;
+  const tagIdsParam = url.searchParams.get('tagIds') || undefined;
 
-    // Filter by search query
-    if (search) {
-      const lowerSearch = search.toLowerCase();
+  // Filter files by search query and tags
+  let filteredFiles: FileInfo[] = mockFiles;
+
+  // Filter by search query
+  if (search) {
+    const lowerSearch = search.toLowerCase();
+    filteredFiles = filteredFiles.filter((file) => {
+      // 名前でマッチしたら早期リターン
+      if (file.name.toLowerCase().includes(lowerSearch)) return true;
+      // 名前でマッチしなければdescriptionをチェック
+      return file.description?.toLowerCase().includes(lowerSearch) ?? false;
+    });
+  }
+
+  // Filter by tags (OR condition - file must have at least one of the specified tags)
+  if (tagIdsParam) {
+    const requestedTagIds = tagIdsParam.split(',').filter(Boolean);
+    if (requestedTagIds.length > 0) {
       filteredFiles = filteredFiles.filter((file) => {
-        // 名前でマッチしたら早期リターン
-        if (file.name.toLowerCase().includes(lowerSearch)) return true;
-        // 名前でマッチしなければdescriptionをチェック
-        return file.description?.toLowerCase().includes(lowerSearch) ?? false;
+        // Check if file has at least one of the requested tags
+        return requestedTagIds.some((tagId) => file.tagIds?.includes(tagId));
       });
     }
-
-    // Filter by tags (OR condition - file must have at least one of the specified tags)
-    if (tagIdsParam) {
-      const requestedTagIds = tagIdsParam.split(',').filter(Boolean);
-      if (requestedTagIds.length > 0) {
-        filteredFiles = filteredFiles.filter((file) => {
-          // Check if file has at least one of the requested tags
-          return requestedTagIds.some((tagId) => file.tagIds?.includes(tagId));
-        });
-      }
-    }
-
-    // Calculate pagination
-    const startIndex = (page - 1) * limit;
-    const endIndex = startIndex + limit;
-    const paginatedFiles = filteredFiles.slice(startIndex, endIndex);
-
-    return {
-      files: paginatedFiles,
-      total: filteredFiles.length,
-      page,
-      limit,
-    };
   }
-);
+
+  // Calculate pagination
+  const startIndex = (page - 1) * limit;
+  const endIndex = startIndex + limit;
+  const paginatedFiles = filteredFiles.slice(startIndex, endIndex);
+
+  const response: FileListResponse = {
+    files: paginatedFiles,
+    total: filteredFiles.length,
+    page,
+    limit,
+  };
+
+  return new Response(JSON.stringify(response), {
+    status: 200,
+    headers: { 'Content-Type': 'application/json' },
+  });
+});
 
 // Define a stable list of mock tags with meaningful names
 const mockTags = [
@@ -148,15 +118,275 @@ const getTagsHandler = getGetTagsMockHandler((): TagListResponse => {
   };
 });
 
+
+// Custom handler for uploadFile
+const uploadFileHandler = http.post('*/files', async ({ request }) => {
+  await new Promise((resolve) => setTimeout(resolve, 500)); // Simulate network delay
+
+  const formData = await request.formData();
+  const file = formData.get('file') as File;
+  const description = formData.get('description') as string | null;
+
+  if (!file) {
+    return new Response(
+      JSON.stringify({
+        message: 'File is required',
+        code: 'FILE_REQUIRED',
+      }),
+      {
+        status: 400,
+        headers: { 'Content-Type': 'application/json' },
+      }
+    );
+  }
+
+  // Check file size (max 10MB)
+  if (file.size > 10 * 1024 * 1024) {
+    return new Response(
+      JSON.stringify({
+        message: 'File size exceeds 10MB',
+        code: 'FILE_SIZE_EXCEEDED',
+      }),
+      {
+        status: 413,
+        headers: { 'Content-Type': 'application/json' },
+      }
+    );
+  }
+
+  // Generate new file ID
+  const newFileId = `file-${String(fileIdCounter++).padStart(3, '0')}`;
+
+  // Store the uploaded file blob
+  uploadedFileBlobs.set(newFileId, file);
+
+  // Create new file info
+  const newFile: FileInfo = {
+    id: newFileId,
+    name: file.name,
+    size: file.size,
+    mimeType: file.type || 'application/octet-stream',
+    description: description || undefined,
+    uploadedAt: new Date().toISOString(),
+    downloadUrl: `/api/v1/files/${newFileId}/download`,
+    tagIds: [],
+  };
+
+  // Add to mock files
+  mockFiles.push(newFile);
+
+  return new Response(
+    JSON.stringify({
+      file: newFile,
+    }),
+    {
+      status: 201,
+      headers: { 'Content-Type': 'application/json' },
+    }
+  );
+});
+
+// Custom handler for deleteFile
+const deleteFileHandler = http.delete('*/files/:fileId', async ({ params }) => {
+  await new Promise((resolve) => setTimeout(resolve, 300));
+
+  const fileId = params.fileId as string;
+  const fileIndex = mockFiles.findIndex((f) => f.id === fileId);
+
+  if (fileIndex === -1) {
+    return new Response(
+      JSON.stringify({
+        message: 'File not found',
+        code: 'FILE_NOT_FOUND',
+      }),
+      {
+        status: 404,
+        headers: { 'Content-Type': 'application/json' },
+      }
+    );
+  }
+
+  // Remove file from mockFiles
+  mockFiles.splice(fileIndex, 1);
+
+  // Remove uploaded blob
+  uploadedFileBlobs.delete(fileId);
+
+  return new Response(null, { status: 204 });
+});
+
+// Custom handler for bulkDeleteFiles
+const bulkDeleteFilesHandler = http.post(
+  '*/files/bulk-delete',
+  async ({ request }) => {
+    await new Promise((resolve) => setTimeout(resolve, 300));
+
+    const body = (await request.json()) as { fileIds: string[] };
+    const { fileIds } = body;
+
+    if (!fileIds || fileIds.length === 0) {
+      return new Response(
+        JSON.stringify({
+          message: 'fileIds is required and must not be empty',
+          code: 'INVALID_REQUEST',
+        }),
+        {
+          status: 400,
+          headers: { 'Content-Type': 'application/json' },
+        }
+      );
+    }
+
+    // Remove files from mockFiles
+    mockFiles = mockFiles.filter((file) => !fileIds.includes(file.id));
+
+    // Remove uploaded blobs
+    fileIds.forEach((id) => uploadedFileBlobs.delete(id));
+
+    return new Response(null, { status: 204 });
+  }
+);
+
+// Custom handler for updateFile
+const updateFileHandler = http.put(
+  '*/files/:fileId',
+  async ({ params, request }) => {
+    await new Promise((resolve) => setTimeout(resolve, 300));
+
+    const fileId = params.fileId as string;
+    const file = mockFiles.find((f) => f.id === fileId);
+
+    if (!file) {
+      return new Response(
+        JSON.stringify({
+          message: 'File not found',
+          code: 'FILE_NOT_FOUND',
+        }),
+        {
+          status: 404,
+          headers: { 'Content-Type': 'application/json' },
+        }
+      );
+    }
+
+    const body = (await request.json()) as {
+      name?: string;
+      description?: string;
+      tagIds?: string[];
+    };
+
+    // Update file properties
+    if (body.name !== undefined) {
+      file.name = body.name;
+    }
+    if (body.description !== undefined) {
+      file.description = body.description;
+    }
+    if (body.tagIds !== undefined) {
+      file.tagIds = body.tagIds;
+    }
+
+    return new Response(
+      JSON.stringify({
+        file,
+      }),
+      {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' },
+      }
+    );
+  }
+);
+
+// Custom handler for getFileById to return actual stored file data
+const getFileByIdHandler = http.get('*/files/:fileId', async ({ params }) => {
+  await new Promise((resolve) => setTimeout(resolve, 300));
+
+  const fileId = params.fileId as string;
+  const file = mockFiles.find((f) => f.id === fileId);
+
+  if (!file) {
+    return new Response(
+      JSON.stringify({
+        message: 'File not found',
+        code: 'FILE_NOT_FOUND',
+      }),
+      {
+        status: 404,
+        headers: { 'Content-Type': 'application/json' },
+      }
+    );
+  }
+
+  return new Response(
+    JSON.stringify({ file }),
+    {
+      status: 200,
+      headers: { 'Content-Type': 'application/json' },
+    }
+  );
+});
+
+// Custom handler for downloadFile with actual PDF blob
+// Note: Generated getDownloadFileMockHandler uses JSON.stringify() on Blob (line 450-452)
+// which results in empty object {}, and sets Content-Type to 'application/json'.
+// We need to return the Blob directly with proper Content-Type, so we create our own handler.
+const downloadFileHandler = http.get(
+  '*/files/:fileId/download',
+  async ({ params }) => {
+    await new Promise((resolve) => setTimeout(resolve, 500)); // Simulate network delay
+
+    const fileId = params.fileId as string;
+    const file = mockFiles.find((f) => f.id === fileId);
+
+    if (!file) {
+      return new Response(
+        JSON.stringify({
+          message: 'File not found',
+          code: 'FILE_NOT_FOUND',
+        }),
+        {
+          status: 404,
+          headers: { 'Content-Type': 'application/json' },
+        }
+      );
+    }
+
+    // Check if we have the actual uploaded blob
+    const uploadedBlob = uploadedFileBlobs.get(fileId);
+
+    if (!uploadedBlob) {
+      return new Response(
+        JSON.stringify({
+          message: 'File blob not found',
+          code: 'FILE_BLOB_NOT_FOUND',
+        }),
+        {
+          status: 404,
+          headers: { 'Content-Type': 'application/json' },
+        }
+      );
+    }
+
+    return new Response(uploadedBlob, {
+      status: 200,
+      headers: {
+        'Content-Type': file.mimeType,
+        'Content-Disposition': `attachment; filename*=UTF-8''${encodeURIComponent(file.name)}`,
+      },
+    });
+  }
+);
+
 export const filesHandlers = [
   // Files handlers
   getFilesWithPaginationHandler, // Custom getFiles handler with pagination
-  getUploadFileMockHandler(),
-  getGetFileByIdMockHandler(),
-  getUpdateFileMockHandler(),
-  getDeleteFileMockHandler(),
-  getBulkDeleteFilesMockHandler(),
-  getDownloadFileMockHandler(),
+  uploadFileHandler, // Custom upload handler to store uploaded files
+  getFileByIdHandler, // Custom getFileById handler to return actual stored file data
+  updateFileHandler, // Custom update handler to update file properties
+  deleteFileHandler, // Custom delete handler to remove files
+  bulkDeleteFilesHandler, // Custom bulk delete handler
+  downloadFileHandler, // Custom download handler with actual uploaded blobs
   // Tags handlers
   getTagsHandler, // Custom getTags handler with meaningful tags
   getCreateTagMockHandler(),

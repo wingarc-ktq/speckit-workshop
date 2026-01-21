@@ -11,3 +11,10 @@ export const Container = styled(Box)(({ theme }) => ({
 export const Title = styled(Typography)(({ theme }) => ({
   ...theme.typography.h5,
 }));
+
+export const Header = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+  marginBottom: theme.spacing(2),
+}));

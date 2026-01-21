@@ -17,16 +17,17 @@ Figmaデザインをベースに、ファイル管理機能を持つ文書管理
 **Target Platform**: Web（デスクトップ・タブレット対応、モバイルは対象外）
 **Project Type**: Single Web Application（React SPAのフロントエンドのみ）
 **Performance Goals**:
+
 - ファイル一覧表示: 1秒以内
 - 検索応答: 500ms以内
 - アップロード処理: 5MB/秒以上
 - DataGrid描画: 100行で60fps維持
-**Constraints**:
+  **Constraints**:
 - ファイルサイズ上限: 10MB/ファイル
 - 対応ファイル形式: PDF, DOCX, XLSX, JPG, PNG
 - 同時アップロード: 最大20ファイル
 - ブラウザサポート: Chrome 120+, Firefox 120+, Safari 17+, Edge 120+
-**Scale/Scope**:
+  **Scale/Scope**:
 - 想定ユーザー数: 最大50人同時接続
 - ファイル数: 最大1000件/ユーザー
 - タグ数: 最大50個/組織
@@ -37,18 +38,22 @@ Figmaデザインをベースに、ファイル管理機能を持つ文書管理
 _GATE: Must pass before Phase 0 research. Re-check after Phase 1 design._
 
 ### ✅ TypeScript Strict Mode (NON-NEGOTIABLE)
+
 - **Status**: PASS
 - **Evidence**: すべての型定義が明示的に定義され、`any`型は使用しない。Domain ModelとAPIレスポンスの変換はAdapter層で型安全に実施。
 
 ### ✅ Component Architecture
+
 - **Status**: PASS
 - **Evidence**: すべてのコンポーネントは関数コンポーネント + hooksで実装。Propsインターフェースはすべてexport。
 
 ### ✅ Material-UI First
+
 - **Status**: PASS
 - **Evidence**: MUI DataGrid（Free版）、MUI Chip、MUI Autocomplete、MUI Drawer、MUI AppBarを使用。カスタムコンポーネントはFileDropZoneのみ（react-dropzoneでMUIスタイルをラップ）。
 
 ### ✅ Test-Driven Development
+
 - **Status**: PASS (計画段階)
 - **Evidence**:
   - 単体テスト: ドメインモデル（FileSize, MimeType）、ユーティリティ関数
@@ -57,10 +62,12 @@ _GATE: Must pass before Phase 0 research. Re-check after Phase 1 design._
   - すべてのテストはspec.mdの Acceptance Scenariosに基づく
 
 ### ✅ API-First with OpenAPI
+
 - **Status**: PASS
 - **Evidence**: OpenAPI 3.1仕様を`specs/002-document-management/contracts/openapi.yaml`に定義。Orvalでコード自動生成（`pnpm gen:api`）。MSWハンドラーも自動生成。
 
 ### ✅ Clean Architecture & Separation of Concerns
+
 - **Status**: PASS
 - **Evidence**:
   - Domain: `src/domain/models/file`, `src/domain/models/tag`, `src/domain/repositories`
@@ -70,6 +77,7 @@ _GATE: Must pass before Phase 0 research. Re-check after Phase 1 design._
   - 依存方向: Presentation → Application → Domain ← Adapters
 
 ### ✅ Accessibility & Responsive Design (NON-NEGOTIABLE)
+
 - **Status**: PASS (計画段階)
 - **Evidence**:
   - すべてのインタラクティブ要素にキーボードアクセス対応（Space, Enter, Arrow keys）
@@ -229,6 +237,7 @@ schema/
 ```
 
 **Structure Decision**:
+
 - **Single Web Application**: フロントエンドのみの実装。バックエンドAPIは別途実装済み（または並行開発）。
 - **Clean Architecture**: Domain層が中心にあり、Adapters、Application、Presentationが依存する構造。
 - **既存パターン準拠**: `src/domain/models/auth`と同じ構造（type.ts + index.ts）で実装
@@ -265,6 +274,7 @@ schema/
 ### 決定の根拠
 
 すべての技術選定は以下の原則に基づいています:
+
 - **既存パターン準拠**: constitution.md、既存実装パターン（auth）に準拠
 - **MUI First**: すべてのUI要素でMUIコンポーネントを優先
 - **アクセシビリティ**: WCAG 2.1 Level AA準拠
@@ -275,6 +285,7 @@ schema/
 **Status**: ✅ 完了
 
 **Output**:
+
 - [data-model.md](./data-model.md) - ドメインモデル定義
 - [contracts/openapi.yaml](./contracts/openapi.yaml) - API仕様
 - [quickstart.md](./quickstart.md) - 実装開始ガイド
@@ -284,12 +295,15 @@ schema/
 #### エンティティ
 
 1. **File**: ファイルの中核エンティティ
+
    - `id`, `name`, `size`, `category`, `mimeType`, `description`, `uploadedAt`, `downloadUrl`, `tagIds`
 
 2. **Tag**: タグエンティティ
+
    - `id`, `name`, `color`, `createdAt`, `updatedAt`
 
 3. **FileQueryParams**: 検索・フィルタパラメータ
+
    - `search`, `category`, `page`, `limit`
 
 4. **FileListResponse**: ページネーション付きレスポンス
@@ -298,6 +312,7 @@ schema/
 #### 値オブジェクト
 
 1. **FileSize**: ファイルサイズを人間可読形式で扱う
+
    - `toHumanReadable()`: "2.4 KB", "964.51 kB"形式に変換
    - `exceedsMaxUploadSize()`: 10MB超過判定
 
@@ -308,6 +323,7 @@ schema/
 #### リポジトリインターフェース
 
 1. **FileRepository**: ファイル操作の抽象化
+
    - `getFiles()`, `getFileById()`, `uploadFile()`, `updateFile()`, `deleteFile()`, `bulkDeleteFiles()`, `downloadFile()`
 
 2. **TagRepository**: タグ操作の抽象化
@@ -320,6 +336,7 @@ OpenAPI 3.1仕様を`contracts/openapi.yaml`に定義:
 #### エンドポイント
 
 **Files**:
+
 - `GET /files`: ファイル一覧取得（検索、カテゴリフィルタ、ページネーション）
 - `POST /files`: ファイルアップロード（multipart/form-data）
 - `GET /files/{fileId}`: ファイル詳細取得
@@ -329,6 +346,7 @@ OpenAPI 3.1仕様を`contracts/openapi.yaml`に定義:
 - `POST /files/bulk-delete`: ファイル一括削除
 
 **Tags**:
+
 - `GET /tags`: タグ一覧取得
 - `POST /tags`: タグ作成
 - `PUT /tags/{tagId}`: タグ更新
@@ -380,24 +398,31 @@ Phase 1完了後も、すべてのConstitution CheckがPASSしています:
 実装は以下の8つのフェーズに分割（quickstart.mdに詳細記載）:
 
 1. **Phase 1: 基盤実装**（1日目）
+
    - OpenAPI仕様配置、ドメインモデル、Adapters、TanStack Queryフック
 
 2. **Phase 2: UI基礎実装**（2日目）
+
    - 共通UIコンポーネント、レイアウト（AppLayout, Sidebar, Header）
 
 3. **Phase 3: ファイル一覧機能**（3日目）
+
    - FileListTable（MUI DataGrid）、検索・フィルタ、ソート、ページネーション
 
 4. **Phase 4: ファイルアップロード機能**（4日目）
+
    - FileUploadZone（react-dropzone）、プログレスバー、エラーハンドリング
 
 5. **Phase 5: タグ管理機能**（5日目）
+
    - TagChips、TagSelector（Autocomplete）、TagManager（CRUD）
 
 6. **Phase 6: Recent Files機能**（6日目）
+
    - FileCard、RecentFilesSection（グリッドレイアウト）
 
 7. **Phase 7: ファイル詳細・編集機能**（7日目）
+
    - FileDetailDialog、FileEditDialog、ダウンロード機能
 
 8. **Phase 8: 統合とテスト**（8日目）

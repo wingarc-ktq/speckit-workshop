@@ -103,6 +103,28 @@ export const en = {
       noResults: 'No search results found',
       noResultsDescription:
         'Try a different keyword or clear the search filter',
+      bulkDownload: 'Download selected files ({{count}})',
+    },
+    fileDetailDialog: {
+      title: 'File Details',
+      close: 'Close',
+      download: 'Download',
+      fileName: 'File Name',
+      fileSize: 'File Size',
+      uploadedAt: 'Uploaded At',
+      tags: 'Tags',
+      noTags: 'No tags',
+      description: 'Description',
+      preview: {
+        pdf: {
+          title: 'PDF preview feature will be available soon',
+          description: 'Please download the file using the download button',
+        },
+        unsupported: {
+          title: 'Preview not available',
+          description: 'Please download the file using the download button',
+        },
+      },
     },
     recentFilesSection: {
       title: 'Recent Files',

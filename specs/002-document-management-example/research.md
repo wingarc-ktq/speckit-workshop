@@ -10,11 +10,13 @@ Figmaデザインをベースに、文書管理システムのフロントエン
 ## Figmaデザイン分析
 
 ### デザインURL
+
 https://www.figma.com/design/8R8P2zlp5FO2PjwTqHRstW/インターン用?node-id=69-428
 
 ### 主要UIコンポーネント
 
 #### 1. レイアウト構造
+
 - **サイドバー**: 左側固定ナビゲーション
   - ロゴエリア（"UI Proto"）
   - セクション: GENERAL, TAGS
@@ -30,6 +32,7 @@ https://www.figma.com/design/8R8P2zlp5FO2PjwTqHRstW/インターン用?node-id=6
   - My Files（テーブル表示）
 
 #### 2. Recent Filesセクション
+
 - カード形式のグリッドレイアウト（4列）
 - 各カード表示内容:
   - ファイルアイコン（PDF等）
@@ -39,12 +42,14 @@ https://www.figma.com/design/8R8P2zlp5FO2PjwTqHRstW/インターン用?node-id=6
   - アクションボタン（"文書を見る"）
 
 #### 3. Upload Filesセクション
+
 - ドラッグ&ドロップエリア
 - アップロードアイコン
 - 説明テキスト: "Click to upload or drag and drop"
 - 対応フォーマット表示: "PDF, Word, Excel, Images - Max 20MB"
 
 #### 4. My Filesセクション（メインテーブル）
+
 - MUI DataGridを使用
 - カラム構成:
   - チェックボックス（選択用）
@@ -56,6 +61,7 @@ https://www.figma.com/design/8R8P2zlp5FO2PjwTqHRstW/インターン用?node-id=6
 - ソート機能（Name列に▼アイコン）
 
 #### 5. ストレージ表示
+
 - サイドバー下部
 - プログレスバー
 - "Storage" ラベル
@@ -63,6 +69,7 @@ https://www.figma.com/design/8R8P2zlp5FO2PjwTqHRstW/インターン用?node-id=6
 - "Upgrade" ボタン
 
 ### カラースキーム
+
 - プライマリカラー: 青系（リンク、アクションボタン）
 - タグカラー: 青、赤、黄、緑（カテゴリ別）
 - 背景: ライトグレー系
@@ -75,6 +82,7 @@ https://www.figma.com/design/8R8P2zlp5FO2PjwTqHRstW/インターン用?node-id=6
 **Decision**: MUI DataGrid（Community版）を使用してファイル一覧テーブルを実装
 
 **Rationale**:
+
 - MUI DataGridは標準のTableコンポーネントより高機能（ソート、ページネーション、選択機能が組み込み済み）
 - Free版で以下の機能が利用可能:
   - Column sorting
@@ -87,11 +95,13 @@ https://www.figma.com/design/8R8P2zlp5FO2PjwTqHRstW/インターン用?node-id=6
 - Figmaデザインのテーブルレイアウトに適合
 
 **Alternatives Considered**:
+
 - **標準のMUI Table**: ソート、ページネーション、選択機能を全て手動実装する必要があり、開発コストが高い
 - **Tanstack Table**: 高度にカスタマイズ可能だが、MUIとの統合に追加の実装が必要
 - **AG Grid**: 高機能だが、Free版でも学習コストが高く、MUIとのデザイン統合が難しい
 
 **実装パターン**:
+
 ```typescript
 // src/presentations/components/files/FileListTable/FileListTable.tsx
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
@@ -122,16 +132,19 @@ export function FileListTable({ files }: FileListTableProps) {
 **Decision**: react-dropzoneを使用してドラッグ&ドロップアップロード機能を実装
 
 **Rationale**:
+
 - react-dropzoneは軽量で、MUIと統合しやすい
 - ドラッグ&ドロップとファイル選択ダイアログの両方をサポート
 - ファイルバリデーション（タイプ、サイズ）機能が組み込まれている
 - アクセシビリティ対応（キーボード操作可能）
 
 **Alternatives Considered**:
+
 - **ネイティブHTML input[type=file]**: ドラッグ&ドロップを手動実装する必要があり、UXが劣る
 - **MUI Dropzone系ライブラリ**: 機能過多で、シンプルなUIには不要
 
 **実装パターン**:
+
 ```typescript
 // src/presentations/components/files/FileUploadZone/FileUploadZone.tsx
 import { useDropzone } from 'react-dropzone';
@@ -162,11 +175,13 @@ export function FileUploadZone({ onUpload }: FileUploadZoneProps) {
 **Decision**: MUI Chip + Autocompleteを使用してタグ選択・表示を実装
 
 **Rationale**:
+
 - MUI Chipはタグ表示に最適（色、アイコン、削除ボタンをサポート）
 - MUI Autocompleteは複数選択、フィルタリング、新規タグ作成に対応
 - Figmaデザインの色付きタグバッジに適合
 
 **実装パターン**:
+
 ```typescript
 // src/presentations/components/tags/TagChips/TagChips.tsx
 export function TagChips({ tags }: TagChipsProps) {
@@ -208,11 +223,13 @@ export function TagSelector({ value, onChange, availableTags }: TagSelectorProps
 **Decision**: MUI Drawer（permanent variant）+ AppBarでレイアウトを構築
 
 **Rationale**:
+
 - Figmaデザインの固定サイドバー + ヘッダー構造に適合
 - MUIの標準パターンで、レスポンシブ対応が容易
 - 既存のAppLayoutコンポーネントパターンに準拠
 
 **実装パターン**:
+
 ```typescript
 // src/presentations/layouts/AppLayout/AppLayout.tsx
 export function AppLayout({ children }: AppLayoutProps) {
@@ -240,11 +257,13 @@ export function AppLayout({ children }: AppLayoutProps) {
 **Decision**: TanStack Query（React Query）を使用したサーバー状態管理
 
 **Rationale**:
+
 - 既存の実装パターン（`src/presentations/hooks/queries`）に準拠
 - キャッシュ管理、楽観的更新、再取得ロジックが組み込み済み
 - ファイル一覧の頻繁な更新に適している
 
 **実装パターン**:
+
 ```typescript
 // src/presentations/hooks/queries/useFiles.ts
 export function useFiles(params: FileQueryParams) {
@@ -274,10 +293,12 @@ export function useUploadFile() {
 **Decision**: カスタムユーティリティ関数を実装
 
 **Rationale**:
+
 - ファイルサイズの人間可読フォーマット（2.4 KB, 964.51 kB等）が必要
 - MIMEタイプからファイルアイコンへのマッピングが必要
 
 **実装パターン**:
+
 ```typescript
 // src/presentations/utils/fileFormatters.ts
 export function formatFileSize(bytes: number): string {
@@ -302,15 +323,18 @@ export function getFileIcon(mimeType: string): React.ReactNode {
 **Decision**: URLクエリパラメータ + debounced inputで検索状態を管理
 
 **Rationale**:
+
 - URLでの状態共有（リンク共有、ブックマーク）が可能
 - ブラウザの戻る/進むボタンに対応
 - debounceでAPI呼び出しを最適化
 
 **Alternatives Considered**:
+
 - **ローカルステート（useState）**: URLでの状態共有ができず、ページリロード時に検索条件が失われる
 - **Global State（Zustand等）**: サーバー状態はReact Queryで管理するため、追加の状態管理ライブラリは不要
 
 **実装パターン**:
+
 ```typescript
 // src/presentations/hooks/useFileFilters.ts
 export function useFileFilters() {
@@ -338,6 +362,7 @@ export function useFileFilters() {
 ## OpenAPI仕様の更新
 
 ### 現状分析
+
 既存の`schema/files/openapi.yaml`は基本的なCRUD操作をカバーしていますが、以下の拡張が必要です:
 
 1. **タグのエンドポイント追加**: タグCRUD操作
@@ -347,6 +372,7 @@ export function useFileFilters() {
 ### 必要な修正
 
 #### 1. タグ管理エンドポイント
+
 ```yaml
 /tags:
   get:
@@ -366,6 +392,7 @@ export function useFileFilters() {
 ```
 
 #### 2. ファイルメタデータ更新
+
 ```yaml
 /files/{fileId}:
   put:
@@ -386,6 +413,7 @@ export function useFileFilters() {
 ```
 
 #### 3. 一括削除
+
 ```yaml
 /files/bulk-delete:
   post:
@@ -408,16 +436,19 @@ export function useFileFilters() {
 ## テスト戦略
 
 ### 1. Unit Tests（Vitest）
+
 - **ユーティリティ関数**: `formatFileSize`, `getFileIcon`
 - **カスタムフック**: `useFileFilters`, `useFiles`
 - **ドメインロジック**: ファイルバリデーション
 
 ### 2. Component Tests（React Testing Library）
+
 - **FileListTable**: ソート、選択、ページネーション
 - **FileUploadZone**: ドラッグ&ドロップ、ファイルバリデーション
 - **TagSelector**: 選択、フィルタリング
 
 ### 3. E2E Tests（Playwright）
+
 - **ファイルアップロードフロー**: ドラッグ&ドロップ → 一覧表示確認
 - **検索フロー**: キーワード検索 → 結果確認
 - **タグフィルタフロー**: タグ選択 → フィルタリング結果確認
@@ -425,29 +456,35 @@ export function useFileFilters() {
 ## パフォーマンス最適化
 
 ### 1. 仮想化（Virtualization）
+
 MUI DataGrid Free版は仮想化をサポートしていますが、1000行以下であれば標準のページネーションで十分です。
 
 **Decision**: 初期実装では仮想化なし、ページサイズ10/20/50で対応
 
 ### 2. 画像の遅延読み込み
+
 Recent Filesセクションのファイルサムネイルには、React Lazy Loadを使用します。
 
 ### 3. Debounced Search
+
 検索入力は300msのdebounceを適用し、API呼び出しを最適化します。
 
 ## アクセシビリティ考慮事項
 
 ### 1. キーボード操作
+
 - ファイル選択: Spaceキーでチェックボックスをトグル
 - アップロードゾーン: Enterキーでファイル選択ダイアログを開く
 - テーブルナビゲーション: 矢印キーで行移動
 
 ### 2. スクリーンリーダー対応
+
 - すべてのアイコンに`aria-label`を設定
 - DataGridの行に`aria-label`でファイル名を設定
 - アップロードゾーンに`role="button"`と説明テキストを設定
 
 ### 3. コントラスト比
+
 - MUIのデフォルトテーマはWCAG AA準拠
 - カスタムタグカラーはコントラスト比4.5:1以上を確保
 

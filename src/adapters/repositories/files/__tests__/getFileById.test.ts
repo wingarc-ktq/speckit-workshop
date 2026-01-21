@@ -73,16 +73,19 @@ describe('getFileById', () => {
       }
     );
 
-    test.concurrent('tagIdsがAPIレスポンスから正しくマッピングされること', async () => {
-      const expectedTagIds = ['tag-001', 'tag-002', 'tag-003'];
-      const mockData = mockFileResponseVariations.withTagIds(expectedTagIds);
-      mocked.mockResolvedValue(mockData);
+    test.concurrent(
+      'tagIdsがAPIレスポンスから正しくマッピングされること',
+      async () => {
+        const expectedTagIds = ['tag-001', 'tag-002', 'tag-003'];
+        const mockData = mockFileResponseVariations.withTagIds(expectedTagIds);
+        mocked.mockResolvedValue(mockData);
 
-      const result = await getFileById(testFileId);
+        const result = await getFileById(testFileId);
 
-      expect(result.tagIds).toEqual(expectedTagIds);
-      expect(Array.isArray(result.tagIds)).toBe(true);
-    });
+        expect(result.tagIds).toEqual(expectedTagIds);
+        expect(Array.isArray(result.tagIds)).toBe(true);
+      }
+    );
 
     test.concurrent('ファイルサイズが正しく保持される', async () => {
       const customSize = 1024 * 1024 * 5; // 5MB

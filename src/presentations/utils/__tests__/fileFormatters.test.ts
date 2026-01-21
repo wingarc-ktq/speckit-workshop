@@ -57,14 +57,19 @@ describe('fileFormatters', () => {
 
     describe('エラーハンドリング', () => {
       test.concurrent('負数が渡されるとエラーが投げられること', () => {
-        expect(() => formatFileSize(-1)).toThrow('File size cannot be negative');
-      });
-
-      test.concurrent('負の大きな数値が渡されるとエラーが投げられること', () => {
-        expect(() => formatFileSize(-1048576)).toThrow(
-          'File size cannot be negative',
+        expect(() => formatFileSize(-1)).toThrow(
+          'File size cannot be negative'
         );
       });
+
+      test.concurrent(
+        '負の大きな数値が渡されるとエラーが投げられること',
+        () => {
+          expect(() => formatFileSize(-1048576)).toThrow(
+            'File size cannot be negative'
+          );
+        }
+      );
     });
   });
 
@@ -123,58 +128,61 @@ describe('fileFormatters', () => {
         () => {
           expect(
             getFileType(
-              'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-            ),
+              'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+            )
           ).toBe(FileType.WORD);
-        },
+        }
       );
 
       test.concurrent(
         'application/vnd.ms-wordがWordと判定されること（wordを含む）',
         () => {
           expect(getFileType('application/vnd.ms-word')).toBe(FileType.WORD);
-        },
+        }
       );
 
       test.concurrent('documentを含むMIMEタイプがWordと判定されること', () => {
         expect(
           getFileType(
-            'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-          ),
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+          )
         ).toBe(FileType.WORD);
       });
     });
 
     describe('Excel型の判定', () => {
-      test.concurrent(
-        'sheetを含むMIMEタイプがExcelと判定されること',
-        () => {
-          // 注: application/vnd.openxmlformats-officedocument.spreadsheetml.sheetは
-          // "document"という文字列を含むため、Word型として判定される
-          // getFileTypeの実装では"document"がsheet より先に評価されるため
-          expect(
-            getFileType(
-              'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-            ),
-          ).toBe(FileType.WORD);
-        },
-      );
+      test.concurrent('sheetを含むMIMEタイプがExcelと判定されること', () => {
+        // 注: application/vnd.openxmlformats-officedocument.spreadsheetml.sheetは
+        // "document"という文字列を含むため、Word型として判定される
+        // getFileTypeの実装では"document"がsheet より先に評価されるため
+        expect(
+          getFileType(
+            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+          )
+        ).toBe(FileType.WORD);
+      });
 
       test.concurrent(
         'application/vnd.ms-excelがExcelと判定されること（excelを含む）',
         () => {
           expect(getFileType('application/vnd.ms-excel')).toBe(FileType.EXCEL);
-        },
+        }
       );
 
-      test.concurrent('sheetを含むシンプルなMIMEタイプがExcelと判定されること', () => {
-        expect(getFileType('application/sheet')).toBe(FileType.EXCEL);
-      });
+      test.concurrent(
+        'sheetを含むシンプルなMIMEタイプがExcelと判定されること',
+        () => {
+          expect(getFileType('application/sheet')).toBe(FileType.EXCEL);
+        }
+      );
 
-      test.concurrent('sheetwordのような複合文字列ではwordが優先されること', () => {
-        // wordはexcelの前に評価されるため、wordが含まれるとWord型と判定される
-        expect(getFileType('application/sheetword')).toBe(FileType.WORD);
-      });
+      test.concurrent(
+        'sheetwordのような複合文字列ではwordが優先されること',
+        () => {
+          // wordはexcelの前に評価されるため、wordが含まれるとWord型と判定される
+          expect(getFileType('application/sheetword')).toBe(FileType.WORD);
+        }
+      );
     });
 
     describe('Image型の判定', () => {
@@ -192,9 +200,12 @@ describe('fileFormatters', () => {
     });
 
     describe('Other型の判定', () => {
-      test.concurrent('サポート対象外のMIMEタイプがOtherと判定されること', () => {
-        expect(getFileType('text/plain')).toBe(FileType.OTHER);
-      });
+      test.concurrent(
+        'サポート対象外のMIMEタイプがOtherと判定されること',
+        () => {
+          expect(getFileType('text/plain')).toBe(FileType.OTHER);
+        }
+      );
 
       test.concurrent('application/jsonがOtherと判定されること', () => {
         expect(getFileType('application/json')).toBe(FileType.OTHER);
@@ -210,16 +221,16 @@ describe('fileFormatters', () => {
         'pdfを含む場合は最初に評価されてPDFと判定されること',
         () => {
           expect(getFileType('application/pdf')).toBe(FileType.PDF);
-        },
+        }
       );
 
       test.concurrent(
         'wordが含まれていてdocumentも含まれている場合はwordが優先されること',
         () => {
-          expect(
-            getFileType('application/vnd.ms-word-document'),
-          ).toBe(FileType.WORD);
-        },
+          expect(getFileType('application/vnd.ms-word-document')).toBe(
+            FileType.WORD
+          );
+        }
       );
     });
   });
@@ -235,10 +246,10 @@ describe('fileFormatters', () => {
         () => {
           expect(
             isSupportedFileType(
-              'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-            ),
+              'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+            )
           ).toBe(true);
-        },
+        }
       );
 
       test.concurrent(
@@ -246,10 +257,10 @@ describe('fileFormatters', () => {
         () => {
           expect(
             isSupportedFileType(
-              'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-            ),
+              'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+            )
           ).toBe(true);
-        },
+        }
       );
 
       test.concurrent('image/jpegがサポート対象と判定されること', () => {
@@ -266,17 +277,23 @@ describe('fileFormatters', () => {
         expect(isSupportedFileType('text/plain')).toBe(false);
       });
 
-      test.concurrent('application/jsonがサポート対象外と判定されること', () => {
-        expect(isSupportedFileType('application/json')).toBe(false);
-      });
+      test.concurrent(
+        'application/jsonがサポート対象外と判定されること',
+        () => {
+          expect(isSupportedFileType('application/json')).toBe(false);
+        }
+      );
 
       test.concurrent('image/gifがサポート対象外と判定されること', () => {
         expect(isSupportedFileType('image/gif')).toBe(false);
       });
 
-      test.concurrent('application/vnd.ms-wordがサポート対象外と判定されること', () => {
-        expect(isSupportedFileType('application/vnd.ms-word')).toBe(false);
-      });
+      test.concurrent(
+        'application/vnd.ms-wordがサポート対象外と判定されること',
+        () => {
+          expect(isSupportedFileType('application/vnd.ms-word')).toBe(false);
+        }
+      );
 
       test.concurrent('空文字列がサポート対象外と判定されること', () => {
         expect(isSupportedFileType('')).toBe(false);
@@ -296,17 +313,18 @@ describe('fileFormatters', () => {
         () => {
           // application/pdfを含む場合はサポート対象
           expect(isSupportedFileType('application/pdf-archive')).toBe(true);
-        },
+        }
       );
     });
 
     describe('複数のサポート対象型が含まれる場合', () => {
-      test.concurrent('最初のサポート対象型がマッチするとtrueが返されること', () => {
-        // 両方を含む異常なMIMEタイプでも、最初にマッチするものを返す
-        expect(
-          isSupportedFileType('application/pdf;image/jpeg'),
-        ).toBe(true);
-      });
+      test.concurrent(
+        '最初のサポート対象型がマッチするとtrueが返されること',
+        () => {
+          // 両方を含む異常なMIMEタイプでも、最初にマッチするものを返す
+          expect(isSupportedFileType('application/pdf;image/jpeg')).toBe(true);
+        }
+      );
     });
   });
 });

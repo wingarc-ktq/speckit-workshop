@@ -1,7 +1,9 @@
 import { uploadFile as uploadFileApi } from '@/adapters/generated/files';
 import type { DocumentFile, UploadFileRequest } from '@/domain/models/file';
 
-export async function uploadFile(request: UploadFileRequest): Promise<DocumentFile> {
+export async function uploadFile(
+  request: UploadFileRequest
+): Promise<DocumentFile> {
   const response = await uploadFileApi({
     file: request.file,
     description: request.description,

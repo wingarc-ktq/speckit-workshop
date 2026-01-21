@@ -140,9 +140,7 @@ describe('SearchFilterPopover', () => {
       expect(
         screen.getByRole('button', { name: 'クリア' })
       ).toBeInTheDocument();
-      expect(
-        screen.getByRole('button', { name: '適用' })
-      ).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: '適用' })).toBeInTheDocument();
     });
   });
 
@@ -150,7 +148,9 @@ describe('SearchFilterPopover', () => {
     test('URLの検索クエリが入力フィールドに反映されること', async () => {
       await renderSearchFilterPopover(`/?${QUERY_PARAMS.SEARCH}=テスト検索`);
 
-      const searchInput = screen.getByLabelText('キーワード') as HTMLInputElement;
+      const searchInput = screen.getByLabelText(
+        'キーワード'
+      ) as HTMLInputElement;
 
       // Popoverが完全に開かれるまで待機
       await waitFor(() => {
@@ -174,7 +174,9 @@ describe('SearchFilterPopover', () => {
       const user = userEvent.setup();
       await renderSearchFilterPopover();
 
-      const searchInput = screen.getByLabelText('キーワード') as HTMLInputElement;
+      const searchInput = screen.getByLabelText(
+        'キーワード'
+      ) as HTMLInputElement;
       await user.type(searchInput, 'ドキュメント');
 
       expect(searchInput.value).toBe('ドキュメント');
@@ -184,7 +186,9 @@ describe('SearchFilterPopover', () => {
       const user = userEvent.setup();
       await renderSearchFilterPopover(`/?${QUERY_PARAMS.SEARCH}=古い検索`);
 
-      const searchInput = screen.getByLabelText('キーワード') as HTMLInputElement;
+      const searchInput = screen.getByLabelText(
+        'キーワード'
+      ) as HTMLInputElement;
 
       // 初期値が反映されるまで待機
       await waitFor(() => {

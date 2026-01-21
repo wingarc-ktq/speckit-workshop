@@ -1,9 +1,9 @@
-import {renderHook, act} from '@testing-library/react';
+import { renderHook, act } from '@testing-library/react';
 import * as ReactRouterDom from 'react-router-dom';
 
-import {QUERY_PARAMS} from '@/presentations/constants/queryParams';
+import { QUERY_PARAMS } from '@/presentations/constants/queryParams';
 
-import {useFilesSearchParams} from '../useFilesSearchParams';
+import { useFilesSearchParams } from '../useFilesSearchParams';
 
 /**
  * react-router-domのuseSearchParamsをモック化
@@ -41,7 +41,7 @@ describe('useFilesSearchParams', () => {
 
   describe('初期状態', () => {
     test('クエリパラメータが空の場合、すべての値がundefinedであること', () => {
-      const {result} = renderHook(() => useFilesSearchParams());
+      const { result } = renderHook(() => useFilesSearchParams());
 
       expect(result.current.searchQuery).toBeUndefined();
       expect(result.current.page).toBeUndefined();
@@ -53,13 +53,13 @@ describe('useFilesSearchParams', () => {
     test('検索クエリが存在する場合、正しい値が返されること', () => {
       mockSearchParams.set(QUERY_PARAMS.SEARCH, 'test query');
 
-      const {result} = renderHook(() => useFilesSearchParams());
+      const { result } = renderHook(() => useFilesSearchParams());
 
       expect(result.current.searchQuery).toBe('test query');
     });
 
     test('検索クエリが存在しない場合、undefinedが返されること', () => {
-      const {result} = renderHook(() => useFilesSearchParams());
+      const { result } = renderHook(() => useFilesSearchParams());
 
       expect(result.current.searchQuery).toBeUndefined();
     });
@@ -67,7 +67,7 @@ describe('useFilesSearchParams', () => {
     test('空文字列の検索クエリの場合、空文字列が返されること', () => {
       mockSearchParams.set(QUERY_PARAMS.SEARCH, '');
 
-      const {result} = renderHook(() => useFilesSearchParams());
+      const { result } = renderHook(() => useFilesSearchParams());
 
       expect(result.current.searchQuery).toBe('');
     });
@@ -75,7 +75,7 @@ describe('useFilesSearchParams', () => {
     test('日本語の検索クエリが正しく取得できること', () => {
       mockSearchParams.set(QUERY_PARAMS.SEARCH, 'テスト検索');
 
-      const {result} = renderHook(() => useFilesSearchParams());
+      const { result } = renderHook(() => useFilesSearchParams());
 
       expect(result.current.searchQuery).toBe('テスト検索');
     });
@@ -83,7 +83,7 @@ describe('useFilesSearchParams', () => {
     test('特殊文字を含む検索クエリが正しく取得できること', () => {
       mockSearchParams.set(QUERY_PARAMS.SEARCH, 'test@#$%&*');
 
-      const {result} = renderHook(() => useFilesSearchParams());
+      const { result } = renderHook(() => useFilesSearchParams());
 
       expect(result.current.searchQuery).toBe('test@#$%&*');
     });
@@ -91,7 +91,7 @@ describe('useFilesSearchParams', () => {
 
   describe('setSearchQuery: 検索クエリの設定', () => {
     test('検索クエリを設定できること', () => {
-      const {result} = renderHook(() => useFilesSearchParams());
+      const { result } = renderHook(() => useFilesSearchParams());
 
       act(() => {
         result.current.setSearchQuery('new query');
@@ -103,7 +103,7 @@ describe('useFilesSearchParams', () => {
     });
 
     test('検索クエリを設定する際にreplaceオプションが使用されること', () => {
-      const {result} = renderHook(() => useFilesSearchParams());
+      const { result } = renderHook(() => useFilesSearchParams());
 
       act(() => {
         result.current.setSearchQuery('new query');
@@ -111,14 +111,14 @@ describe('useFilesSearchParams', () => {
 
       expect(mockSetSearchParams).toHaveBeenCalledWith(
         expect.any(URLSearchParams),
-        {replace: true},
+        { replace: true }
       );
     });
 
     test('空文字列を設定した場合、検索クエリパラメータが削除されること', () => {
       mockSearchParams.set(QUERY_PARAMS.SEARCH, 'existing query');
 
-      const {result} = renderHook(() => useFilesSearchParams());
+      const { result } = renderHook(() => useFilesSearchParams());
 
       act(() => {
         result.current.setSearchQuery('');
@@ -133,7 +133,7 @@ describe('useFilesSearchParams', () => {
       mockSearchParams.set(QUERY_PARAMS.PAGE, '3');
       mockSearchParams.set(QUERY_PARAMS.PAGE_SIZE, '20');
 
-      const {result} = renderHook(() => useFilesSearchParams());
+      const { result } = renderHook(() => useFilesSearchParams());
 
       act(() => {
         result.current.setSearchQuery('new query');
@@ -153,7 +153,7 @@ describe('useFilesSearchParams', () => {
       mockSearchParams.set(QUERY_PARAMS.SEARCH, 'existing query');
       mockSearchParams.set(QUERY_PARAMS.PAGE, '3');
 
-      const {result} = renderHook(() => useFilesSearchParams());
+      const { result } = renderHook(() => useFilesSearchParams());
 
       act(() => {
         result.current.setSearchQuery('');
@@ -168,7 +168,7 @@ describe('useFilesSearchParams', () => {
     });
 
     test('日本語の検索クエリを設定できること', () => {
-      const {result} = renderHook(() => useFilesSearchParams());
+      const { result } = renderHook(() => useFilesSearchParams());
 
       act(() => {
         result.current.setSearchQuery('テスト検索');
@@ -180,7 +180,7 @@ describe('useFilesSearchParams', () => {
     });
 
     test('特殊文字を含む検索クエリを設定できること', () => {
-      const {result} = renderHook(() => useFilesSearchParams());
+      const { result } = renderHook(() => useFilesSearchParams());
 
       act(() => {
         result.current.setSearchQuery('test@#$%&*');
@@ -192,7 +192,7 @@ describe('useFilesSearchParams', () => {
     });
 
     test('連続して検索クエリを設定できること', () => {
-      const {result} = renderHook(() => useFilesSearchParams());
+      const { result } = renderHook(() => useFilesSearchParams());
 
       act(() => {
         result.current.setSearchQuery('query1');
@@ -212,13 +212,13 @@ describe('useFilesSearchParams', () => {
     test('ページ番号が存在する場合、数値が返されること', () => {
       mockSearchParams.set(QUERY_PARAMS.PAGE, '5');
 
-      const {result} = renderHook(() => useFilesSearchParams());
+      const { result } = renderHook(() => useFilesSearchParams());
 
       expect(result.current.page).toBe(5);
     });
 
     test('ページ番号が存在しない場合、undefinedが返されること', () => {
-      const {result} = renderHook(() => useFilesSearchParams());
+      const { result } = renderHook(() => useFilesSearchParams());
 
       expect(result.current.page).toBeUndefined();
     });
@@ -226,7 +226,7 @@ describe('useFilesSearchParams', () => {
     test('ページ番号が文字列"0"の場合、0が返されること', () => {
       mockSearchParams.set(QUERY_PARAMS.PAGE, '0');
 
-      const {result} = renderHook(() => useFilesSearchParams());
+      const { result } = renderHook(() => useFilesSearchParams());
 
       expect(result.current.page).toBe(0);
     });
@@ -234,7 +234,7 @@ describe('useFilesSearchParams', () => {
     test('ページ番号が文字列"1"の場合、1が返されること', () => {
       mockSearchParams.set(QUERY_PARAMS.PAGE, '1');
 
-      const {result} = renderHook(() => useFilesSearchParams());
+      const { result } = renderHook(() => useFilesSearchParams());
 
       expect(result.current.page).toBe(1);
     });
@@ -242,7 +242,7 @@ describe('useFilesSearchParams', () => {
     test('ページ番号に大きな数値が設定されている場合、正しく変換されること', () => {
       mockSearchParams.set(QUERY_PARAMS.PAGE, '9999');
 
-      const {result} = renderHook(() => useFilesSearchParams());
+      const { result } = renderHook(() => useFilesSearchParams());
 
       expect(result.current.page).toBe(9999);
     });
@@ -250,7 +250,7 @@ describe('useFilesSearchParams', () => {
     test('ページ番号に不正な値が設定されている場合、NaNが返されること', () => {
       mockSearchParams.set(QUERY_PARAMS.PAGE, 'invalid');
 
-      const {result} = renderHook(() => useFilesSearchParams());
+      const { result } = renderHook(() => useFilesSearchParams());
 
       expect(result.current.page).toBeNaN();
     });
@@ -258,7 +258,7 @@ describe('useFilesSearchParams', () => {
     test('ページ番号に負の数が設定されている場合、負の数が返されること', () => {
       mockSearchParams.set(QUERY_PARAMS.PAGE, '-1');
 
-      const {result} = renderHook(() => useFilesSearchParams());
+      const { result } = renderHook(() => useFilesSearchParams());
 
       expect(result.current.page).toBe(-1);
     });
@@ -268,13 +268,13 @@ describe('useFilesSearchParams', () => {
     test('ページサイズが存在する場合、数値が返されること', () => {
       mockSearchParams.set(QUERY_PARAMS.PAGE_SIZE, '20');
 
-      const {result} = renderHook(() => useFilesSearchParams());
+      const { result } = renderHook(() => useFilesSearchParams());
 
       expect(result.current.pageSize).toBe(20);
     });
 
     test('ページサイズが存在しない場合、undefinedが返されること', () => {
-      const {result} = renderHook(() => useFilesSearchParams());
+      const { result } = renderHook(() => useFilesSearchParams());
 
       expect(result.current.pageSize).toBeUndefined();
     });
@@ -282,7 +282,7 @@ describe('useFilesSearchParams', () => {
     test('ページサイズが文字列"10"の場合、10が返されること', () => {
       mockSearchParams.set(QUERY_PARAMS.PAGE_SIZE, '10');
 
-      const {result} = renderHook(() => useFilesSearchParams());
+      const { result } = renderHook(() => useFilesSearchParams());
 
       expect(result.current.pageSize).toBe(10);
     });
@@ -290,7 +290,7 @@ describe('useFilesSearchParams', () => {
     test('ページサイズが文字列"50"の場合、50が返されること', () => {
       mockSearchParams.set(QUERY_PARAMS.PAGE_SIZE, '50');
 
-      const {result} = renderHook(() => useFilesSearchParams());
+      const { result } = renderHook(() => useFilesSearchParams());
 
       expect(result.current.pageSize).toBe(50);
     });
@@ -298,7 +298,7 @@ describe('useFilesSearchParams', () => {
     test('ページサイズに大きな数値が設定されている場合、正しく変換されること', () => {
       mockSearchParams.set(QUERY_PARAMS.PAGE_SIZE, '1000');
 
-      const {result} = renderHook(() => useFilesSearchParams());
+      const { result } = renderHook(() => useFilesSearchParams());
 
       expect(result.current.pageSize).toBe(1000);
     });
@@ -306,7 +306,7 @@ describe('useFilesSearchParams', () => {
     test('ページサイズに不正な値が設定されている場合、NaNが返されること', () => {
       mockSearchParams.set(QUERY_PARAMS.PAGE_SIZE, 'invalid');
 
-      const {result} = renderHook(() => useFilesSearchParams());
+      const { result } = renderHook(() => useFilesSearchParams());
 
       expect(result.current.pageSize).toBeNaN();
     });
@@ -314,7 +314,7 @@ describe('useFilesSearchParams', () => {
     test('ページサイズに負の数が設定されている場合、負の数が返されること', () => {
       mockSearchParams.set(QUERY_PARAMS.PAGE_SIZE, '-10');
 
-      const {result} = renderHook(() => useFilesSearchParams());
+      const { result } = renderHook(() => useFilesSearchParams());
 
       expect(result.current.pageSize).toBe(-10);
     });
@@ -326,7 +326,7 @@ describe('useFilesSearchParams', () => {
       mockSearchParams.set(QUERY_PARAMS.PAGE, '3');
       mockSearchParams.set(QUERY_PARAMS.PAGE_SIZE, '25');
 
-      const {result} = renderHook(() => useFilesSearchParams());
+      const { result } = renderHook(() => useFilesSearchParams());
 
       expect(result.current.searchQuery).toBe('test query');
       expect(result.current.page).toBe(3);
@@ -336,7 +336,7 @@ describe('useFilesSearchParams', () => {
     test('検索クエリを変更しても他のパラメータは影響を受けないこと（ページ以外）', () => {
       mockSearchParams.set(QUERY_PARAMS.PAGE_SIZE, '30');
 
-      const {result} = renderHook(() => useFilesSearchParams());
+      const { result } = renderHook(() => useFilesSearchParams());
 
       act(() => {
         result.current.setSearchQuery('new search');
@@ -353,7 +353,7 @@ describe('useFilesSearchParams', () => {
     test('QUERY_PARAMS.SEARCHが正しく使用されていること', () => {
       mockSearchParams.set(QUERY_PARAMS.SEARCH, 'test');
 
-      const {result} = renderHook(() => useFilesSearchParams());
+      const { result } = renderHook(() => useFilesSearchParams());
 
       expect(result.current.searchQuery).toBe('test');
     });
@@ -361,7 +361,7 @@ describe('useFilesSearchParams', () => {
     test('QUERY_PARAMS.PAGEが正しく使用されていること', () => {
       mockSearchParams.set(QUERY_PARAMS.PAGE, '2');
 
-      const {result} = renderHook(() => useFilesSearchParams());
+      const { result } = renderHook(() => useFilesSearchParams());
 
       expect(result.current.page).toBe(2);
     });
@@ -369,7 +369,7 @@ describe('useFilesSearchParams', () => {
     test('QUERY_PARAMS.PAGE_SIZEが正しく使用されていること', () => {
       mockSearchParams.set(QUERY_PARAMS.PAGE_SIZE, '15');
 
-      const {result} = renderHook(() => useFilesSearchParams());
+      const { result } = renderHook(() => useFilesSearchParams());
 
       expect(result.current.pageSize).toBe(15);
     });
@@ -377,7 +377,7 @@ describe('useFilesSearchParams', () => {
 
   describe('エッジケース', () => {
     test('URLSearchParamsが空の状態でsetSearchQueryを呼び出しても動作すること', () => {
-      const {result} = renderHook(() => useFilesSearchParams());
+      const { result } = renderHook(() => useFilesSearchParams());
 
       act(() => {
         result.current.setSearchQuery('first query');
@@ -389,7 +389,7 @@ describe('useFilesSearchParams', () => {
     });
 
     test('同じ検索クエリを連続して設定しても正しく動作すること', () => {
-      const {result} = renderHook(() => useFilesSearchParams());
+      const { result } = renderHook(() => useFilesSearchParams());
 
       act(() => {
         result.current.setSearchQuery('same query');
@@ -405,7 +405,7 @@ describe('useFilesSearchParams', () => {
     });
 
     test('空白文字のみの検索クエリを設定できること', () => {
-      const {result} = renderHook(() => useFilesSearchParams());
+      const { result } = renderHook(() => useFilesSearchParams());
 
       act(() => {
         result.current.setSearchQuery('   ');
@@ -420,7 +420,7 @@ describe('useFilesSearchParams', () => {
       mockSearchParams.set(QUERY_PARAMS.PAGE, '2');
       mockSearchParams.set(QUERY_PARAMS.PAGE_SIZE, '50');
 
-      const {result} = renderHook(() => useFilesSearchParams());
+      const { result } = renderHook(() => useFilesSearchParams());
 
       expect(result.current.searchQuery).toBeUndefined();
       expect(result.current.page).toBe(2);

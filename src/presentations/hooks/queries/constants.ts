@@ -19,12 +19,14 @@ export const QUERY_KEYS = {
 
   // ファイル関連
   FILES: {
-    LIST: (params?: FileQueryParams) => [
-      GLOBAL_LOADING,
-      'files',
-      'list',
-      params,
-    ],
+    LIST: (params?: FileQueryParams) => {
+      const keys = [];
+      keys.push(GLOBAL_LOADING, 'files', 'list');
+
+      if (params) keys.push(params);
+
+      return keys;
+    },
     DETAIL: (id: string) => [GLOBAL_LOADING, 'files', 'detail', id],
   },
 

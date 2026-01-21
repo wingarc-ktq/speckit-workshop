@@ -26,6 +26,7 @@ interface FileListTableProps {
   loading?: boolean;
   onPaginationModelChange: (model: GridPaginationModel) => void;
   onSelectionChange?: (fileIds: string[]) => void;
+  onRowClick?: (file: DocumentFile) => void;
 }
 
 export const FileListTable: React.FC<FileListTableProps> = ({
@@ -36,6 +37,7 @@ export const FileListTable: React.FC<FileListTableProps> = ({
   loading = false,
   onPaginationModelChange,
   onSelectionChange,
+  onRowClick,
 }) => {
   const { data: tags } = useTags();
 
@@ -114,6 +116,13 @@ export const FileListTable: React.FC<FileListTableProps> = ({
     [onSelectionChange]
   );
 
+  const handleRowClick = useCallback(
+    (params: { row: DocumentFile }) => {
+      onRowClick?.(params.row);
+    },
+    [onRowClick]
+  );
+
   return (
     <DataGrid
       autoHeight
@@ -125,9 +134,10 @@ export const FileListTable: React.FC<FileListTableProps> = ({
       rowCount={total}
       rowSelectionModel={rowSelectionModel}
       onRowSelectionModelChange={handleRowSelectionModelChange}
+      onRowClick={handleRowClick}
       loading={loading}
       checkboxSelection
-      disableRowSelectionOnClick
+      disableRowSelectionOnClick={false}
       pageSizeOptions={[5, 10, 25]}
     />
   );

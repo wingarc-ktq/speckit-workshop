@@ -1,1 +1,1 @@
-export * from './FileCard';
+// FileCard is now exported from @/presentations/components

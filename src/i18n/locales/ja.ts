@@ -107,6 +107,30 @@ export const ja = {
       noResults: '検索結果が見つかりませんでした',
       noResultsDescription:
         '別のキーワードで検索するか、検索条件をクリアしてください',
+      bulkDownload: '選択したファイルをダウンロード ({{count}})',
+    },
+    fileDetailDialog: {
+      title: 'ファイル詳細',
+      close: '閉じる',
+      download: 'ダウンロード',
+      fileName: 'ファイル名',
+      fileSize: 'ファイルサイズ',
+      uploadedAt: 'アップロード日時',
+      tags: 'タグ',
+      noTags: 'タグなし',
+      description: '説明',
+      preview: {
+        pdf: {
+          title: 'PDFプレビュー機能は今後実装予定です',
+          description:
+            'ダウンロードボタンからファイルをダウンロードしてください',
+        },
+        unsupported: {
+          title: 'プレビュー機能は対応していません',
+          description:
+            'ダウンロードボタンからファイルをダウンロードしてください',
+        },
+      },
     },
     recentFilesSection: {
       title: '最近使用したファイル',

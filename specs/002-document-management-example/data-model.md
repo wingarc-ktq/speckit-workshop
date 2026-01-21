@@ -239,8 +239,10 @@ export type FileType = (typeof FileType)[keyof typeof FileType];
  */
 export function getFileType(mimeType: string): FileType {
   if (mimeType.includes('pdf')) return FileType.PDF;
-  if (mimeType.includes('word') || mimeType.includes('document')) return FileType.WORD;
-  if (mimeType.includes('excel') || mimeType.includes('sheet')) return FileType.EXCEL;
+  if (mimeType.includes('word') || mimeType.includes('document'))
+    return FileType.WORD;
+  if (mimeType.includes('excel') || mimeType.includes('sheet'))
+    return FileType.EXCEL;
   if (mimeType.includes('image')) return FileType.IMAGE;
   return FileType.OTHER;
 }

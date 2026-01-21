@@ -1,4 +1,4 @@
-import {act, fireEvent, screen} from '@testing-library/react';
+import { act, fireEvent, screen } from '@testing-library/react';
 
 // デフォルトの値
 const FILE_TYPE = 'application/pdf';
@@ -12,22 +12,22 @@ const createDragEvent = (files: File[]): DragEvent => {
     files,
     types: ['Files'],
   };
-  return {dataTransfer} as unknown as DragEvent;
+  return { dataTransfer } as unknown as DragEvent;
 };
 
 /**
  * ファイルを作成
  */
 export const createFile = (name: string, type: string = FILE_TYPE): File =>
-  new File(['dummy content'], name, {type});
+  new File(['dummy content'], name, { type });
 
 /**
  * 複数ファイルを作成
  */
 export const createFiles = (
   names: string[],
-  type: string = FILE_TYPE,
-): File[] => names.map(name => createFile(name, type));
+  type: string = FILE_TYPE
+): File[] => names.map((name) => createFile(name, type));
 
 /**
  * ドラッグを実行

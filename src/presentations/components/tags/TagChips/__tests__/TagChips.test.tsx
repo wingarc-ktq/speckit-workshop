@@ -1,7 +1,12 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
-import { mockTag, mockTag2, mockTag3, mockTagVariations } from '@/__fixtures__/tags';
+import {
+  mockTag,
+  mockTag2,
+  mockTag3,
+  mockTagVariations,
+} from '@/__fixtures__/tags';
 import { TagColor } from '@/domain/models/tag';
 
 import { TagChips } from '../TagChips';
@@ -25,13 +30,41 @@ describe('TagChips', () => {
 
     test('各タグの色が正しくMUIのChipカラーに変換されること', () => {
       const colorTags = [
-        { ...mockTagVariations.withColor(TagColor.BLUE), id: 'tag-blue', name: 'Blue Tag' },
-        { ...mockTagVariations.withColor(TagColor.RED), id: 'tag-red', name: 'Red Tag' },
-        { ...mockTagVariations.withColor(TagColor.YELLOW), id: 'tag-yellow', name: 'Yellow Tag' },
-        { ...mockTagVariations.withColor(TagColor.GREEN), id: 'tag-green', name: 'Green Tag' },
-        { ...mockTagVariations.withColor(TagColor.PURPLE), id: 'tag-purple', name: 'Purple Tag' },
-        { ...mockTagVariations.withColor(TagColor.ORANGE), id: 'tag-orange', name: 'Orange Tag' },
-        { ...mockTagVariations.withColor(TagColor.GRAY), id: 'tag-gray', name: 'Gray Tag' },
+        {
+          ...mockTagVariations.withColor(TagColor.BLUE),
+          id: 'tag-blue',
+          name: 'Blue Tag',
+        },
+        {
+          ...mockTagVariations.withColor(TagColor.RED),
+          id: 'tag-red',
+          name: 'Red Tag',
+        },
+        {
+          ...mockTagVariations.withColor(TagColor.YELLOW),
+          id: 'tag-yellow',
+          name: 'Yellow Tag',
+        },
+        {
+          ...mockTagVariations.withColor(TagColor.GREEN),
+          id: 'tag-green',
+          name: 'Green Tag',
+        },
+        {
+          ...mockTagVariations.withColor(TagColor.PURPLE),
+          id: 'tag-purple',
+          name: 'Purple Tag',
+        },
+        {
+          ...mockTagVariations.withColor(TagColor.ORANGE),
+          id: 'tag-orange',
+          name: 'Orange Tag',
+        },
+        {
+          ...mockTagVariations.withColor(TagColor.GRAY),
+          id: 'tag-gray',
+          name: 'Gray Tag',
+        },
       ];
 
       render(<TagChips tags={colorTags} />);
@@ -46,13 +79,27 @@ describe('TagChips', () => {
       const grayChip = screen.getByText('Gray Tag');
 
       // 各色がMUIのcolorクラスにマッピングされていることを確認
-      expect(blueChip.closest('.MuiChip-root')).toHaveClass('MuiChip-colorInfo'); // blue -> info
-      expect(redChip.closest('.MuiChip-root')).toHaveClass('MuiChip-colorError'); // red -> error
-      expect(yellowChip.closest('.MuiChip-root')).toHaveClass('MuiChip-colorWarning'); // yellow -> warning
-      expect(greenChip.closest('.MuiChip-root')).toHaveClass('MuiChip-colorSuccess'); // green -> success
-      expect(purpleChip.closest('.MuiChip-root')).toHaveClass('MuiChip-colorSecondary'); // purple -> secondary
-      expect(orangeChip.closest('.MuiChip-root')).toHaveClass('MuiChip-colorWarning'); // orange -> warning
-      expect(grayChip.closest('.MuiChip-root')).toHaveClass('MuiChip-colorDefault'); // gray -> default
+      expect(blueChip.closest('.MuiChip-root')).toHaveClass(
+        'MuiChip-colorInfo'
+      ); // blue -> info
+      expect(redChip.closest('.MuiChip-root')).toHaveClass(
+        'MuiChip-colorError'
+      ); // red -> error
+      expect(yellowChip.closest('.MuiChip-root')).toHaveClass(
+        'MuiChip-colorWarning'
+      ); // yellow -> warning
+      expect(greenChip.closest('.MuiChip-root')).toHaveClass(
+        'MuiChip-colorSuccess'
+      ); // green -> success
+      expect(purpleChip.closest('.MuiChip-root')).toHaveClass(
+        'MuiChip-colorSecondary'
+      ); // purple -> secondary
+      expect(orangeChip.closest('.MuiChip-root')).toHaveClass(
+        'MuiChip-colorWarning'
+      ); // orange -> warning
+      expect(grayChip.closest('.MuiChip-root')).toHaveClass(
+        'MuiChip-colorDefault'
+      ); // gray -> default
     });
   });
 
@@ -89,19 +136,31 @@ describe('TagChips', () => {
       expect(chips).toHaveLength(2);
 
       // 各チップに削除アイコンがあることを確認
-      const importantChip = screen.getByText('Important').closest('.MuiChip-root');
+      const importantChip = screen
+        .getByText('Important')
+        .closest('.MuiChip-root');
       const reviewChip = screen.getByText('Review').closest('.MuiChip-root');
-      expect(importantChip?.querySelector('.MuiChip-deleteIcon')).toBeInTheDocument();
-      expect(reviewChip?.querySelector('.MuiChip-deleteIcon')).toBeInTheDocument();
+      expect(
+        importantChip?.querySelector('.MuiChip-deleteIcon')
+      ).toBeInTheDocument();
+      expect(
+        reviewChip?.querySelector('.MuiChip-deleteIcon')
+      ).toBeInTheDocument();
     });
 
     test('onDeleteが渡されていない場合、削除ボタンが表示されないこと', () => {
       render(<TagChips tags={[mockTag, mockTag2]} />);
 
-      const importantChip = screen.getByText('Important').closest('.MuiChip-root');
+      const importantChip = screen
+        .getByText('Important')
+        .closest('.MuiChip-root');
       const reviewChip = screen.getByText('Review').closest('.MuiChip-root');
-      expect(importantChip?.querySelector('.MuiChip-deleteIcon')).not.toBeInTheDocument();
-      expect(reviewChip?.querySelector('.MuiChip-deleteIcon')).not.toBeInTheDocument();
+      expect(
+        importantChip?.querySelector('.MuiChip-deleteIcon')
+      ).not.toBeInTheDocument();
+      expect(
+        reviewChip?.querySelector('.MuiChip-deleteIcon')
+      ).not.toBeInTheDocument();
     });
 
     test('削除ボタンをクリックした時にonDeleteが正しいtagIdで呼び出されること', async () => {
@@ -110,7 +169,9 @@ describe('TagChips', () => {
 
       render(<TagChips tags={[mockTag, mockTag2]} onDelete={onDelete} />);
 
-      const importantChip = screen.getByText('Important').closest('.MuiChip-root');
+      const importantChip = screen
+        .getByText('Important')
+        .closest('.MuiChip-root');
       const reviewChip = screen.getByText('Review').closest('.MuiChip-root');
 
       // 最初のタグの削除ボタンをクリック
@@ -189,7 +250,9 @@ describe('TagChips', () => {
       const remainingChip = screen.getByText('+5');
 
       // "+5"チップがoutlinedスタイルであることを確認
-      expect(remainingChip.closest('.MuiChip-root')).toHaveClass('MuiChip-outlined');
+      expect(remainingChip.closest('.MuiChip-root')).toHaveClass(
+        'MuiChip-outlined'
+      );
     });
 
     test('maxとsizeを組み合わせて使用できること', () => {
@@ -207,7 +270,9 @@ describe('TagChips', () => {
       expect(tag1.closest('.MuiChip-root')).toHaveClass('MuiChip-sizeSmall');
       expect(tag2.closest('.MuiChip-root')).toHaveClass('MuiChip-sizeSmall');
       expect(tag3.closest('.MuiChip-root')).toHaveClass('MuiChip-sizeSmall');
-      expect(remaining.closest('.MuiChip-root')).toHaveClass('MuiChip-sizeSmall');
+      expect(remaining.closest('.MuiChip-root')).toHaveClass(
+        'MuiChip-sizeSmall'
+      );
     });
   });
 
@@ -229,7 +294,9 @@ describe('TagChips', () => {
       const user = userEvent.setup();
       const onClick = vi.fn();
 
-      render(<TagChips tags={[mockTag, mockTag2, mockTag3]} onClick={onClick} />);
+      render(
+        <TagChips tags={[mockTag, mockTag2, mockTag3]} onClick={onClick} />
+      );
 
       // 2番目のタグをクリック
       const secondChip = screen.getByText('Review');
@@ -250,7 +317,9 @@ describe('TagChips', () => {
       const chip = screen.getByText('Important');
 
       // onClickが渡されていない場合、clickableクラスが付与されないことを確認
-      expect(chip.closest('.MuiChip-root')).not.toHaveClass('MuiChip-clickable');
+      expect(chip.closest('.MuiChip-root')).not.toHaveClass(
+        'MuiChip-clickable'
+      );
     });
 
     test('onClickとonDeleteが同時に指定された場合、両方が機能すること', async () => {
@@ -258,7 +327,9 @@ describe('TagChips', () => {
       const onClick = vi.fn();
       const onDelete = vi.fn();
 
-      render(<TagChips tags={[mockTag]} onClick={onClick} onDelete={onDelete} />);
+      render(
+        <TagChips tags={[mockTag]} onClick={onClick} onDelete={onDelete} />
+      );
 
       // チップ本体をクリック
       const chip = screen.getByText('Important');
@@ -267,7 +338,9 @@ describe('TagChips', () => {
       expect(onClick).toHaveBeenCalledWith(mockTag);
 
       // 削除ボタンをクリック
-      const chipElement = screen.getByText('Important').closest('.MuiChip-root');
+      const chipElement = screen
+        .getByText('Important')
+        .closest('.MuiChip-root');
       const deleteButton = chipElement?.querySelector('.MuiChip-deleteIcon');
       await user.click(deleteButton!);
       expect(onDelete).toHaveBeenCalledTimes(1);
@@ -282,7 +355,14 @@ describe('TagChips', () => {
       const onDelete = vi.fn();
       const manyTags = mockTagVariations.multiple(10);
 
-      render(<TagChips tags={manyTags} max={3} onClick={onClick} onDelete={onDelete} />);
+      render(
+        <TagChips
+          tags={manyTags}
+          max={3}
+          onClick={onClick}
+          onDelete={onDelete}
+        />
+      );
 
       // 表示されているタグをクリック
       const firstChip = screen.getByText('Tag 1');
@@ -321,7 +401,9 @@ describe('TagChips', () => {
       const remaining = screen.getByText('+5');
       expect(tag1.closest('.MuiChip-root')).toHaveClass('MuiChip-sizeSmall');
       expect(tag5.closest('.MuiChip-root')).toHaveClass('MuiChip-sizeSmall');
-      expect(remaining.closest('.MuiChip-root')).toHaveClass('MuiChip-sizeSmall');
+      expect(remaining.closest('.MuiChip-root')).toHaveClass(
+        'MuiChip-sizeSmall'
+      );
 
       // maxによる制限が機能している
       expect(screen.getByText('+5')).toBeInTheDocument();
