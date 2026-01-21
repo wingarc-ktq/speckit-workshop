@@ -1,6 +1,7 @@
-import { describe, test, expect, vi } from 'vitest';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { describe, test, expect, vi } from 'vitest';
+
 import { SearchBar } from '../SearchBar';
 
 /**

@@ -1,31 +1,25 @@
 import { useMemo } from 'react';
 import type { ReactElement } from 'react';
-import {
-  Grid as MuiGrid,
-  Card,
-  CardContent,
-  Skeleton,
-  Box,
-  Checkbox,
-  Typography,
-} from '@mui/material';
-import {
-  PictureAsPdf as PdfIcon,
-  Description as DocIcon,
-  Slideshow as PptIcon,
-  TableChart as ExcelIcon,
-  Image as ImageIcon,
-  InsertDriveFile as FileIcon,
-} from '@mui/icons-material';
+
+import DescriptionIcon from '@mui/icons-material/Description';
+import ImageIcon from '@mui/icons-material/Image';
+import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
+import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
+import SlideshowIcon from '@mui/icons-material/Slideshow';
+import TableChartIcon from '@mui/icons-material/TableChart';
+import Box from '@mui/material/Box';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import Checkbox from '@mui/material/Checkbox';
+import Grid from '@mui/material/Grid';
+import Skeleton from '@mui/material/Skeleton';
+import Typography from '@mui/material/Typography';
+
 import type { Document } from '@/domain/models/document';
-import { highlightMatch } from '@/presentations/utils/highlightMatch';
 import { TagChip } from '@/presentations/components/tags/TagChip';
+import { highlightMatch } from '@/presentations/utils/highlightMatch';
 
-const DOCUMENT_TAG_NAMES = ['請求書', '契約書', '議事録', '提案書', '見積書', '仕様書'];
 const PROGRESS_TAG_NAMES = ['完了', '未完了', '進行中'];
-
-// MUI v7 Grid コンポーネントの型互換性を確保
-const Grid = MuiGrid as any;
 
 interface FileGridViewProps {
   documents: Document[];
@@ -39,19 +33,19 @@ const getFileTypeInfo = (fileName: string) => {
   const extension = fileName.split('.').pop()?.toLowerCase() || '';
   
   const typeMap: Record<string, { icon: ReactElement; bgColor: string }> = {
-    pdf: { icon: <PdfIcon sx={{ fontSize: 80, color: '#D32F2F' }} />, bgColor: '#FFE5E5' },
-    doc: { icon: <DocIcon sx={{ fontSize: 80, color: '#1976D2' }} />, bgColor: '#E3F2FD' },
-    docx: { icon: <DocIcon sx={{ fontSize: 80, color: '#1976D2' }} />, bgColor: '#E3F2FD' },
-    ppt: { icon: <PptIcon sx={{ fontSize: 80, color: '#FF9800' }} />, bgColor: '#FFF3E0' },
-    pptx: { icon: <PptIcon sx={{ fontSize: 80, color: '#FF9800' }} />, bgColor: '#FFF3E0' },
-    xls: { icon: <ExcelIcon sx={{ fontSize: 80, color: '#2E7D32' }} />, bgColor: '#E8F5E9' },
-    xlsx: { icon: <ExcelIcon sx={{ fontSize: 80, color: '#2E7D32' }} />, bgColor: '#E8F5E9' },
+    pdf: { icon: <PictureAsPdfIcon sx={{ fontSize: 80, color: '#D32F2F' }} />, bgColor: '#FFE5E5' },
+    doc: { icon: <DescriptionIcon sx={{ fontSize: 80, color: '#1976D2' }} />, bgColor: '#E3F2FD' },
+    docx: { icon: <DescriptionIcon sx={{ fontSize: 80, color: '#1976D2' }} />, bgColor: '#E3F2FD' },
+    ppt: { icon: <SlideshowIcon sx={{ fontSize: 80, color: '#FF9800' }} />, bgColor: '#FFF3E0' },
+    pptx: { icon: <SlideshowIcon sx={{ fontSize: 80, color: '#FF9800' }} />, bgColor: '#FFF3E0' },
+    xls: { icon: <TableChartIcon sx={{ fontSize: 80, color: '#2E7D32' }} />, bgColor: '#E8F5E9' },
+    xlsx: { icon: <TableChartIcon sx={{ fontSize: 80, color: '#2E7D32' }} />, bgColor: '#E8F5E9' },
     jpg: { icon: <ImageIcon sx={{ fontSize: 80, color: '#9C27B0' }} />, bgColor: '#F3E5F5' },
     jpeg: { icon: <ImageIcon sx={{ fontSize: 80, color: '#9C27B0' }} />, bgColor: '#F3E5F5' },
     png: { icon: <ImageIcon sx={{ fontSize: 80, color: '#9C27B0' }} />, bgColor: '#F3E5F5' },
   };
 
-  return typeMap[extension] || { icon: <FileIcon sx={{ fontSize: 80, color: '#757575' }} />, bgColor: '#F5F5F5' };
+  return typeMap[extension] || { icon: <InsertDriveFileIcon sx={{ fontSize: 80, color: '#757575' }} />, bgColor: '#F5F5F5' };
 };
 
 /**
@@ -92,7 +86,7 @@ export function FileGridView({ documents, isLoading, searchKeyword, onCardClick 
     return (
       <Grid container spacing={2}>
         {skeletonCards.map((card) => (
-          <Grid key={card.id} xs={12} sm={6} md={3}>
+          <Grid key={card.id} size={{ xs: 12, sm: 6, md: 3 }}>
             <Card>
               <CardContent>
                 <Skeleton variant="rectangular" height={120} />
@@ -133,7 +127,7 @@ export function FileGridView({ documents, isLoading, searchKeyword, onCardClick 
         const { icon, bgColor } = getFileTypeInfo(document.fileName);
         
         return (
-          <Grid key={document.id} xs={12} sm={6} md={3}>
+          <Grid key={document.id} size={{ xs: 12, sm: 6, md: 3 }}>
             <Card
               sx={{
                 position: 'relative',

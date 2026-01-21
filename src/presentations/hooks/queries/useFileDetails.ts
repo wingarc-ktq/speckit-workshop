@@ -1,8 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
-import type { UseQueryResult } from '@tanstack/react-query';
+
 
 import { repositoryComposition } from '@/adapters/repositories';
 import type { Document } from '@/domain/models/document';
+
+import type { UseQueryResult } from '@tanstack/react-query';
 
 interface UseFileDetailsOptions {
   enabled?: boolean;

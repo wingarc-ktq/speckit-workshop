@@ -3,7 +3,7 @@ export interface FileValidationError {
   error: string;
 }
 
-export const SUPPORTED_FORMATS = ['pdf', 'docx', 'xlsx', 'jpg', 'jpeg', 'png'] as const;
+export const SUPPORTED_FORMATS = ['pdf', 'docx', 'xlsx', 'pptx', 'jpg', 'jpeg', 'png'] as const;
 export const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 export const MAX_FILES_PER_UPLOAD = 20;
 
@@ -12,7 +12,7 @@ export const MAX_FILES_PER_UPLOAD = 20;
  */
 export function validateFileFormat(file: File): boolean {
   const extension = file.name.split('.').pop()?.toLowerCase();
-  return extension ? SUPPORTED_FORMATS.includes(extension as any) : false;
+  return extension ? (SUPPORTED_FORMATS as readonly string[]).includes(extension) : false;
 }
 
 /**

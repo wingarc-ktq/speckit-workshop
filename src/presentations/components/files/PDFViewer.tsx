@@ -2,13 +2,11 @@ import { useEffect, useRef, useState } from 'react';
 
 import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
-import {
-  Box,
-  IconButton,
-  Skeleton,
-  Stack,
-  Typography,
-} from '@mui/material';
+import Box from '@mui/material/Box';
+import IconButton from '@mui/material/IconButton';
+import Skeleton from '@mui/material/Skeleton';
+import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
 import { Document as PdfDocument, Page, pdfjs } from 'react-pdf';
 
 // Setup PDF worker using local file

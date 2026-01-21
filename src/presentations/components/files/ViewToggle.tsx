@@ -1,8 +1,9 @@
-import { ToggleButton, ToggleButtonGroup, Box, Tooltip } from '@mui/material';
-import {
-  ViewWeek as ViewListIcon,
-  ViewAgenda as ViewGridIcon,
-} from '@mui/icons-material';
+import ViewAgendaIcon from '@mui/icons-material/ViewAgenda';
+import ViewWeekIcon from '@mui/icons-material/ViewWeek';
+import Box from '@mui/material/Box';
+import ToggleButton from '@mui/material/ToggleButton';
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
+import Tooltip from '@mui/material/Tooltip';
 
 interface ViewToggleProps {
   currentView: 'list' | 'grid';
@@ -41,12 +42,12 @@ export function ViewToggle({ currentView, onViewChange }: ViewToggleProps) {
       >
         <Tooltip title="リスト表示">
           <ToggleButton value="list" aria-label="list view" data-testid="view-toggle-list">
-            <ViewListIcon />
+            <ViewWeekIcon />
           </ToggleButton>
         </Tooltip>
         <Tooltip title="グリッド表示">
           <ToggleButton value="grid" aria-label="grid view" data-testid="view-toggle-grid">
-            <ViewGridIcon />
+            <ViewAgendaIcon />
           </ToggleButton>
         </Tooltip>
       </ToggleButtonGroup>

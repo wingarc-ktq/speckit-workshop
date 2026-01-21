@@ -3,7 +3,7 @@ import type { Tag } from '../tag/Tag';
 /**
  * ファイル形式タイプ
  */
-export type FileFormat = 'pdf' | 'docx' | 'xlsx' | 'jpg' | 'png';
+export type FileFormat = 'pdf' | 'docx' | 'xlsx' | 'jpg' | 'png' | 'pptx';
 
 /**
  * Document エンティティ

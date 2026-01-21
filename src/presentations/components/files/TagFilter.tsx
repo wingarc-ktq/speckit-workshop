@@ -1,5 +1,9 @@
-import { Box, CircularProgress, Typography } from '@mui/material';
 import { useMemo } from 'react';
+
+import Box from '@mui/material/Box';
+import CircularProgress from '@mui/material/CircularProgress';
+import Typography from '@mui/material/Typography';
+
 import type { Tag } from '@/domain/models/tag';
 import { TagChip } from '@/presentations/components/tags/TagChip';
 import { useTags } from '@/presentations/hooks/queries';

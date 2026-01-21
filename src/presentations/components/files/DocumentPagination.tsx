@@ -1,4 +1,12 @@
-import { Box, Pagination, FormControl, InputLabel, Select, MenuItem, Typography } from '@mui/material';
+import Box from '@mui/material/Box';
+import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import Pagination from '@mui/material/Pagination';
+import Select from '@mui/material/Select';
+import Typography from '@mui/material/Typography';
+
+import type { SelectChangeEvent } from '@mui/material/Select';
 
 interface DocumentPaginationProps {
   currentPage: number;
@@ -37,8 +45,8 @@ export function DocumentPagination({
     onPageChange(page);
   };
 
-  const handlePageSizeChange = (_event: any) => {
-    const newPageSize: number = _event.target.value;
+  const handlePageSizeChange = (event: SelectChangeEvent<number>) => {
+    const newPageSize: number = event.target.value as number;
     onPageSizeChange?.(newPageSize);
     // localStorage に保存
     localStorage.setItem('documentPageSize', String(newPageSize));

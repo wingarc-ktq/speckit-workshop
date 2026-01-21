@@ -4,6 +4,8 @@ import type {
   UpdateTagRequest,
 } from '@/domain/models/tag';
 
+import type { AxiosInstance } from 'axios';
+
 /**
  * TagRepository インターフェース
  * Tag エンティティの CRUD 操作を定義
@@ -58,34 +60,34 @@ export class TagRepository implements ITagRepository {
    * コンストラクタ
    * @param axiosInstance - Axios インスタンス
    */
-  axiosInstance: any;
+  axiosInstance: AxiosInstance;
 
-  constructor(axiosInstance: any) {
+  constructor(axiosInstance: AxiosInstance) {
     this.axiosInstance = axiosInstance;
   }
 
   async getTags(): Promise<Tag[]> {
-    const response = await (this.axiosInstance.get as any)('/tags');
-    return response.data as Tag[];
+    const response = await this.axiosInstance.get<Tag[]>('/tags');
+    return response.data;
   }
 
   async createTag(data: CreateTagRequest): Promise<Tag> {
-    const response = await (this.axiosInstance.post as any)('/tags', data);
-    return response.data as Tag;
+    const response = await this.axiosInstance.post<Tag>('/tags', data);
+    return response.data;
   }
 
   async updateTag(id: string, data: UpdateTagRequest): Promise<Tag> {
-    const response = await (this.axiosInstance.put as any)(`/tags/${id}`, data);
-    return response.data as Tag;
+    const response = await this.axiosInstance.put<Tag>(`/tags/${id}`, data);
+    return response.data;
   }
 
   async deleteTag(id: string): Promise<Tag> {
-    const response = await (this.axiosInstance.delete as any)(`/tags/${id}`);
-    return response.data as Tag;
+    const response = await this.axiosInstance.delete<Tag>(`/tags/${id}`);
+    return response.data;
   }
 
   async getTagById(id: string): Promise<Tag> {
-    const response = await (this.axiosInstance.get as any)(`/tags/${id}`);
-    return response.data as Tag;
+    const response = await this.axiosInstance.get<Tag>(`/tags/${id}`);
+    return response.data;
   }
 }

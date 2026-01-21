@@ -1,5 +1,7 @@
-import { Box, Typography, Button } from '@mui/material';
-import { CloudUpload as CloudUploadIcon } from '@mui/icons-material';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
 
 interface DocumentEmptyStateProps {
   onUploadClick?: () => void;

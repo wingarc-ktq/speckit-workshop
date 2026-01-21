@@ -1,9 +1,11 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
+
 import { RepositoryTestWrapper } from '@/__fixtures__/testWrappers';
-import { FileList } from '../FileList';
 import type { Document } from '@/domain/models/document';
+
+import { FileList } from '../FileList';
 
 describe('FileList Component (T033)', () => {
   const mockDocuments: Document[] = [

@@ -1,9 +1,11 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
+
 import { RepositoryTestWrapper } from '@/__fixtures__/testWrappers';
-import { FileGridView } from '../FileGridView';
 import type { Document } from '@/domain/models/document';
+
+import { FileGridView } from '../FileGridView';
 
 describe('FileGridView Component (T034)', () => {
   const mockDocuments: Document[] = [

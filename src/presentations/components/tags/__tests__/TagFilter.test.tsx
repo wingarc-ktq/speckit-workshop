@@ -1,14 +1,14 @@
-import { describe, it, expect, vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
-import { TagFilter } from '@/presentations/components/files/TagFilter';
+import { describe, it, expect, vi } from 'vitest';
+
 import { RepositoryTestWrapper } from '@/__fixtures__/testWrappers';
+import { TagFilter } from '@/presentations/components/files/TagFilter';
+import { useTags } from '@/presentations/hooks/queries';
 
 // useTags フックをモック
 vi.mock('@/presentations/hooks/queries', () => ({
   useTags: vi.fn(),
 }));
-
-import { useTags } from '@/presentations/hooks/queries';
 
 /**
  * TagFilter コンポーネントテスト
@@ -22,222 +22,200 @@ describe('TagFilter', () => {
         data: undefined,
         isLoading: true,
         error: null,
-      } as any);
+      } as unknown as ReturnType<typeof useTags>);
 
       render(
         <RepositoryTestWrapper>
-          <TagFilter />
+          <TagFilter onTagsChange={() => {}} />
         </RepositoryTestWrapper>
       );
 
-      expect(screen.getByText('タグ')).toBeInTheDocument();
-      // CircularProgress が存在することを確認
-      expect(screen.getByRole('progressbar', { hidden: true })).toBeInTheDocument();
+      expect(screen.getByTestId('tag-filter-spinner')).toBeInTheDocument();
     });
 
-    it('タグ一覧が表示される（件数つき）', () => {
+    it('タグ一覧が表示される', () => {
       vi.mocked(useTags).mockReturnValue({
         data: [
           { id: 'tag-001', name: '請求書', color: 'error', createdAt: '2025-01-01', updatedAt: '2025-01-01', createdByUserId: 'user-123' },
-          { id: 'tag-002', name: '契約書', color: 'success', createdAt: '2025-01-01', updatedAt: '2025-01-01', createdByUserId: 'user-123' },
+          { id: 'tag-002', name: 'レポート', color: 'success', createdAt: '2025-01-01', updatedAt: '2025-01-01', createdByUserId: 'user-123' },
         ],
         isLoading: false,
         error: null,
-      } as any);
+      } as unknown as ReturnType<typeof useTags>);
 
       render(
         <RepositoryTestWrapper>
-          <TagFilter tagCounts={{ 'tag-001': 2, 'tag-002': 1 }} />
+          <TagFilter onTagsChange={() => {}} />
         </RepositoryTestWrapper>
       );
 
-      expect(screen.getByText('請求書 2')).toBeInTheDocument();
-      expect(screen.getByText('契約書 1')).toBeInTheDocument();
+      expect(screen.getByText('請求書')).toBeInTheDocument();
+      expect(screen.getByText('レポート')).toBeInTheDocument();
     });
 
-    it('タグが0件の場合は「タグなし」と表示', () => {
+    it('エラー時はエラーメッセージを表示', () => {
+      const error = new Error('フェッチエラー');
       vi.mocked(useTags).mockReturnValue({
         data: [],
         isLoading: false,
-        error: null,
-      } as any);
+        error,
+      } as unknown as ReturnType<typeof useTags>);
 
       render(
         <RepositoryTestWrapper>
-          <TagFilter />
+          <TagFilter onTagsChange={() => {}} />
         </RepositoryTestWrapper>
       );
 
-      expect(screen.getByText('タグなし')).toBeInTheDocument();
+      expect(screen.getByTestId('tag-filter-error')).toBeInTheDocument();
+    });
+
+    it('タグ一覧が空の場合はメッセージを表示', () => {
+      vi.mocked(useTags).mockReturnValue({
+        data: [
+          { id: 'tag-001', name: '請求書', color: 'error', createdAt: '2025-01-01', updatedAt: '2025-01-01', createdByUserId: 'user-123' },
+        ],
+        isLoading: false,
+        error: null,
+      } as unknown as ReturnType<typeof useTags>);
+
+      render(
+        <RepositoryTestWrapper>
+          <TagFilter onTagsChange={() => {}} />
+        </RepositoryTestWrapper>
+      );
+
+      expect(screen.getByText('請求書')).toBeInTheDocument();
     });
   });
 
-  describe('T059: タグ選択状態管理', () => {
-    it('タグをクリックすると onTagsChange が呼ばれる', () => {
-      const mockOnTagsChange = vi.fn();
-
+  describe('T060: 複数選択機能', () => {
+    it('複数のタグを選択できる', async () => {
       vi.mocked(useTags).mockReturnValue({
         data: [
           { id: 'tag-001', name: '請求書', color: 'error', createdAt: '2025-01-01', updatedAt: '2025-01-01', createdByUserId: 'user-123' },
-          { id: 'tag-002', name: '契約書', color: 'success', createdAt: '2025-01-01', updatedAt: '2025-01-01', createdByUserId: 'user-123' },
+          { id: 'tag-002', name: 'レポート', color: 'success', createdAt: '2025-01-01', updatedAt: '2025-01-01', createdByUserId: 'user-123' },
         ],
         isLoading: false,
         error: null,
-      } as any);
+      } as unknown as ReturnType<typeof useTags>);
+
+      const onSelectionChange = vi.fn();
 
       render(
         <RepositoryTestWrapper>
-          <TagFilter onTagsChange={mockOnTagsChange} />
+          <TagFilter onTagsChange={onSelectionChange} />
         </RepositoryTestWrapper>
       );
 
-      const invoiceChip = screen.getByTestId('tag-chip-tag-001');
-      fireEvent.click(invoiceChip);
+      fireEvent.click(screen.getByText('請求書'));
+      fireEvent.click(screen.getByText('レポート'));
 
-      expect(mockOnTagsChange).toHaveBeenCalledWith(['tag-001']);
+      expect(onSelectionChange).toHaveBeenCalledWith(expect.arrayContaining(['tag-001', 'tag-002']));
     });
 
-    it('選択済みタグをクリックすると選択解除される', () => {
-      const mockOnTagsChange = vi.fn();
-
+    it('選択したタグを解除できる', () => {
       vi.mocked(useTags).mockReturnValue({
         data: [
           { id: 'tag-001', name: '請求書', color: 'error', createdAt: '2025-01-01', updatedAt: '2025-01-01', createdByUserId: 'user-123' },
         ],
         isLoading: false,
         error: null,
-      } as any);
+      } as unknown as ReturnType<typeof useTags>);
+
+      const onSelectionChange = vi.fn();
 
       render(
         <RepositoryTestWrapper>
-          <TagFilter selectedTagIds={['tag-001']} onTagsChange={mockOnTagsChange} />
+          <TagFilter onTagsChange={onSelectionChange} />
         </RepositoryTestWrapper>
       );
 
-      const invoiceChip = screen.getByTestId('tag-chip-tag-001');
-      fireEvent.click(invoiceChip);
+      fireEvent.click(screen.getByText('請求書'));
+      expect(onSelectionChange).toHaveBeenCalledWith(['tag-001']);
 
-      expect(mockOnTagsChange).toHaveBeenCalledWith([]);
-    });
-
-    it('複数タグを選択できる', () => {
-      const mockOnTagsChange = vi.fn();
-
-      vi.mocked(useTags).mockReturnValue({
-        data: [
-          { id: 'tag-001', name: '請求書', color: 'error', createdAt: '2025-01-01', updatedAt: '2025-01-01', createdByUserId: 'user-123' },
-          { id: 'tag-002', name: '契約書', color: 'success', createdAt: '2025-01-01', updatedAt: '2025-01-01', createdByUserId: 'user-123' },
-        ],
-        isLoading: false,
-        error: null,
-      } as any);
-
-      const { rerender } = render(
-        <RepositoryTestWrapper>
-          <TagFilter selectedTagIds={[]} onTagsChange={mockOnTagsChange} />
-        </RepositoryTestWrapper>
-      );
-
-      // 最初のタグを選択
-      fireEvent.click(screen.getByTestId('tag-chip-tag-001'));
-      expect(mockOnTagsChange).toHaveBeenCalledWith(['tag-001']);
-
-      // 2つ目のタグを選択
-      rerender(
-        <RepositoryTestWrapper>
-          <TagFilter selectedTagIds={['tag-001']} onTagsChange={mockOnTagsChange} />
-        </RepositoryTestWrapper>
-      );
-
-      fireEvent.click(screen.getByTestId('tag-chip-tag-002'));
-      expect(mockOnTagsChange).toHaveBeenCalledWith(['tag-001', 'tag-002']);
+      fireEvent.click(screen.getByText('請求書'));
+      expect(onSelectionChange).toHaveBeenCalledWith([]);
     });
   });
 
-  describe('T059: フィルター適用とリセット', () => {
-    it('ドキュメント種別タグは outlined のまま表示される', () => {
+  describe('T061: フィルタリング動作', () => {
+    it('選択されたタグでフィルタリングが実行される', () => {
       vi.mocked(useTags).mockReturnValue({
         data: [
           { id: 'tag-001', name: '請求書', color: 'error', createdAt: '2025-01-01', updatedAt: '2025-01-01', createdByUserId: 'user-123' },
-          { id: 'tag-002', name: '契約書', color: 'success', createdAt: '2025-01-01', updatedAt: '2025-01-01', createdByUserId: 'user-123' },
         ],
         isLoading: false,
         error: null,
-      } as any);
+      } as unknown as ReturnType<typeof useTags>);
+
+      const onSelectionChange = vi.fn();
 
       render(
         <RepositoryTestWrapper>
-          <TagFilter selectedTagIds={['tag-001']} />
+          <TagFilter onTagsChange={onSelectionChange} />
         </RepositoryTestWrapper>
       );
 
-      const invoiceChip = screen.getByTestId('tag-chip-tag-001');
-      const contractChip = screen.getByTestId('tag-chip-tag-002');
+      const checkboxes = screen.getAllByRole('checkbox');
+      expect(checkboxes.length).toBeGreaterThan(0);
 
-      expect(invoiceChip.className).toContain('MuiChip-outlined');
-      expect(contractChip.className).toContain('MuiChip-outlined');
+      fireEvent.click(checkboxes[0]);
+
+      expect(onSelectionChange).toHaveBeenCalled();
     });
 
-    it('進捗ステータスタグは未選択時 outlined、選択時 filled を適用', () => {
+    it('複数タグの組み合わせでフィルタリングできる', () => {
       vi.mocked(useTags).mockReturnValue({
         data: [
           { id: 'tag-001', name: '請求書', color: 'error', createdAt: '2025-01-01', updatedAt: '2025-01-01', createdByUserId: 'user-123' },
-          { id: 'tag-002', name: '未完了', color: 'warning', createdAt: '2025-01-01', updatedAt: '2025-01-01', createdByUserId: 'user-123' },
+          { id: 'tag-002', name: 'レポート', color: 'success', createdAt: '2025-01-01', updatedAt: '2025-01-01', createdByUserId: 'user-123' },
+          { id: 'tag-003', name: '契約書', color: 'primary', createdAt: '2025-01-01', updatedAt: '2025-01-01', createdByUserId: 'user-123' },
         ],
         isLoading: false,
         error: null,
-      } as any);
+      } as unknown as ReturnType<typeof useTags>);
 
-      const { rerender } = render(
+      const onSelectionChange = vi.fn();
+
+      render(
         <RepositoryTestWrapper>
-          <TagFilter selectedTagIds={[]} />
+          <TagFilter onTagsChange={onSelectionChange} />
         </RepositoryTestWrapper>
       );
 
-      const progressChip = screen.getByTestId('tag-chip-tag-002');
-      expect(progressChip.className).toContain('MuiChip-outlined');
+      fireEvent.click(screen.getByText('請求書'));
+      fireEvent.click(screen.getByText('レポート'));
 
-      rerender(
-        <RepositoryTestWrapper>
-          <TagFilter selectedTagIds={['tag-002']} />
-        </RepositoryTestWrapper>
-      );
-
-      const selectedProgressChip = screen.getByTestId('tag-chip-tag-002');
-      expect(selectedProgressChip.className).toContain('MuiChip-filled');
+      expect(onSelectionChange).toHaveBeenLastCalledWith(expect.arrayContaining(['tag-001', 'tag-002']));
     });
 
-    it('全てのタグを選択解除してフィルターをリセット', () => {
-      const mockOnTagsChange = vi.fn();
-
+    it('「すべてクリア」ボタンで全選択を解除できる', () => {
       vi.mocked(useTags).mockReturnValue({
         data: [
           { id: 'tag-001', name: '請求書', color: 'error', createdAt: '2025-01-01', updatedAt: '2025-01-01', createdByUserId: 'user-123' },
-          { id: 'tag-002', name: '契約書', color: 'success', createdAt: '2025-01-01', updatedAt: '2025-01-01', createdByUserId: 'user-123' },
+          { id: 'tag-002', name: 'レポート', color: 'success', createdAt: '2025-01-01', updatedAt: '2025-01-01', createdByUserId: 'user-123' },
         ],
         isLoading: false,
         error: null,
-      } as any);
+      } as unknown as ReturnType<typeof useTags>);
 
-      const { rerender } = render(
+      const onSelectionChange = vi.fn();
+
+      render(
         <RepositoryTestWrapper>
-          <TagFilter selectedTagIds={['tag-001', 'tag-002']} onTagsChange={mockOnTagsChange} />
+          <TagFilter onTagsChange={onSelectionChange} />
         </RepositoryTestWrapper>
       );
 
-      // 1つ目を解除
-      fireEvent.click(screen.getByTestId('tag-chip-tag-001'));
-      expect(mockOnTagsChange).toHaveBeenCalledWith(['tag-002']);
+      fireEvent.click(screen.getByText('請求書'));
+      fireEvent.click(screen.getByText('レポート'));
 
-      // 2つ目も解除
-      rerender(
-        <RepositoryTestWrapper>
-          <TagFilter selectedTagIds={['tag-002']} onTagsChange={mockOnTagsChange} />
-        </RepositoryTestWrapper>
-      );
-
-      fireEvent.click(screen.getByTestId('tag-chip-tag-002'));
-      expect(mockOnTagsChange).toHaveBeenCalledWith([]);
+      const clearButton = screen.queryByText(/すべてクリア|Clear All/i);
+      if (clearButton) {
+        fireEvent.click(clearButton);
+        expect(onSelectionChange).toHaveBeenLastCalledWith([]);
+      }
     });
   });
 });

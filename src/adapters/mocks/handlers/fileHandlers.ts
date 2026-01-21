@@ -1,6 +1,7 @@
 import { http, HttpResponse } from 'msw';
-import type { Document, DocumentListResponse } from '@/domain/models/document';
-import type { Tag } from '@/domain/models/tag';
+
+import type { Document, DocumentListResponse, FileFormat } from '@/domain/models/document';
+import type { Tag, TagColor } from '@/domain/models/tag';
 
 /**
  * API base URL
@@ -35,7 +36,7 @@ function base64ToUint8Array(base64String: string): Uint8Array {
 /**
  * Mock tags data store
  */
-let mockTags: Tag[] = [
+const mockTags: Tag[] = [
   {
     id: 'tag-doc-001',
     name: '請求書',
@@ -129,7 +130,7 @@ const getTagsByIds = (tagIds: string[]): Tag[] =>
 /**
  * Mock documents data store
  */
-let mockDocuments: Document[] = [
+const mockDocuments: Document[] = [
   {
     id: 'doc-001',
     fileName: '請求書_20250110.pdf',
@@ -256,7 +257,7 @@ let mockDocuments: Document[] = [
  * Validate file format
  */
 function isValidFileFormat(fileName: string): boolean {
-  const validExtensions = ['.pdf', '.docx', '.xlsx', '.jpg', '.png'];
+  const validExtensions = ['.pdf', '.docx', '.xlsx', '.jpg', '.png', '.pptx'];
   return validExtensions.some((ext) =>
     fileName.toLowerCase().endsWith(ext)
   );
@@ -265,16 +266,17 @@ function isValidFileFormat(fileName: string): boolean {
 /**
  * Get file format from file name
  */
-function getFileFormat(fileName: string): string {
+function getFileFormat(fileName: string): FileFormat {
   const ext = fileName.split('.').pop()?.toLowerCase() || '';
-  const formatMap: Record<string, string> = {
+  const formatMap: Record<string, FileFormat> = {
     pdf: 'pdf',
     docx: 'docx',
     xlsx: 'xlsx',
+    pptx: 'pptx',
     jpg: 'jpg',
     png: 'png',
   };
-  return formatMap[ext] || 'unknown';
+  return formatMap[ext] || 'pdf';
 }
 
 /**
@@ -413,7 +415,7 @@ function handleUploadDocument() {
         id: `doc-${Date.now()}`,
         fileName: file.name,
         fileSize: file.size,
-        fileFormat: getFileFormat(file.name) as any,
+        fileFormat: getFileFormat(file.name),
         uploadedAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
         uploadedByUserId: 'user-123', // Mock current user
@@ -425,7 +427,7 @@ function handleUploadDocument() {
       mockDocuments.push(newDoc);
 
       return HttpResponse.json(newDoc, { status: 201 });
-    } catch (error) {
+    } catch {
       return HttpResponse.json(
         { error: 'Failed to upload file' },
         { status: 500 }
@@ -438,7 +440,7 @@ function handleUploadDocument() {
  * GET /files/:id - ファイル詳細取得
  */
 function handleGetDocumentById() {
-  return http.get(`${API_BASE_URL}/files/:id`, ({ params, request }) => {
+  return http.get(`${API_BASE_URL}/files/:id`, ({ params }) => {
     const { id } = params;
     const doc = mockDocuments.find((d) => d.id === id);
 
@@ -457,7 +459,7 @@ function handleGetDocumentById() {
  * GET /files/:id/download - ファイルダウンロード
  */
 function handleDownloadDocument() {
-  return http.get(`${API_BASE_URL}/files/:id/download`, ({ params, request }) => {
+  return http.get(`${API_BASE_URL}/files/:id/download`, ({ params }) => {
     const { id } = params;
     const doc = mockDocuments.find((d) => d.id === id);
 
@@ -488,7 +490,7 @@ function handleDownloadDocument() {
 function handleUpdateDocument() {
   return http.put(`${API_BASE_URL}/files/:id`, async ({ params, request }) => {
     const { id } = params;
-    const body = (await request.json()) as any;
+    const body = (await request.json()) as { fileName?: string; tagIds?: string[] };
 
     const doc = mockDocuments.find((d) => d.id === id);
     if (!doc) {
@@ -503,7 +505,7 @@ function handleUpdateDocument() {
       doc.fileName = body.fileName;
     }
     if (body.tagIds) {
-      doc.tags = mockTags.filter((tag) => body.tagIds.includes(tag.id));
+      doc.tags = mockTags.filter((tag) => body.tagIds?.includes(tag.id) ?? false);
     }
     doc.updatedAt = new Date().toISOString();
 
@@ -572,7 +574,7 @@ function handleGetTags() {
  */
 function handleCreateTag() {
   return http.post(`${API_BASE_URL}/tags`, async ({ request }) => {
-    const body = (await request.json()) as any;
+    const body = (await request.json()) as { name: string; color?: string };
 
     // Validate input
     if (!body.name || body.name.length < 2 || body.name.length > 50) {
@@ -593,7 +595,7 @@ function handleCreateTag() {
     const newTag: Tag = {
       id: `tag-${Date.now()}`,
       name: body.name,
-      color: body.color || 'primary',
+      color: (body.color as TagColor) || 'primary',
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
       createdByUserId: 'user-123', // Mock current user
@@ -611,7 +613,7 @@ function handleCreateTag() {
 function handleUpdateTag() {
   return http.put(`${API_BASE_URL}/tags/:id`, async ({ params, request }) => {
     const { id } = params;
-    const body = (await request.json()) as any;
+    const body = (await request.json()) as { name?: string; color?: string };
 
     const tag = mockTags.find((t) => t.id === id);
     if (!tag) {
@@ -626,7 +628,7 @@ function handleUpdateTag() {
       tag.name = body.name;
     }
     if (body.color) {
-      tag.color = body.color;
+      tag.color = body.color as TagColor;
     }
     tag.updatedAt = new Date().toISOString();
 

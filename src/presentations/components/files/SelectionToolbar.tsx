@@ -1,5 +1,8 @@
-import { Box, Button, Typography } from '@mui/material';
-import { Delete as DeleteIcon, Download as DownloadIcon } from '@mui/icons-material';
+import DeleteIcon from '@mui/icons-material/Delete';
+import DownloadIcon from '@mui/icons-material/Download';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
 
 interface SelectionToolbarProps {
   selectedCount: number;

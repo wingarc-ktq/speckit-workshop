@@ -1,18 +1,17 @@
-import {
-  Box,
-  Button,
-  Chip,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  Divider,
-  Skeleton,
-  Stack,
-  Typography,
-} from '@mui/material';
-import DownloadIcon from '@mui/icons-material/Download';
 import { useMemo } from 'react';
+
+import DownloadIcon from '@mui/icons-material/Download';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Chip from '@mui/material/Chip';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogTitle from '@mui/material/DialogTitle';
+import Divider from '@mui/material/Divider';
+import Skeleton from '@mui/material/Skeleton';
+import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
 
 import { repositoryComposition } from '@/adapters/repositories';
 import { useDownloadFile } from '@/presentations/hooks/mutations/useDownloadFile';
@@ -72,7 +71,7 @@ bmRvYmoKNSAwIG9iajw8L0xlbmd0aCAzOD4+c3RyZWFtCkJUCi9GMSAxMiBUZgoxMDAgNzAwIFRkCihI
     
     // For other files, use the API endpoint
     return repositoryComposition.document.getDownloadUrl(document.id);
-  }, [document]);
+  }, [document, MOCK_PDF_BASE64]);
 
   const handleDownload = async () => {
     if (!document) return;

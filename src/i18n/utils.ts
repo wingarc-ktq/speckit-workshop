@@ -1,14 +1,8 @@
-type DeepKeys<T, Prefix extends string = ''> =
-  T extends Record<string, unknown>
-    ? {
-        [K in keyof T]: T[K] extends Record<string, unknown>
-          ? DeepKeys<
-              T[K],
-              `${Prefix}${Prefix extends '' ? '' : '.'}${K & string}`
-            >
-          : `${Prefix}${Prefix extends '' ? '' : '.'}${K & string}`;
-      }
-    : never;
+type DeepKeyStructure<T, Prefix extends string = ''> = {
+  [K in keyof T]: T[K] extends Record<string, unknown>
+    ? DeepKeyStructure<T[K], `${Prefix}${Prefix extends '' ? '' : '.'}${K & string}`>
+    : `${Prefix}${Prefix extends '' ? '' : '.'}${K & string}`;
+};
 
 /**
  * オブジェクトのキーをドット記法の文字列に変換する
@@ -19,8 +13,8 @@ type DeepKeys<T, Prefix extends string = ''> =
 export function createKeys<T extends Record<string, unknown>>(
   obj: T,
   prefix = ''
-): DeepKeys<T> {
-  const result = {} as DeepKeys<T>;
+): DeepKeyStructure<T> {
+  const result = {} as DeepKeyStructure<T>;
 
   Object.keys(obj).forEach((key) => {
     const value = obj[key];

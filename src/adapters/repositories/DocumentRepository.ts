@@ -6,6 +6,8 @@ import type {
   DocumentListResponse,
 } from '@/domain/models/document';
 
+import type { AxiosInstance } from 'axios';
+
 /**
  * DocumentRepository インターフェース
  * Document エンティティの CRUD 操作を定義
@@ -87,9 +89,9 @@ export class DocumentRepository implements IDocumentRepository {
    * コンストラクタ
    * @param axiosInstance - Axios インスタンス
    */
-  axiosInstance: any;
+  axiosInstance: AxiosInstance;
 
-  constructor(axiosInstance: any) {
+  constructor(axiosInstance: AxiosInstance) {
     this.axiosInstance = axiosInstance;
   }
 
@@ -97,7 +99,7 @@ export class DocumentRepository implements IDocumentRepository {
     filters: DocumentFilter & { page?: number; limit?: number }
   ): Promise<DocumentListResponse> {
     const { search, tagIds, page = 1, limit = 20 } = filters;
-    const params: Record<string, any> = {
+    const params: Record<string, string | number | string[]> = {
       page,
       limit,
     };
@@ -110,10 +112,10 @@ export class DocumentRepository implements IDocumentRepository {
       params.tagIds = tagIds;
     }
 
-    const response = await (this.axiosInstance.get as any)('/files', {
+    const response = await this.axiosInstance.get<DocumentListResponse>('/files', {
       params,
     });
-    return response.data as DocumentListResponse;
+    return response.data;
   }
 
   async uploadDocument(data: CreateDocumentRequest): Promise<Document> {
@@ -126,46 +128,46 @@ export class DocumentRepository implements IDocumentRepository {
       });
     }
 
-    const response = await (this.axiosInstance.post as any)('/files', formData, {
+    const response = await this.axiosInstance.post<Document>('/files', formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
     });
-    return response.data as Document;
+    return response.data;
   }
 
   async getDocumentById(id: string): Promise<Document> {
-    const response = await (this.axiosInstance.get as any)(`/files/${id}`);
-    return response.data as Document;
+    const response = await this.axiosInstance.get<Document>(`/files/${id}`);
+    return response.data;
   }
 
   async updateDocument(id: string, data: UpdateDocumentRequest): Promise<Document> {
-    const response = await (this.axiosInstance.put as any)(`/files/${id}`, data);
-    return response.data as Document;
+    const response = await this.axiosInstance.put<Document>(`/files/${id}`, data);
+    return response.data;
   }
 
   async deleteDocument(id: string): Promise<Document> {
-    const response = await (this.axiosInstance.delete as any)(`/files/${id}`);
-    return response.data as Document;
+    const response = await this.axiosInstance.delete<Document>(`/files/${id}`);
+    return response.data;
   }
 
   async restoreDocument(id: string): Promise<Document> {
-    const response = await (this.axiosInstance.post as any)(
+    const response = await this.axiosInstance.post<Document>(
       `/files/${id}/restore`,
       {}
     );
-    return response.data as Document;
+    return response.data;
   }
 
   async getTrashDocuments(page = 1, limit = 20): Promise<DocumentListResponse> {
-    const response = await (this.axiosInstance.get as any)('/files', {
+    const response = await this.axiosInstance.get<DocumentListResponse>('/files', {
       params: {
         isDeleted: true,
         page,
         limit,
       },
     });
-    return response.data as DocumentListResponse;
+    return response.data;
   }
 
   /**
@@ -175,6 +177,6 @@ export class DocumentRepository implements IDocumentRepository {
    * @throws DocumentNotFoundException
    */
   getDownloadUrl(id: string): string {
-    return `${(this.axiosInstance as any).defaults.baseURL}/files/${id}/download`;
+    return `${this.axiosInstance.defaults.baseURL}/files/${id}/download`;
   }
 }

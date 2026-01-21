@@ -1,14 +1,26 @@
+import { useEffect } from 'react';
+
 import { render, screen, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
-import React from 'react';
+import { describe, expect, beforeEach, test, vi } from 'vitest';
 
 import { PDFViewer } from '../PDFViewer';
 
+interface DocumentProps {
+  children: React.ReactNode;
+  onLoadSuccess?: (data: { numPages: number }) => void;
+  onLoadError?: (error: Error) => void;
+  file?: string;
+}
+
+interface PageProps {
+  pageNumber: number;
+}
+
 vi.mock('react-pdf', () => {
-  const ReactModule = require('react');
   return {
-    Document: ({ children, onLoadSuccess, onLoadError, file }: any) => {
-      ReactModule.useEffect(() => {
+    Document: ({ children, onLoadSuccess, onLoadError, file }: DocumentProps) => {
+      useEffect(() => {
         if (file === 'error') {
           onLoadError?.(new Error('load error'));
         } else {
@@ -22,7 +34,7 @@ vi.mock('react-pdf', () => {
 
       return <div data-testid="mock-document">{children}</div>;
     },
-    Page: ({ pageNumber }: any) => (
+    Page: ({ pageNumber }: PageProps) => (
       <div data-testid="mock-page">page-{pageNumber}</div>
     ),
     pdfjs: { GlobalWorkerOptions: { workerSrc: '' }, version: '4.0.0' },

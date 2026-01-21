@@ -1,6 +1,8 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
+
 import { RepositoryTestWrapper } from '@/__fixtures__/testWrappers';
+
 import { FileUploadArea } from '../FileUploadArea';
 
 describe('FileUploadAreaのファイル形式検証', () => {

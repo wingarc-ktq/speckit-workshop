@@ -4,6 +4,7 @@ import { userEvent } from '@testing-library/user-event';
 import { RepositoryTestWrapper } from '@/__fixtures__/testWrappers';
 import { repositoryComposition } from '@/adapters/repositories';
 import type { Document } from '@/domain/models/document';
+
 import { FileDetailsModal } from '../FileDetailsModal';
 
 vi.mock('../PDFViewer', () => ({
@@ -101,8 +102,9 @@ describe('FileDetailsModal', () => {
       .spyOn(HTMLAnchorElement.prototype, 'click')
       .mockImplementation(() => undefined);
 
-    (URL as any).createObjectURL = createObjectURLMock;
-    (URL as any).revokeObjectURL = revokeMock;
+    // Type assertion with unknown intermediate step
+    (URL.createObjectURL as unknown as typeof createObjectURLMock) = createObjectURLMock;
+    (URL.revokeObjectURL as unknown as typeof revokeMock) = revokeMock;
 
     await setup();
 
@@ -117,8 +119,8 @@ describe('FileDetailsModal', () => {
     expect(revokeMock).toHaveBeenCalled();
 
     clickMock.mockRestore();
-    (URL as any).createObjectURL = originalCreate;
-    (URL as any).revokeObjectURL = originalRevoke;
+    (URL.createObjectURL as unknown as typeof originalCreate) = originalCreate;
+    (URL.revokeObjectURL as unknown as typeof originalRevoke) = originalRevoke;
   });
 
   test('未対応形式の場合はプレビュー未対応メッセージを表示する', async () => {

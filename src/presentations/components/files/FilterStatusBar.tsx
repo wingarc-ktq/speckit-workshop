@@ -1,9 +1,10 @@
-import { Box, Typography, Button } from '@mui/material';
-import { Close as CloseIcon } from '@mui/icons-material';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
+
 import type { Tag } from '@/domain/models/tag';
 import { TagChip } from '@/presentations/components/tags/TagChip';
 
-const DOCUMENT_TAG_NAMES = ['請求書', '契約書', '議事録', '提案書', '見積書', '仕様書'];
 const PROGRESS_TAG_NAMES = ['完了', '未完了', '進行中'];
 
 interface FilterStatusBarProps {

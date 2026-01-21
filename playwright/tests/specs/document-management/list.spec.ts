@@ -62,7 +62,7 @@ test.describe('文書一覧表示 (US2)', () => {
     
     if (await pagination.isVisible()) {
       // 次ページボタンの存在を確認
-      const nextButton = page.locator('button').filter({ hasText: /次|>' });
+      const nextButton = page.locator('button').filter({ hasText: /次|>/ });
       expect(nextButton).toBeDefined();
     }
   });

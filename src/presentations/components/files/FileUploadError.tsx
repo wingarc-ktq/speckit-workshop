@@ -1,4 +1,10 @@
-import { Alert, AlertTitle, Box, List, ListItem, ListItemText } from '@mui/material';
+import Alert from '@mui/material/Alert';
+import AlertTitle from '@mui/material/AlertTitle';
+import Box from '@mui/material/Box';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemText from '@mui/material/ListItemText';
+
 import type { FileValidationError } from '@/domain/models/document/DocumentError';
 
 export interface FileUploadErrorProps {

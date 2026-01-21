@@ -1,6 +1,8 @@
 import { useState } from 'react';
 
-import { Box, Skeleton, Typography } from '@mui/material';
+import Box from '@mui/material/Box';
+import Skeleton from '@mui/material/Skeleton';
+import Typography from '@mui/material/Typography';
 
 export interface ImageViewerProps {
   src: string;

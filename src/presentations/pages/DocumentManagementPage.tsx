@@ -1,8 +1,13 @@
-import { Box, Container, Stack, Dialog, DialogTitle, DialogContent } from '@mui/material';
 import { useState, useEffect, useMemo } from 'react';
+
+import Box from '@mui/material/Box';
+import Container from '@mui/material/Container';
+import Dialog from '@mui/material/Dialog';
+import DialogContent from '@mui/material/DialogContent';
+import DialogTitle from '@mui/material/DialogTitle';
+import Stack from '@mui/material/Stack';
+
 import type { Document } from '@/domain/models/document';
-import { useDocuments, useTagFilter, useTags } from '@/presentations/hooks/queries';
-import { useDocumentHeader } from '@/presentations/layouts/AppLayout/contexts';
 import {
   FileUploadArea,
   FileList,
@@ -17,6 +22,8 @@ import {
 } from '@/presentations/components';
 import { FilterStatusBar } from '@/presentations/components/files/FilterStatusBar';
 import { SearchResultsStatus } from '@/presentations/components/search/SearchResultsStatus';
+import { useDocuments, useTagFilter, useTags } from '@/presentations/hooks/queries';
+import { useDocumentHeader } from '@/presentations/layouts/AppLayout/contexts';
 
 /**
  * DocumentManagementPage コンポーネント
@@ -59,7 +66,7 @@ export function DocumentManagementPage() {
     return () => {
       documentHeader.setShowDocumentTools(false);
     };
-  }, []);
+  }, [documentHeader]);
 
   // localStorage から設定を復元
   useEffect(() => {
@@ -75,12 +82,12 @@ export function DocumentManagementPage() {
     if (savedPageSize) setPageSize(parseInt(savedPageSize, 10));
     if (savedSortBy) setSortBy(savedSortBy);
     if (savedSortOrder) setSortOrder(savedSortOrder);
-  }, []);
+  }, [documentHeader]);
 
   // ビューが変更されたらlocalStorageとヘッダーを更新
   useEffect(() => {
     documentHeader.setCurrentView(view);
-  }, [view]);
+  }, [view, documentHeader]);
 
   // 文書一覧を取得
   const { data, isLoading, error } = useDocuments({
@@ -89,6 +96,17 @@ export function DocumentManagementPage() {
     search: searchKeyword,
     tagIds: selectedTagIds,
   });
+
+  const documents = useMemo(() => data?.data || [], [data?.data]);
+
+  const tagCounts = useMemo(() => {
+    return documents.reduce<Record<string, number>>((acc, doc) => {
+      doc.tags.forEach((tag) => {
+        acc[tag.id] = (acc[tag.id] || 0) + 1;
+      });
+      return acc;
+    }, {});
+  }, [documents]);
 
   if (error) {
     return (
@@ -109,16 +127,7 @@ export function DocumentManagementPage() {
     );
   }
 
-  const documents = data?.data || [];
   const totalCount = data?.pagination.total || 0;
-  const tagCounts = useMemo(() => {
-    return documents.reduce<Record<string, number>>((acc, doc) => {
-      doc.tags.forEach((tag) => {
-        acc[tag.id] = (acc[tag.id] || 0) + 1;
-      });
-      return acc;
-    }, {});
-  }, [documents]);
 
   return (
     <Container maxWidth="lg">

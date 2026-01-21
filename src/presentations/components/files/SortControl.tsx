@@ -1,4 +1,10 @@
-import { Box, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
+import Box from '@mui/material/Box';
+import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/Select';
+
+import type { SelectChangeEvent } from '@mui/material/Select';
 
 interface SortControlProps {
   sortBy: string;
@@ -21,15 +27,15 @@ interface SortControlProps {
  * ```
  */
 export function SortControl({ sortBy, sortOrder, onSortChange }: SortControlProps) {
-  const handleSortByChange = (event: any) => {
+  const handleSortByChange = (event: SelectChangeEvent<string>) => {
     const newSortBy = event.target.value;
     onSortChange(newSortBy, sortOrder);
     // localStorage に保存
     localStorage.setItem('documentSortBy', newSortBy);
   };
 
-  const handleSortOrderChange = (event: any) => {
-    const newSortOrder = event.target.value;
+  const handleSortOrderChange = (event: SelectChangeEvent<string>) => {
+    const newSortOrder = event.target.value as 'asc' | 'desc';
     onSortChange(sortBy, newSortOrder);
     // localStorage に保存
     localStorage.setItem('documentSortOrder', newSortOrder);

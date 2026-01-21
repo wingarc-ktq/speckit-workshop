@@ -1,25 +1,26 @@
 import { useCallback, useState } from 'react';
-import { useDropzone } from 'react-dropzone';
-import {
-  Box,
-  Button,
-  Card,
-  CardContent,
-  Container,
-  LinearProgress,
-  Snackbar,
-  Stack,
-  Typography,
-} from '@mui/material';
+
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import DeleteIcon from '@mui/icons-material/Delete';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import Container from '@mui/material/Container';
+import LinearProgress from '@mui/material/LinearProgress';
+import Snackbar from '@mui/material/Snackbar';
+import Stack from '@mui/material/Stack';
+import { styled } from '@mui/material/styles';
+import Typography from '@mui/material/Typography';
+import { useDropzone } from 'react-dropzone';
+
+import type { CreateDocumentRequest } from '@/domain/models/document';
 import { validateFiles, type FileValidationError } from '@/domain/models/document/DocumentError';
 import type { Tag } from '@/domain/models/tag';
-import type { CreateDocumentRequest } from '@/domain/models/document';
 import { TagSelector } from '@/presentations/components/tags/TagSelector';
-import { FileUploadError } from './FileUploadError';
 import { useFileUpload } from '@/presentations/hooks/mutations/useFileUpload';
-import { styled } from '@mui/material/styles';
+
+import { FileUploadError } from './FileUploadError';
 
 export interface FileUploadAreaProps {
   onUploadSuccess?: () => void;
