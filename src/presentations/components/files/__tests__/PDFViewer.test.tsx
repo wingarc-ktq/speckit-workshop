@@ -2,7 +2,6 @@ import { useEffect } from 'react';
 
 import { render, screen, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
-import { describe, expect, beforeEach, test, vi } from 'vitest';
 
 import { PDFViewer } from '../PDFViewer';
 
@@ -17,6 +16,14 @@ interface PageProps {
   pageNumber: number;
 }
 
+/**
+ * react-pdf ライブラリをモック化
+ *
+ * 理由：react-pdfはPDF.jsに依存しており、テスト環境では
+ * PDF.jsのWorkerやCanvas APIが正しく動作しない。
+ * PDFViewerコンポーネントのUI操作とページネーション機能のみをテストしたいため、
+ * react-pdfの内部実装をモック化する。
+ */
 vi.mock('react-pdf', () => {
   return {
     Document: ({ children, onLoadSuccess, onLoadError, file }: DocumentProps) => {
@@ -42,10 +49,6 @@ vi.mock('react-pdf', () => {
 });
 
 describe('PDFViewer', () => {
-  beforeEach(() => {
-    vi.clearAllMocks();
-  });
-
   test('PDFの1ページ目を表示し、ページ数を表示する', async () => {
     render(<PDFViewer fileUrl="http://example.com/sample.pdf" />);
 

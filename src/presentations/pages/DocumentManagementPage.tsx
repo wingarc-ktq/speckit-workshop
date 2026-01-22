@@ -6,6 +6,7 @@ import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
 
 import type { Document } from '@/domain/models/document';
 import {
@@ -95,6 +96,8 @@ export function DocumentManagementPage() {
     limit: pageSize,
     search: searchKeyword,
     tagIds: selectedTagIds,
+    sortBy,
+    sortOrder,
   });
 
   const documents = useMemo(() => data?.data || [], [data?.data]);
@@ -248,16 +251,48 @@ export function DocumentManagementPage() {
               gap: 2,
             }}
           >
-            <SortControl sortBy={sortBy} sortOrder={sortOrder} onSortChange={setSortBy} />
+            <SortControl 
+              sortBy={sortBy} 
+              sortOrder={sortOrder} 
+              onSortChange={(newSortBy, newSortOrder) => {
+                setSortBy(newSortBy);
+                setSortOrder(newSortOrder);
+                setCurrentPage(1);
+              }}
+            />
           </Box>
 
           {/* 文書一覧またはグリッド */}
           {documents.length === 0 && !isLoading ? (
-            <DocumentEmptyState
-              onUploadClick={() => {
-                setShowUploadDialog(true);
-              }}
-            />
+            searchKeyword || selectedTagIds.length > 0 || startDate || endDate ? (
+              <Box
+                sx={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  minHeight: '400px',
+                  backgroundColor: '#fafafa',
+                  borderRadius: 2,
+                  border: '2px dashed #ccc',
+                  gap: 2,
+                  p: 4,
+                }}
+              >
+                <Typography variant="h6" sx={{ color: '#666' }}>
+                  該当する文書が見つかりませんでした
+                </Typography>
+                <Typography variant="body2" sx={{ color: '#999', textAlign: 'center', maxWidth: 300 }}>
+                  検索条件を変更して、再度お試しください。
+                </Typography>
+              </Box>
+            ) : (
+              <DocumentEmptyState
+                onUploadClick={() => {
+                  setShowUploadDialog(true);
+                }}
+              />
+            )
           ) : view === 'list' ? (
             <FileList
               documents={documents}
