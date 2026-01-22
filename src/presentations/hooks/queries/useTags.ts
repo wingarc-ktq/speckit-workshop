@@ -1,8 +1,12 @@
 import { useQuery } from '@tanstack/react-query';
 
-import { getTags } from '@/adapters/repositories/files/getTags';
+import { useRepository } from '@/app/providers/RepositoryProvider';
 
 export const useTags = () => {
+  const {
+    files: { getTags },
+  } = useRepository();
+
   return useQuery({
     queryKey: ['tags'],
     queryFn: () => getTags(),

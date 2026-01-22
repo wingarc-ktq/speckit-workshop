@@ -3,6 +3,7 @@ import Box from '@mui/material/Box';
 import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
+import { useTranslation } from 'react-i18next';
 
 import type { TagColor } from '@/domain/models/files';
 
@@ -11,14 +12,14 @@ interface TagColorPickerProps {
   onChange: (color: TagColor) => void;
 }
 
-const COLOR_OPTIONS: Array<{ value: TagColor; label: string }> = [
-  { value: 'blue', label: '青' },
-  { value: 'red', label: '赤' },
-  { value: 'yellow', label: '黄' },
-  { value: 'green', label: '緑' },
-  { value: 'purple', label: '紫' },
-  { value: 'orange', label: 'オレンジ' },
-  { value: 'gray', label: 'グレー' },
+const COLOR_OPTIONS: Array<{ value: TagColor }> = [
+  { value: 'blue' },
+  { value: 'red' },
+  { value: 'yellow' },
+  { value: 'green' },
+  { value: 'purple' },
+  { value: 'orange' },
+  { value: 'gray' },
 ];
 
 const COLOR_MAP: Record<TagColor, string> = {
@@ -36,16 +37,20 @@ const COLOR_MAP: Record<TagColor, string> = {
  * プリセットカラーから選択
  */
 export const TagColorPicker = ({ value, onChange }: TagColorPickerProps) => {
+  const { t } = useTranslation();
+  const colorLabel = t('filesPage.tags.color');
+
   return (
     <Box>
       <Typography variant="body2" gutterBottom fontWeight="medium">
-        カラー
+        {colorLabel}
       </Typography>
       <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
         {COLOR_OPTIONS.map((option) => {
+          const label = t(`filesPage.tags.colorOptions.${option.value}`);
           const isSelected = value === option.value;
           const chipProps = {
-            label: option.label,
+            label: label,
             onClick: () => onChange(option.value),
             icon: isSelected ? <CheckIcon fontSize="small" /> : undefined,
             sx: {

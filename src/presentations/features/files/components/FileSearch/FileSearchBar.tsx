@@ -5,6 +5,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
 import TextField from '@mui/material/TextField';
+import { useTranslation } from 'react-i18next';
 
 interface FileSearchBarProps {
   value: string;
@@ -15,15 +16,19 @@ interface FileSearchBarProps {
 export const FileSearchBar: React.FC<FileSearchBarProps> = ({
   value,
   onChange,
-  placeholder = 'ファイル名やタグで検索...',
+  placeholder,
 }) => {
+  const { t } = useTranslation();
+  const defaultPlaceholder = t('filesPage.search.placeholderEllipsis');
+  const clearSearchLabel = t('filesPage.search.clearSearch');
+
   const handleClear = () => {
     onChange('');
   };
 
   return (
     <TextField
-      placeholder={placeholder}
+      placeholder={placeholder ?? defaultPlaceholder}
       value={value}
       onChange={(e) => onChange(e.target.value)}
       size="small"
@@ -45,7 +50,7 @@ export const FileSearchBar: React.FC<FileSearchBarProps> = ({
         endAdornment: value && (
           <InputAdornment position="end">
             <IconButton
-              aria-label="検索をクリア"
+              aria-label={clearSearchLabel}
               onClick={handleClear}
               edge="end"
               size="small"

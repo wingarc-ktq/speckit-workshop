@@ -41,7 +41,7 @@ export const EditTagDialog = ({ open, tag, onClose }: EditTagDialogProps) => {
           <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
             タグを編集
           </Typography>
-          <IconButton onClick={onClose} disabled={updateTagMutation.isPending}>
+          <IconButton onClick={onClose} disabled={updateTagMutation.isPending} aria-label="閉じる">
             <CloseIcon />
           </IconButton>
         </Box>

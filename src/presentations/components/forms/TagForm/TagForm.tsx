@@ -3,9 +3,10 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
+import { useTranslation } from 'react-i18next';
 
 import type { TagColor } from '@/domain/models/files';
-import { TagColorPicker } from './TagColorPicker';
+import { TagColorPicker } from '../TagColorPicker';
 
 interface TagFormProps {
   initialName?: string;
@@ -24,19 +25,20 @@ export const TagForm = ({
   initialColor = 'blue',
   onSubmit,
   onCancel,
-  submitLabel = '作成',
+  submitLabel,
   isLoading = false,
 }: TagFormProps) => {
+  const { t } = useTranslation();
   const [name, setName] = useState(initialName);
   const [color, setColor] = useState<TagColor>(initialColor);
   const [errors, setErrors] = useState<{ name?: string }>({});
 
   const validateName = (value: string): string | undefined => {
     if (!value.trim()) {
-      return 'タグ名は必須です';
+      return t('filesPage.tags.nameRequired');
     }
     if (value.length > 50) {
-      return 'タグ名は50文字以内にしてください';
+      return t('filesPage.tags.nameMaxLength');
     }
     return undefined;
   };
@@ -57,7 +59,7 @@ export const TagForm = ({
   const handleNameChange = (e: ChangeEvent<HTMLInputElement>) => {
     const newName = e.target.value;
     setName(newName);
-    
+
     // リアルタイムバリデーション
     if (errors.name) {
       const nameError = validateName(newName);
@@ -65,11 +67,15 @@ export const TagForm = ({
     }
   };
 
+  const defaultSubmitLabel = t('actions.create');
+  const cancelLabel = t('actions.cancel');
+  const tagNameLabel = t('filesPage.tags.label');
+
   return (
     <Box component="form" onSubmit={handleSubmit}>
       <Stack spacing={3}>
         <TextField
-          label="タグ名"
+          label={tagNameLabel}
           value={name}
           onChange={handleNameChange}
           error={!!errors.name}
@@ -86,7 +92,7 @@ export const TagForm = ({
         <Stack direction="row" spacing={2} justifyContent="flex-end">
           {onCancel && (
             <Button onClick={onCancel} disabled={isLoading}>
-              キャンセル
+              {cancelLabel}
             </Button>
           )}
           <Button
@@ -94,7 +100,7 @@ export const TagForm = ({
             variant="contained"
             disabled={isLoading || !name.trim()}
           >
-            {submitLabel}
+            {submitLabel ?? defaultSubmitLabel}
           </Button>
         </Stack>
       </Stack>

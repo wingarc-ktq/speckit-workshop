@@ -6,6 +6,7 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import Typography from '@mui/material/Typography';
+import { useTranslation } from 'react-i18next';
 
 interface DeleteConfirmDialogProps {
   open: boolean;
@@ -19,20 +20,25 @@ interface DeleteConfirmDialogProps {
 
 export const DeleteConfirmDialog = ({
   open,
-  title = '削除しますか？',
+  title,
   description,
-  confirmLabel = '削除',
+  confirmLabel,
   isLoading = false,
   onConfirm,
   onClose,
 }: DeleteConfirmDialogProps) => {
+  const { t } = useTranslation();
+  const defaultTitle = t('filesPage.dialog.deleteConfirm');
+  const defaultConfirmLabel = t('actions.delete');
+  const cancelLabel = t('actions.cancel');
+
   return (
     <Dialog open={open} onClose={onClose} maxWidth="xs" fullWidth>
       <DialogTitle>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
           <WarningAmberIcon sx={{ color: '#f97316' }} />
           <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
-            {title}
+            {title ?? defaultTitle}
           </Typography>
         </Box>
       </DialogTitle>
@@ -45,7 +51,7 @@ export const DeleteConfirmDialog = ({
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose} disabled={isLoading}>
-          キャンセル
+          {cancelLabel}
         </Button>
         <Button
           color="error"
@@ -53,7 +59,7 @@ export const DeleteConfirmDialog = ({
           onClick={onConfirm}
           disabled={isLoading}
         >
-          {confirmLabel}
+          {confirmLabel ?? defaultConfirmLabel}
         </Button>
       </DialogActions>
     </Dialog>

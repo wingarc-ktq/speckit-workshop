@@ -1,9 +1,13 @@
 import { useQuery } from '@tanstack/react-query';
 
-import { getFiles } from '@/adapters/repositories/files/getFiles';
+import { useRepository } from '@/app/providers/RepositoryProvider';
 import type { GetFilesParams } from '@/domain/models/files';
 
 export const useFiles = (params?: GetFilesParams) => {
+  const {
+    files: { getFiles },
+  } = useRepository();
+
   return useQuery({
     queryKey: ['files', params],
     queryFn: () => getFiles(params),

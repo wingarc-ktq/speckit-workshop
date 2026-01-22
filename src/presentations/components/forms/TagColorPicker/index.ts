@@ -1,0 +1,1 @@
+export { TagColorPicker } from './TagColorPicker';

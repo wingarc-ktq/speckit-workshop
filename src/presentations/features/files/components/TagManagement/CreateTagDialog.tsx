@@ -40,7 +40,7 @@ export const CreateTagDialog = ({ open, onClose, onCreated }: CreateTagDialogPro
           <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
             タグを作成
           </Typography>
-          <IconButton onClick={onClose} disabled={createTagMutation.isPending}>
+          <IconButton onClick={onClose} disabled={createTagMutation.isPending} aria-label="閉じる">
             <CloseIcon />
           </IconButton>
         </Box>
