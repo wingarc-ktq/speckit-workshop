@@ -27,7 +27,14 @@ export const QUERY_KEYS = {
 
       return keys;
     },
-    DETAIL: (id: string) => [GLOBAL_LOADING, 'files', 'detail', id],
+    DETAIL: (id?: string) => {
+      const keys = [];
+      keys.push(GLOBAL_LOADING, 'files', 'detail');
+
+      if (id) keys.push(id);
+
+      return keys;
+    },
   },
 
   // タグ関連

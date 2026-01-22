@@ -54,7 +54,7 @@ export const TagsSection: React.FC = () => {
             data-testid="addTagButton"
             onClick={handleManageDialogOpen}
           >
-            <SettingsIcon fontSize="small" />
+            <SettingsIcon fontSize="small" color="action" />
           </IconButton>
         </S.HeaderWithButton>
         <List dense>

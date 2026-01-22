@@ -219,10 +219,10 @@
 
 ### Implementation for User Story 7
 
-- [ ] T072 [P] [US7] FileEditDialogコンポーネント `src/presentations/pages/FilesPage/components/MyFilesSection/components/FileEditDialog/FileEditDialog.tsx`
-- [ ] T073 [US7] ファイル名編集機能の実装
-- [ ] T074 [US7] タグ編集機能の実装（追加・削除）
-- [ ] T075 [US7] 編集内容の保存と一覧への即時反映
+- [x] T072 [P] [US7] FileEditDialogコンポーネント `src/presentations/pages/FilesPage/components/MyFilesSection/components/FileEditDialog/FileEditDialog.tsx`
+- [x] T073 [US7] ファイル名編集機能の実装
+- [x] T074 [US7] タグ編集機能の実装（追加・削除）
+- [x] T075 [US7] 編集内容の保存と一覧への即時反映
 
 **Checkpoint**: User Story 7が独立して機能し、テスト可能な状態
 

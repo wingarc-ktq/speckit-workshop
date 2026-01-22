@@ -121,6 +121,7 @@ export const ja = {
       title: 'ファイル詳細',
       close: '閉じる',
       download: 'ダウンロード',
+      edit: '編集',
       fileName: 'ファイル名',
       fileSize: 'ファイルサイズ',
       uploadedAt: 'アップロード日時',
@@ -139,6 +140,14 @@ export const ja = {
             'ダウンロードボタンからファイルをダウンロードしてください',
         },
       },
+    },
+    fileEditDialog: {
+      title: 'ファイルを編集',
+      fileName: 'ファイル名',
+      fileNameError: 'ファイル名は1〜255文字で入力してください',
+      description: '説明',
+      descriptionError: '説明は500文字以内で入力してください',
+      tags: 'タグ',
     },
     recentFilesSection: {
       title: '最近使用したファイル',

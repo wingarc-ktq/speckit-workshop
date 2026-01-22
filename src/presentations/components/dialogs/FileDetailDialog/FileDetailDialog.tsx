@@ -1,7 +1,8 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 
 import CloseIcon from '@mui/icons-material/Close';
 import DownloadIcon from '@mui/icons-material/Download';
+import EditIcon from '@mui/icons-material/Edit';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -17,6 +18,7 @@ import { useDownloadFile } from '@/presentations/hooks/queries/files/useDownload
 import { useFileById } from '@/presentations/hooks/queries/files/useFileById';
 import { useTags } from '@/presentations/hooks/queries/tags/useTags';
 
+import { FileEditDialog } from './components/FileEditDialog';
 import { FileInfo } from './components/FileInfo';
 import { FilePreview } from './components/FilePreview';
 import * as S from './styled';
@@ -34,6 +36,7 @@ const FileDetailDialogContent: React.FC<{
   const { t } = useTranslation();
   const { mutateAsync: downloadFile } = useDownloadFile();
   const [previewUrl, setPreviewUrl] = React.useState<string | null>(null);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
 
   const { data: file } = useFileById(fileId);
   const { data: tags } = useTags();
@@ -80,6 +83,14 @@ const FileDetailDialogContent: React.FC<{
     }
   }, [fileId, file.name, downloadFile]);
 
+  const handleEditClick = useCallback(() => {
+    setIsEditDialogOpen(true);
+  }, []);
+
+  const handleCloseEditDialog = useCallback(() => {
+    setIsEditDialogOpen(false);
+  }, []);
+
   return (
     <>
       <DialogTitle>
@@ -110,6 +121,9 @@ const FileDetailDialogContent: React.FC<{
         <Button onClick={onClose}>
           {t(tKeys.filesPage.fileDetailDialog.close)}
         </Button>
+        <Button startIcon={<EditIcon />} onClick={handleEditClick}>
+          {t(tKeys.filesPage.fileDetailDialog.edit)}
+        </Button>
         <Button
           variant="contained"
           startIcon={<DownloadIcon />}
@@ -118,6 +132,12 @@ const FileDetailDialogContent: React.FC<{
           {t(tKeys.filesPage.fileDetailDialog.download)}
         </Button>
       </DialogActions>
+
+      <FileEditDialog
+        fileId={fileId}
+        open={isEditDialogOpen}
+        onClose={handleCloseEditDialog}
+      />
     </>
   );
 };

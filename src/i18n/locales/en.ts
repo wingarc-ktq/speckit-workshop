@@ -117,6 +117,7 @@ export const en = {
       title: 'File Details',
       close: 'Close',
       download: 'Download',
+      edit: 'Edit',
       fileName: 'File Name',
       fileSize: 'File Size',
       uploadedAt: 'Uploaded At',
@@ -133,6 +134,14 @@ export const en = {
           description: 'Please download the file using the download button',
         },
       },
+    },
+    fileEditDialog: {
+      title: 'Edit File',
+      fileName: 'File Name',
+      fileNameError: 'File name must be between 1 and 255 characters',
+      description: 'Description',
+      descriptionError: 'Description must be no more than 500 characters',
+      tags: 'Tags',
     },
     recentFilesSection: {
       title: 'Recent Files',

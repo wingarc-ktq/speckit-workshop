@@ -21,7 +21,8 @@ export const useUpdateFile = () => {
     }) => updateFile(fileId, request),
     onSuccess: () => {
       // ファイル一覧と詳細を再取得
-      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.FILES.LIST()] });
+      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.FILES.LIST() });
+      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.FILES.DETAIL() });
     },
   });
 };
