@@ -8,6 +8,7 @@ import {
   mockTagVariations,
 } from '@/__fixtures__/tags';
 import { TagColor } from '@/domain/models/tag';
+import { TAG_COLOR_MAP } from '@/presentations/components/tags/constants';
 
 import { TagChips } from '../TagChips';
 
@@ -28,7 +29,7 @@ describe('TagChips', () => {
       expect(screen.queryByRole('button')).not.toBeInTheDocument();
     });
 
-    test('各タグの色が正しくMUIのChipカラーに変換されること', () => {
+    test('各タグの色がTAG_COLOR_MAPに基づいて正しく適用されること', () => {
       const colorTags = [
         {
           ...mockTagVariations.withColor(TagColor.BLUE),
@@ -70,36 +71,49 @@ describe('TagChips', () => {
       render(<TagChips tags={colorTags} />);
 
       // 各タグが表示されていることを確認
-      const blueChip = screen.getByText('Blue Tag');
-      const redChip = screen.getByText('Red Tag');
-      const yellowChip = screen.getByText('Yellow Tag');
-      const greenChip = screen.getByText('Green Tag');
-      const purpleChip = screen.getByText('Purple Tag');
-      const orangeChip = screen.getByText('Orange Tag');
-      const grayChip = screen.getByText('Gray Tag');
+      const blueChip = screen.getByText('Blue Tag').closest('.MuiChip-root');
+      const redChip = screen.getByText('Red Tag').closest('.MuiChip-root');
+      const yellowChip = screen
+        .getByText('Yellow Tag')
+        .closest('.MuiChip-root');
+      const greenChip = screen.getByText('Green Tag').closest('.MuiChip-root');
+      const purpleChip = screen
+        .getByText('Purple Tag')
+        .closest('.MuiChip-root');
+      const orangeChip = screen
+        .getByText('Orange Tag')
+        .closest('.MuiChip-root');
+      const grayChip = screen.getByText('Gray Tag').closest('.MuiChip-root');
 
-      // 各色がMUIのcolorクラスにマッピングされていることを確認
-      expect(blueChip.closest('.MuiChip-root')).toHaveClass(
-        'MuiChip-colorInfo'
-      ); // blue -> info
-      expect(redChip.closest('.MuiChip-root')).toHaveClass(
-        'MuiChip-colorError'
-      ); // red -> error
-      expect(yellowChip.closest('.MuiChip-root')).toHaveClass(
-        'MuiChip-colorWarning'
-      ); // yellow -> warning
-      expect(greenChip.closest('.MuiChip-root')).toHaveClass(
-        'MuiChip-colorSuccess'
-      ); // green -> success
-      expect(purpleChip.closest('.MuiChip-root')).toHaveClass(
-        'MuiChip-colorSecondary'
-      ); // purple -> secondary
-      expect(orangeChip.closest('.MuiChip-root')).toHaveClass(
-        'MuiChip-colorWarning'
-      ); // orange -> warning
-      expect(grayChip.closest('.MuiChip-root')).toHaveClass(
-        'MuiChip-colorDefault'
-      ); // gray -> default
+      // 各ChipにTAG_COLOR_MAPの色が正しく適用されていることを確認
+      expect(blueChip).toHaveStyle({
+        borderColor: TAG_COLOR_MAP[TagColor.BLUE],
+        color: TAG_COLOR_MAP[TagColor.BLUE],
+      });
+      expect(redChip).toHaveStyle({
+        borderColor: TAG_COLOR_MAP[TagColor.RED],
+        color: TAG_COLOR_MAP[TagColor.RED],
+      });
+      expect(yellowChip).toHaveStyle({
+        borderColor: TAG_COLOR_MAP[TagColor.YELLOW],
+        color: TAG_COLOR_MAP[TagColor.YELLOW],
+      });
+      expect(greenChip).toHaveStyle({
+        borderColor: TAG_COLOR_MAP[TagColor.GREEN],
+        color: TAG_COLOR_MAP[TagColor.GREEN],
+      });
+      expect(purpleChip).toHaveStyle({
+        borderColor: TAG_COLOR_MAP[TagColor.PURPLE],
+        color: TAG_COLOR_MAP[TagColor.PURPLE],
+      });
+      expect(orangeChip).toHaveStyle({
+        borderColor: TAG_COLOR_MAP[TagColor.ORANGE],
+        color: TAG_COLOR_MAP[TagColor.ORANGE],
+      });
+      expect(grayChip).toHaveStyle({
+        borderColor: TAG_COLOR_MAP[TagColor.GRAY],
+        color: TAG_COLOR_MAP[TagColor.GRAY],
+      });
     });
   });
 

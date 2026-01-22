@@ -12,6 +12,7 @@ import { MyFilesSection } from '../MyFilesSection';
 describe('MyFilesSection', () => {
   const getFiles = vi.fn();
   const getTags = vi.fn();
+  const getFileById = vi.fn();
 
   const renderMyFilesSection = async (searchQuery?: string) => {
     const r = render(
@@ -21,6 +22,7 @@ describe('MyFilesSection', () => {
           override={{
             files: {
               getFiles: getFiles,
+              getFileById: getFileById,
             },
             tags: {
               getTags: getTags,
@@ -44,6 +46,12 @@ describe('MyFilesSection', () => {
       return Promise.resolve(filterMockFilesBySearch(params?.search));
     });
     getTags.mockResolvedValue(mockTags);
+    // ファイル詳細のモックを追加
+    getFileById.mockImplementation((fileId: string) => {
+      const allFiles = filterMockFilesBySearch(undefined);
+      const file = allFiles.files.find((f) => f.id === fileId);
+      return Promise.resolve(file || null);
+    });
   });
 
   describe('多言語リソースの確認', () => {
@@ -180,14 +188,33 @@ describe('MyFilesSection', () => {
       const user = userEvent.setup();
       await renderMyFilesSection();
 
+      // チェックボックスの初期状態を取得
+      const checkboxes = screen.getAllByRole('checkbox');
+      const firstFileCheckbox = checkboxes[1];
+      expect(firstFileCheckbox).not.toBeChecked();
+
       // 最初のファイル名をクリック
       const firstFile = screen.getByText('document.pdf');
       await user.click(firstFile);
 
-      // チェックボックスがチェックされていないことを確認
-      const checkboxes = screen.getAllByRole('checkbox');
-      const firstFileCheckbox = checkboxes[1];
-      expect(firstFileCheckbox).not.toBeChecked();
+      // ダイアログが開くのを待つ
+      await waitFor(() => {
+        expect(screen.getByRole('dialog')).toBeInTheDocument();
+      });
+
+      // ダイアログを閉じる（複数ある場合は最後のボタンを取得）
+      const closeButtons = screen.getAllByRole('button', { name: '閉じる' });
+      await user.click(closeButtons[closeButtons.length - 1]);
+
+      // ダイアログが閉じるのを待つ
+      await waitFor(() => {
+        expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+      });
+
+      // チェックボックスがまだチェックされていないことを確認
+      const checkboxesAfter = screen.getAllByRole('checkbox');
+      const firstFileCheckboxAfter = checkboxesAfter[1];
+      expect(firstFileCheckboxAfter).not.toBeChecked();
     });
   });
 

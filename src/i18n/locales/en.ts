@@ -1,5 +1,13 @@
 export const en = {
   title: 'ui-prototype',
+  common: {
+    cancel: 'Cancel',
+    close: 'Close',
+    save: 'Save',
+    delete: 'Delete',
+    edit: 'Edit',
+    create: 'Create',
+  },
   auth: {
     login: 'Login',
     logout: 'Logout',
@@ -156,6 +164,28 @@ export const en = {
       },
       tags: {
         title: 'Tags',
+        manageDialog: {
+          title: 'Manage Tags',
+          createButton: 'Create New Tag',
+        },
+        formDialog: {
+          createTitle: 'Create Tag',
+          editTitle: 'Edit Tag',
+          nameLabel: 'Tag Name',
+          nameRequired: 'Tag name is required',
+          nameMaxLength: 'Tag name must be 50 characters or less',
+          colorLabel: 'Color',
+          colorRequired: 'Color is required',
+          createButton: 'Create',
+          saveButton: 'Save',
+        },
+        deleteDialog: {
+          title: 'Delete Tag',
+          message: 'Are you sure you want to delete "{{tagName}}"?',
+          warning:
+            'This tag will be removed from all files using it. This action cannot be undone.',
+          confirmButton: 'Delete',
+        },
       },
       storage: {
         title: 'Storage',

@@ -1,8 +1,10 @@
 import SellOutlinedIcon from '@mui/icons-material/SellOutlined';
-import Chip, { type ChipProps } from '@mui/material/Chip';
+import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
 
-import type { Tag, TagColor } from '@/domain/models/tag';
+import type { Tag } from '@/domain/models/tag';
+
+import { TAG_COLOR_MAP } from '../constants';
 
 interface TagChipsProps {
   tags: Tag[];
@@ -10,6 +12,7 @@ interface TagChipsProps {
   max?: number;
   onDelete?: (tagId: string) => void;
   onClick?: (tag: Tag) => void;
+  'data-testid'?: string;
 }
 
 /**
@@ -29,6 +32,7 @@ export const TagChips = ({
   max,
   onDelete,
   onClick,
+  'data-testid': dataTestId,
 }: TagChipsProps) => {
   // 最大表示数による制限
   const displayTags = max && tags.length > max ? tags.slice(0, max) : tags;
@@ -39,17 +43,29 @@ export const TagChips = ({
   }
 
   return (
-    <Stack direction="row" spacing={0.5} flexWrap="wrap" useFlexGap>
+    <Stack
+      direction="row"
+      spacing={0.5}
+      flexWrap="wrap"
+      useFlexGap
+      data-testid={dataTestId}
+    >
       {displayTags.map((tag) => (
         <Chip
           key={tag.id}
           label={tag.name}
-          color={getChipColor(tag.color)}
           size={size}
           variant="outlined"
           icon={<SellOutlinedIcon />}
           onDelete={onDelete ? () => onDelete(tag.id) : undefined}
           onClick={onClick ? () => onClick(tag) : undefined}
+          sx={{
+            borderColor: TAG_COLOR_MAP[tag.color],
+            color: TAG_COLOR_MAP[tag.color],
+            '& .MuiChip-icon': {
+              color: TAG_COLOR_MAP[tag.color],
+            },
+          }}
         />
       ))}
       {remainingCount > 0 && (
@@ -57,21 +73,4 @@ export const TagChips = ({
       )}
     </Stack>
   );
-};
-
-/**
- * タグの色をMUIのChipカラーに変換
- */
-const getChipColor = (color: TagColor): ChipProps['color'] => {
-  const colorMap: Record<TagColor, ChipProps['color']> = {
-    blue: 'info',
-    red: 'error',
-    yellow: 'warning',
-    green: 'success',
-    purple: 'secondary',
-    orange: 'warning',
-    gray: 'default',
-  };
-
-  return colorMap[color];
 };

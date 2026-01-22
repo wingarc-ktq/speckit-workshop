@@ -137,7 +137,7 @@ export const FileListTable: React.FC<FileListTableProps> = ({
       onRowClick={handleRowClick}
       loading={loading}
       checkboxSelection
-      disableRowSelectionOnClick={false}
+      disableRowSelectionOnClick
       pageSizeOptions={[5, 10, 25]}
     />
   );

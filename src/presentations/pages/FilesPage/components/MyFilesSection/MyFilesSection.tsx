@@ -10,9 +10,8 @@ import type {
   FileQueryParams,
 } from '@/domain/models/file';
 import { tKeys } from '@/i18n/tKeys';
-import { useFiles } from '@/presentations/hooks/queries/files/useFiles';
-
 import { FileDetailDialog } from '@/presentations/components';
+import { useFiles } from '@/presentations/hooks/queries/files/useFiles';
 
 import { EmptySearchResult, FileListTable } from './components';
 import * as S from './styled';

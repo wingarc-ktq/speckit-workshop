@@ -1,5 +1,13 @@
 export const ja = {
   title: 'UIプロトタイプ',
+  common: {
+    cancel: 'キャンセル',
+    close: '閉じる',
+    save: '保存',
+    delete: '削除',
+    edit: '編集',
+    create: '作成',
+  },
   auth: {
     login: 'ログイン',
     logout: 'ログアウト',
@@ -162,6 +170,28 @@ export const ja = {
       },
       tags: {
         title: 'タグ',
+        manageDialog: {
+          title: 'タグの管理',
+          createButton: '新しいタグを作成',
+        },
+        formDialog: {
+          createTitle: 'タグを作成',
+          editTitle: 'タグを編集',
+          nameLabel: 'タグ名',
+          nameRequired: 'タグ名は必須です',
+          nameMaxLength: 'タグ名は50文字以内で入力してください',
+          colorLabel: '色',
+          colorRequired: '色は必須です',
+          createButton: '作成',
+          saveButton: '保存',
+        },
+        deleteDialog: {
+          title: 'タグを削除',
+          message: '「{{tagName}}」を削除してもよろしいですか?',
+          warning:
+            'このタグが使用されているファイルから、このタグが削除されます。この操作は取り消せません。',
+          confirmButton: '削除',
+        },
       },
       storage: {
         title: 'ストレージ',

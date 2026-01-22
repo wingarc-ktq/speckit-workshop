@@ -77,7 +77,9 @@ describe('FileCard', () => {
       await renderComponent({ file: mockFile });
 
       const viewButton = screen.getByRole('button', { name: '文書を見る' });
-      const icon = viewButton.querySelector('svg[data-testid="ArrowOutwardIcon"]');
+      const icon = viewButton.querySelector(
+        'svg[data-testid="ArrowOutwardIcon"]'
+      );
       expect(icon).toBeInTheDocument();
     });
 
@@ -292,8 +294,16 @@ describe('FileCard', () => {
       const onView1 = vi.fn();
       const onView2 = vi.fn();
 
-      const file1: DocumentFile = { ...mockFile, id: 'file-1', name: 'file1.pdf' };
-      const file2: DocumentFile = { ...mockFile, id: 'file-2', name: 'file2.pdf' };
+      const file1: DocumentFile = {
+        ...mockFile,
+        id: 'file-1',
+        name: 'file1.pdf',
+      };
+      const file2: DocumentFile = {
+        ...mockFile,
+        id: 'file-2',
+        name: 'file2.pdf',
+      };
 
       render(
         <RepositoryTestWrapper
@@ -402,7 +412,9 @@ describe('FileCard', () => {
     test('StyledCardContentが描画されること', async () => {
       await renderComponent({ file: mockFile });
 
-      const cardContent = screen.getByText('document.pdf').closest('.MuiCardContent-root');
+      const cardContent = screen
+        .getByText('document.pdf')
+        .closest('.MuiCardContent-root');
       expect(cardContent).toBeInTheDocument();
     });
 
@@ -418,21 +430,27 @@ describe('FileCard', () => {
       await renderComponent({ file: mockFile });
 
       const viewButton = screen.getByRole('button', { name: '文書を見る' });
-      expect(viewButton.closest('.MuiButton-root')).toHaveClass('MuiButton-fullWidth');
+      expect(viewButton.closest('.MuiButton-root')).toHaveClass(
+        'MuiButton-fullWidth'
+      );
     });
 
     test('ViewButtonがvariant="contained"であること', async () => {
       await renderComponent({ file: mockFile });
 
       const viewButton = screen.getByRole('button', { name: '文書を見る' });
-      expect(viewButton.closest('.MuiButton-root')).toHaveClass('MuiButton-contained');
+      expect(viewButton.closest('.MuiButton-root')).toHaveClass(
+        'MuiButton-contained'
+      );
     });
 
     test('ViewButtonがsize="small"であること', async () => {
       await renderComponent({ file: mockFile });
 
       const viewButton = screen.getByRole('button', { name: '文書を見る' });
-      expect(viewButton.closest('.MuiButton-root')).toHaveClass('MuiButton-sizeSmall');
+      expect(viewButton.closest('.MuiButton-root')).toHaveClass(
+        'MuiButton-sizeSmall'
+      );
     });
   });
 });

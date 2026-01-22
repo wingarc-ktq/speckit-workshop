@@ -1,12 +1,11 @@
 import { http } from 'msw';
 
 import {
-  getCreateTagMockHandler,
-  getDeleteTagMockHandler,
   getGetTagsMockHandler,
-  getUpdateTagMockHandler,
   type FileInfo,
   type FileListResponse,
+  type TagColor,
+  type TagInfo,
   type TagListResponse,
 } from '@/adapters/generated/files';
 
@@ -20,96 +19,102 @@ const uploadedFileBlobs = new Map<string, Blob>();
 let fileIdCounter = 100;
 
 // Custom handler for getFiles with pagination and search support
-const getFilesWithPaginationHandler = http.get('*/files', async ({ request }) => {
-  await new Promise((resolve) => setTimeout(resolve, 300));
+const getFilesWithPaginationHandler = http.get(
+  '*/files',
+  async ({ request }) => {
+    await new Promise((resolve) => setTimeout(resolve, 300));
 
-  const url = new URL(request.url);
-  const page = parseInt(url.searchParams.get('page') || '1', 10);
-  const limit = parseInt(url.searchParams.get('limit') || '10', 10);
-  const search = url.searchParams.get('search') || undefined;
-  const tagIdsParam = url.searchParams.get('tagIds') || undefined;
+    const url = new URL(request.url);
+    const page = parseInt(url.searchParams.get('page') || '1', 10);
+    const limit = parseInt(url.searchParams.get('limit') || '10', 10);
+    const search = url.searchParams.get('search') || undefined;
+    const tagIdsParam = url.searchParams.get('tagIds') || undefined;
 
-  // Filter files by search query and tags
-  let filteredFiles: FileInfo[] = mockFiles;
+    // Filter files by search query and tags
+    let filteredFiles: FileInfo[] = mockFiles;
 
-  // Filter by search query
-  if (search) {
-    const lowerSearch = search.toLowerCase();
-    filteredFiles = filteredFiles.filter((file) => {
-      // 名前でマッチしたら早期リターン
-      if (file.name.toLowerCase().includes(lowerSearch)) return true;
-      // 名前でマッチしなければdescriptionをチェック
-      return file.description?.toLowerCase().includes(lowerSearch) ?? false;
-    });
-  }
-
-  // Filter by tags (OR condition - file must have at least one of the specified tags)
-  if (tagIdsParam) {
-    const requestedTagIds = tagIdsParam.split(',').filter(Boolean);
-    if (requestedTagIds.length > 0) {
+    // Filter by search query
+    if (search) {
+      const lowerSearch = search.toLowerCase();
       filteredFiles = filteredFiles.filter((file) => {
-        // Check if file has at least one of the requested tags
-        return requestedTagIds.some((tagId) => file.tagIds?.includes(tagId));
+        // 名前でマッチしたら早期リターン
+        if (file.name.toLowerCase().includes(lowerSearch)) return true;
+        // 名前でマッチしなければdescriptionをチェック
+        return file.description?.toLowerCase().includes(lowerSearch) ?? false;
       });
     }
+
+    // Filter by tags (OR condition - file must have at least one of the specified tags)
+    if (tagIdsParam) {
+      const requestedTagIds = tagIdsParam.split(',').filter(Boolean);
+      if (requestedTagIds.length > 0) {
+        filteredFiles = filteredFiles.filter((file) => {
+          // Check if file has at least one of the requested tags
+          return requestedTagIds.some((tagId) => file.tagIds?.includes(tagId));
+        });
+      }
+    }
+
+    // Calculate pagination
+    const startIndex = (page - 1) * limit;
+    const endIndex = startIndex + limit;
+    const paginatedFiles = filteredFiles.slice(startIndex, endIndex);
+
+    const response: FileListResponse = {
+      files: paginatedFiles,
+      total: filteredFiles.length,
+      page,
+      limit,
+    };
+
+    return new Response(JSON.stringify(response), {
+      status: 200,
+      headers: { 'Content-Type': 'application/json' },
+    });
   }
+);
 
-  // Calculate pagination
-  const startIndex = (page - 1) * limit;
-  const endIndex = startIndex + limit;
-  const paginatedFiles = filteredFiles.slice(startIndex, endIndex);
-
-  const response: FileListResponse = {
-    files: paginatedFiles,
-    total: filteredFiles.length,
-    page,
-    limit,
-  };
-
-  return new Response(JSON.stringify(response), {
-    status: 200,
-    headers: { 'Content-Type': 'application/json' },
-  });
-});
-
-// Define a stable list of mock tags with meaningful names
-const mockTags = [
+// Mutable mock tags store - starts with predefined tags
+const mockTags: TagInfo[] = [
   {
     id: 'tag-001',
     name: '請求書',
-    color: 'blue' as const,
+    color: 'blue',
     createdAt: new Date('2025-01-01T00:00:00Z').toISOString(),
     updatedAt: new Date('2025-01-01T00:00:00Z').toISOString(),
   },
   {
     id: 'tag-002',
     name: '提案書',
-    color: 'orange' as const,
+    color: 'orange',
     createdAt: new Date('2025-01-01T00:00:00Z').toISOString(),
     updatedAt: new Date('2025-01-01T00:00:00Z').toISOString(),
   },
   {
     id: 'tag-003',
     name: '未処理',
-    color: 'green' as const,
+    color: 'green',
     createdAt: new Date('2025-01-01T00:00:00Z').toISOString(),
     updatedAt: new Date('2025-01-01T00:00:00Z').toISOString(),
   },
   {
     id: 'tag-004',
     name: '完了',
-    color: 'red' as const,
+    color: 'red',
     createdAt: new Date('2025-01-01T00:00:00Z').toISOString(),
     updatedAt: new Date('2025-01-01T00:00:00Z').toISOString(),
   },
   {
     id: 'tag-005',
     name: 'その他',
-    color: 'gray' as const,
+    color: 'gray',
     createdAt: new Date('2025-01-01T00:00:00Z').toISOString(),
     updatedAt: new Date('2025-01-01T00:00:00Z').toISOString(),
   },
 ];
+
+// Generate unique tag ID
+let tagIdCounter = 6;
 
 // Custom handler for getTags
 const getTagsHandler = getGetTagsMockHandler((): TagListResponse => {
@@ -117,7 +122,6 @@ const getTagsHandler = getGetTagsMockHandler((): TagListResponse => {
     tags: mockTags,
   };
 });
-
 
 // Custom handler for uploadFile
 const uploadFileHandler = http.post('*/files', async ({ request }) => {
@@ -318,13 +322,10 @@ const getFileByIdHandler = http.get('*/files/:fileId', async ({ params }) => {
     );
   }
 
-  return new Response(
-    JSON.stringify({ file }),
-    {
-      status: 200,
-      headers: { 'Content-Type': 'application/json' },
-    }
-  );
+  return new Response(JSON.stringify({ file }), {
+    status: 200,
+    headers: { 'Content-Type': 'application/json' },
+  });
 });
 
 // Custom handler for downloadFile with actual PDF blob
@@ -378,6 +379,135 @@ const downloadFileHandler = http.get(
   }
 );
 
+// Custom handler for createTag
+const createTagHandler = http.post('*/tags', async ({ request }) => {
+  await new Promise((resolve) => setTimeout(resolve, 300));
+
+  const body = (await request.json()) as {
+    name: string;
+    color: TagColor;
+  };
+
+  if (!body.name || !body.color) {
+    return new Response(
+      JSON.stringify({
+        message: 'Name and color are required',
+        code: 'INVALID_REQUEST',
+      }),
+      {
+        status: 400,
+        headers: { 'Content-Type': 'application/json' },
+      }
+    );
+  }
+
+  // Generate new tag ID
+  const newTagId = `tag-${String(tagIdCounter++).padStart(3, '0')}`;
+
+  // Create new tag
+  const newTag: TagInfo = {
+    id: newTagId,
+    name: body.name,
+    color: body.color,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  };
+
+  // Add to mock tags
+  mockTags.push(newTag);
+
+  return new Response(
+    JSON.stringify({
+      tag: newTag,
+    }),
+    {
+      status: 201,
+      headers: { 'Content-Type': 'application/json' },
+    }
+  );
+});
+
+// Custom handler for updateTag
+const updateTagHandler = http.put(
+  '*/tags/:tagId',
+  async ({ params, request }) => {
+    await new Promise((resolve) => setTimeout(resolve, 300));
+
+    const tagId = params.tagId as string;
+    const tag = mockTags.find((t) => t.id === tagId);
+
+    if (!tag) {
+      return new Response(
+        JSON.stringify({
+          message: 'Tag not found',
+          code: 'TAG_NOT_FOUND',
+        }),
+        {
+          status: 404,
+          headers: { 'Content-Type': 'application/json' },
+        }
+      );
+    }
+
+    const body = (await request.json()) as {
+      name?: string;
+      color?: TagColor;
+    };
+
+    // Update tag properties
+    if (body.name !== undefined) {
+      tag.name = body.name;
+    }
+    if (body.color !== undefined) {
+      tag.color = body.color;
+    }
+    tag.updatedAt = new Date().toISOString();
+
+    return new Response(
+      JSON.stringify({
+        tag,
+      }),
+      {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' },
+      }
+    );
+  }
+);
+
+// Custom handler for deleteTag
+const deleteTagHandler = http.delete('*/tags/:tagId', async ({ params }) => {
+  await new Promise((resolve) => setTimeout(resolve, 300));
+
+  const tagId = params.tagId as string;
+  const tagIndex = mockTags.findIndex((t) => t.id === tagId);
+
+  if (tagIndex === -1) {
+    return new Response(
+      JSON.stringify({
+        message: 'Tag not found',
+        code: 'TAG_NOT_FOUND',
+      }),
+      {
+        status: 404,
+        headers: { 'Content-Type': 'application/json' },
+      }
+    );
+  }
+
+  // Remove tag from mockTags
+  mockTags.splice(tagIndex, 1);
+
+  // Remove tag from all files
+  mockFiles.forEach((file) => {
+    if (file.tagIds) {
+      file.tagIds = file.tagIds.filter((id) => id !== tagId);
+    }
+  });
+
+  return new Response(null, { status: 204 });
+});
+
 export const filesHandlers = [
   // Files handlers
   getFilesWithPaginationHandler, // Custom getFiles handler with pagination
@@ -389,7 +519,7 @@ export const filesHandlers = [
   downloadFileHandler, // Custom download handler with actual uploaded blobs
   // Tags handlers
   getTagsHandler, // Custom getTags handler with meaningful tags
-  getCreateTagMockHandler(),
-  getUpdateTagMockHandler(),
-  getDeleteTagMockHandler(),
+  createTagHandler, // Custom createTag handler to add new tags
+  updateTagHandler, // Custom updateTag handler to modify tags
+  deleteTagHandler, // Custom deleteTag handler to remove tags
 ];
