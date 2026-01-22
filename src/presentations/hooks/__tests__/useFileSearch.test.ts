@@ -1,4 +1,4 @@
-import { renderHook, waitFor } from '@testing-library/react';
+import { act, renderHook, waitFor } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
 import { createTestWrapper } from '@/__fixtures__/testWrappers';
@@ -38,15 +38,19 @@ describe('useFileSearch', () => {
     expect(result.current.debouncedSearchQuery).toBe('');
   });
 
-  it('検索クエリを設定できる', () => {
+  it('検索クエリを設定できる', async () => {
     const { result } = renderHook(() => useFileSearch(), {
       wrapper: createTestWrapper(),
     });
 
     // 検索クエリを設定
-    result.current.setSearchQuery('test');
+    act(() => {
+      result.current.setSearchQuery('test');
+    });
 
-    expect(result.current.searchQuery).toBe('test');
+    await waitFor(() => {
+      expect(result.current.searchQuery).toBe('test');
+    });
   });
 
   it('初期パラメータを受け取る', () => {

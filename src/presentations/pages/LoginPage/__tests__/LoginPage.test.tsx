@@ -56,10 +56,13 @@ describe('LoginPage', () => {
 
     await clickLoginButton();
 
-    expect(mockLoginUser).toHaveBeenCalledWith({
-      userId: 'testuser@example.com',
-      password: 'password123',
-      rememberMe: false,
-    });
+    expect(mockLoginUser).toHaveBeenCalledWith(
+      {
+        userId: 'testuser@example.com',
+        password: 'password123',
+        rememberMe: false,
+      },
+      expect.anything()
+    );
   });
 });

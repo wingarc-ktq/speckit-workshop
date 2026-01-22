@@ -119,11 +119,14 @@ describe('LoginForm', () => {
 
     await clickLoginButton();
 
-    expect(loginUser).toHaveBeenCalledWith({
-      userId: 'test@example.com',
-      password: 'password123',
-      rememberMe: true,
-    });
+    expect(loginUser).toHaveBeenCalledWith(
+      {
+        userId: 'test@example.com',
+        password: 'password123',
+        rememberMe: true,
+      },
+      expect.anything()
+    );
   });
 
   describe('遷移先', () => {
