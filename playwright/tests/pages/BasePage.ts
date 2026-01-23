@@ -40,7 +40,8 @@ export abstract class BasePage {
 
   // ネットワーク監視
   async waitForNetworkIdle() {
-    await this.page.waitForLoadState('networkidle');
+    // networkidleは信頼性が低いため、loadを使用
+    await this.page.waitForLoadState('load', { timeout: 10000 });
   }
 
   // 要素の待機

@@ -82,8 +82,6 @@ export const getCustomAuthAPIMock = () => {
       status: HTTP_STATUS_SUCCESS.OK,
       headers: {
         'content-type': 'application/json',
-        'set-cookie':
-          'session_id=abc123; Path=/;  Max-Age=86400; HttpOnly; SameSite=Strict',
       },
     });
   });

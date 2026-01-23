@@ -1,15 +1,18 @@
 import { test, expect } from '@playwright/test';
 import { LoginPage } from '../../pages/LoginPage';
 import { DashboardPage } from '../../pages/DashboardPage';
+import { FilesPage } from '../../pages/FilesPage';
 import { testUsers } from '../../fixtures/testUsers';
 
 test.describe('保護されたルート', () => {
   let loginPage: LoginPage;
   let dashboardPage: DashboardPage;
+  let filesPage: FilesPage;
 
   test.beforeEach(async ({ page, context }) => {
     loginPage = new LoginPage(page);
     dashboardPage = new DashboardPage(page);
+    filesPage = new FilesPage(page);
 
     // セッションをクリアしてテストを開始
     await context.clearCookies();
@@ -53,7 +56,7 @@ test.describe('保護されたルート', () => {
     // 7. ダッシュボードページ（/）に戻ること
     await expect(page).toHaveURL('/');
 
-    // 8. 「ダッシュボード」という見出しが表示されること
-    await expect(await dashboardPage.getDashboardHeading()).toBeVisible();
+    // 8. ファイル一覧ページが表示されること（/はファイル一覧ページ）
+    await expect(filesPage.fileTable).toBeVisible();
   });
 });

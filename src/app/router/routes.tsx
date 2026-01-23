@@ -9,7 +9,6 @@ import { ProtectedRoute, RouteErrorBoundary } from './components';
 const ROUTE_PATH = {
   HOME: '/',
   LOGIN: '/login',
-  FILES: '/files',
   TRASH: '/trash',
 };
 
@@ -36,10 +35,6 @@ export const routes = [
         children: [
           {
             index: true,
-            lazy: async () => ({ Component: HomePage }),
-          },
-          {
-            path: ROUTE_PATH.FILES,
             lazy: async () => ({ Component: FilesPage }),
           },
           {

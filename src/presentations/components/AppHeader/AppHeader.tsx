@@ -9,6 +9,8 @@ import Button from '@mui/material/Button';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 
+import { UserMenu } from '@/presentations/layouts/AppLayout/components/AppHeader/components';
+
 interface AppHeaderProps {
   showTrashButton?: boolean;
   onToggleView?: () => void;
@@ -58,26 +60,31 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
             </Typography>
           </Box>
         </Box>
-        {onToggleView && (
-          <Button
-            variant="contained"
-            startIcon={showTrashButton ? <DeleteIcon /> : <ListIcon />}
-            onClick={onToggleView}
-            sx={{
-              bgcolor: 'white',
-              color: '#FF9800',
-              fontWeight: 600,
-              px: 2,
-              py: 1,
-              borderRadius: 2,
-              '&:hover': {
-                bgcolor: 'rgba(255, 255, 255, 0.9)',
-              },
-            }}
-          >
-            {showTrashButton ? 'ごみ箱' : '一覧へ'}
-          </Button>
-        )}
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+          {onToggleView && (
+            <Button
+              variant="contained"
+              startIcon={showTrashButton ? <DeleteIcon /> : <ListIcon />}
+              onClick={onToggleView}
+              sx={{
+                bgcolor: 'white',
+                color: '#FF9800',
+                fontWeight: 600,
+                px: 2,
+                py: 1,
+                borderRadius: 2,
+                '&:hover': {
+                  bgcolor: 'rgba(255, 255, 255, 0.9)',
+                },
+              }}
+            >
+              {showTrashButton ? 'ごみ箱' : '一覧へ'}
+            </Button>
+          )}
+          <Box sx={{ '& button': { color: 'white' }, '& svg': { color: 'white' } }}>
+            <UserMenu />
+          </Box>
+        </Box>
       </Toolbar>
     </AppBar>
   );

@@ -148,4 +148,92 @@ describe('FileListTable', () => {
 
     expect(onSelectionChange).toHaveBeenCalledWith(['file-1', 'file-2']);
   });
+
+  describe('ビュー切替', () => {
+    test('テーブルビューで正しくレンダリングされること', () => {
+      renderFileListTable();
+
+      // テーブル要素が存在する
+      expect(screen.getByRole('table')).toBeInTheDocument();
+    });
+
+    test('テーブルヘッダーが正しく表示されること', () => {
+      renderFileListTable();
+
+      expect(screen.getByText('ファイル名')).toBeInTheDocument();
+      expect(screen.getByText('カテゴリー')).toBeInTheDocument();
+      expect(screen.getByText('サイズ')).toBeInTheDocument();
+      expect(screen.getByText('操作')).toBeInTheDocument();
+    });
+  });
+
+  describe('選択状態の表示', () => {
+    test('選択されたファイルがハイライト表示されること', () => {
+      renderFileListTable({
+        selectedFileIds: ['file-1'],
+        onSelectionChange: vi.fn(),
+      });
+
+      // 選択されたファイルのチェックボックスがチェック状態
+      const checkboxes = screen.getAllByRole('checkbox');
+      expect(checkboxes[1]).toBeChecked(); // file-1のチェックボックス
+      expect(checkboxes[2]).not.toBeChecked(); // file-2のチェックボックス
+    });
+
+    test('部分選択時にヘッダーチェックボックスがindeterminate状態になること', () => {
+      renderFileListTable({
+        selectedFileIds: ['file-1'],
+        onSelectionChange: vi.fn(),
+      });
+
+      const headerCheckbox = screen.getAllByRole('checkbox')[0];
+      expect(headerCheckbox).toHaveAttribute('data-indeterminate', 'true');
+    });
+
+    test('全選択時にヘッダーチェックボックスがチェック状態になること', () => {
+      renderFileListTable({
+        selectedFileIds: ['file-1', 'file-2'],
+        onSelectionChange: vi.fn(),
+      });
+
+      const headerCheckbox = screen.getAllByRole('checkbox')[0];
+      expect(headerCheckbox).toBeChecked();
+    });
+  });
+
+  describe('削除操作', () => {
+    test('削除ボタンクリック時に行クリックイベントが発火しないこと', async () => {
+      const user = userEvent.setup();
+      const onFileClick = vi.fn();
+      renderFileListTable({ onFileClick });
+
+      const deleteButtons = screen.getAllByLabelText('delete');
+      await user.click(deleteButtons[0]);
+
+      // onFileClickは呼ばれない（イベント伝播が止まる）
+      expect(onFileClick).not.toHaveBeenCalled();
+    });
+
+    test('確認ダイアログでキャンセルするとファイルが削除されないこと', async () => {
+      const user = userEvent.setup();
+      renderFileListTable();
+
+      const deleteButtons = screen.getAllByLabelText('delete');
+      await user.click(deleteButtons[0]);
+
+      // ダイアログが表示される
+      expect(screen.getByText('ファイルを削除しますか？')).toBeInTheDocument();
+
+      // キャンセルボタンをクリック（ダイアログを閉じる）
+      const closeButton = screen.getByRole('button', { name: /キャンセル|閉じる/i });
+      if (closeButton) {
+        await user.click(closeButton);
+      }
+
+      // ダイアログが閉じる（ファイルはそのまま）
+      await waitFor(() => {
+        expect(screen.queryByText('ファイルを削除しますか？')).not.toBeInTheDocument();
+      });
+    });
+  });
 });

@@ -1,15 +1,15 @@
 import { test, expect } from '@playwright/test';
 import { LoginPage } from '../../pages/LoginPage';
-import { DashboardPage } from '../../pages/DashboardPage';
+import { FilesPage } from '../../pages/FilesPage';
 import { testUsers } from '../../fixtures/testUsers';
 
 test.describe('ログイン', () => {
   let loginPage: LoginPage;
-  let dashboardPage: DashboardPage;
+  let filesPage: FilesPage;
 
   test.beforeEach(async ({ page }) => {
     loginPage = new LoginPage(page);
-    dashboardPage = new DashboardPage(page);
+    filesPage = new FilesPage(page);
     await loginPage.navigate();
   });
 
@@ -25,11 +25,11 @@ test.describe('ログイン', () => {
     // 4. 「ログイン」ボタンをクリックする
     await loginPage.clickLoginButton();
 
-    // 5. ダッシュボードページに遷移すること
+    // 5. ファイル一覧ページに遷移すること
     await expect(page).toHaveURL('/');
 
-    // 6. 「ダッシュボード」という見出しが表示されること
-    await expect(await dashboardPage.getDashboardHeading()).toBeVisible();
+    // 6. ファイル一覧ページが表示されること
+    await filesPage.waitForPageLoad();
   });
 
   test('ログイン状態を記録するチェックボックスが機能すること', async ({
@@ -55,7 +55,7 @@ test.describe('ログイン', () => {
     // 6. 「ログイン」ボタンをクリックする
     await loginPage.clickLoginButton();
 
-    // 7. ダッシュボードページに遷移すること
+    // 7. ファイル一覧ページに遷移すること
     await expect(page).toHaveURL('/');
   });
 });

@@ -72,7 +72,7 @@ export const FileListTable: React.FC<FileListTableProps> = ({
 
   if (files.length === 0) {
     return (
-      <Box sx={{ p: 8, textAlign: 'center' }}>
+      <Box sx={{ p: 8, textAlign: 'center' }} data-testid="empty-state">
         <Typography variant="body1" color="text.secondary">
           ファイルが見つかりません
         </Typography>
@@ -83,7 +83,7 @@ export const FileListTable: React.FC<FileListTableProps> = ({
   return (
     <>
       <Box sx={{ overflowX: 'auto' }}>
-        <Table sx={{ minWidth: { xs: 650, md: 'auto' } }}>
+        <Table sx={{ minWidth: { xs: 650, md: 'auto' } }} data-testid="file-table">
           <TableHead
             sx={{
               background: 'linear-gradient(to right, #eff6ff, #eef2ff)',

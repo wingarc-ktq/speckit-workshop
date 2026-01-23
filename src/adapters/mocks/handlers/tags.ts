@@ -4,7 +4,7 @@ import { HTTP_STATUS_CLIENT_ERROR, HTTP_STATUS_SUCCESS } from '@/domain/constant
 import type { TagInfo, TagListResponse, TagResponse } from '@/domain/models/files';
 
 // モックタグデータ（ミュータブル）
-let MOCK_TAGS: TagInfo[] = [
+export let MOCK_TAGS: TagInfo[] = [
   {
     id: 'tag-001',
     name: '重要',

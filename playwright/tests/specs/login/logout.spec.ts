@@ -1,15 +1,15 @@
 import { test, expect } from '@playwright/test';
 import { LoginPage } from '../../pages/LoginPage';
-import { DashboardPage } from '../../pages/DashboardPage';
+import { FilesPage } from '../../pages/FilesPage';
 import { testUsers } from '../../fixtures/testUsers';
 
 test.describe('ログアウト', () => {
   let loginPage: LoginPage;
-  let dashboardPage: DashboardPage;
+  let filesPage: FilesPage;
 
   test.beforeEach(async ({ page, context }) => {
     loginPage = new LoginPage(page);
-    dashboardPage = new DashboardPage(page);
+    filesPage = new FilesPage(page);
 
     // セッションをクリア
     await context.clearCookies();
@@ -30,11 +30,11 @@ test.describe('ログアウト', () => {
     // 4. 「ログイン」ボタンをクリックする
     await loginPage.clickLoginButton();
 
-    // 5. ダッシュボードページに遷移すること
+    // 5. ファイル一覧ページに遷移すること
     await expect(page).toHaveURL('/');
 
-    // 6. 「ダッシュボード」という見出しが表示されること
-    await expect(await dashboardPage.getDashboardHeading()).toBeVisible();
+    // 6. ファイル一覧ページが表示されること
+    await filesPage.waitForPageLoad();
 
     // 7. ユーザーメニューボタン（アバター）をクリックする
     await page.getByTestId('user-menu-button').click();
@@ -66,11 +66,11 @@ test.describe('ログアウト', () => {
     // 4. 「ログイン」ボタンをクリックする
     await loginPage.clickLoginButton();
 
-    // 5. ダッシュボードページに遷移すること
+    // 5. ファイル一覧ページに遷移すること
     await expect(page).toHaveURL('/');
 
-    // 6. 「ダッシュボード」という見出しが表示されること
-    await expect(await dashboardPage.getDashboardHeading()).toBeVisible();
+    // 6. ファイル一覧ページが表示されること
+    await filesPage.waitForPageLoad();
 
     // 7. ユーザーメニューボタン（アバター）をクリックする
     await page.getByTestId('user-menu-button').click();
@@ -81,7 +81,7 @@ test.describe('ログアウト', () => {
     // 9. ログインページ（/login）にリダイレクトされること
     await expect(page).toHaveURL('/login');
 
-    // 10. ダッシュボードページ（/）に直接アクセスする
+    // 10. ファイル一覧ページ（/）に直接アクセスする
     await page.goto('/');
 
     // 11. 再度ログインページ（/login）にリダイレクトされること

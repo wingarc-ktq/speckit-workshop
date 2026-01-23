@@ -65,7 +65,7 @@ export const FilesPage: React.FC = () => {
 
   const queryParams: GetFilesParams = {
     page,
-    limit: 20,
+    limit: 10,
     search: debouncedSearchQuery,
     tagIds: selectedTags,
     sortBy,
@@ -402,10 +402,10 @@ export const FilesPage: React.FC = () => {
             {filesData && filesData.total > 0 && (
               <PaginationControls
                 page={page}
-                totalPages={Math.ceil(filesData.total / 20)}
+                totalPages={Math.ceil(filesData.total / 10)}
                 total={filesData.total}
                 onPageChange={setPage}
-                itemsPerPage={20}
+                itemsPerPage={10}
               />
             )}
           </>

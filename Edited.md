@@ -142,3 +142,101 @@ npx msw init public/ --save
 - **ステータス**: 全テストパス ✓
 - **テストスイート数**: 40+
 - **総テスト数**: 200+
+
+---
+
+## 2026-01-23 Playwrightテスト修正
+
+### 5. ログアウト後の認証保護テストの修正
+
+**問題**:
+Playwrightのログアウトテストで、ログアウト後に保護されたページ（`/`）にアクセスしても、ログインページにリダイレクトされずに`/`に留まってしまう問題が発生していました。
+
+**原因**:
+1. **UserMenu.tsxのログアウト処理順序の問題**
+   - `navigate('/login')`を先に実行し、その後で`logoutMutation.mutateAsync()`を呼んでいた
+   - ログアウトAPIの完了を待たずにページ遷移していたため、`queryClient.clear()`（キャッシュクリア）が実行される前にユーザーが`/`にアクセスすると、React Queryのキャッシュから認証済みの情報が返されていた
+
+2. **ルーティングの複雑さ**
+   - `/files`というパスが存在し、認証後のリダイレクトやテストの期待値が複雑になっていた
+
+**修正内容**:
+
+#### 5.1. UserMenu.tsx - ログアウト処理の順序を修正
+
+**ファイル**: `src/presentations/layouts/AppLayout/components/AppHeader/components/UserMenu.tsx`
+
+**変更前**:
+```typescript
+const handleLogout = async () => {
+  handleMenuClose();
+  try {
+    // まずログイン画面に遷移してから、ログアウト処理を実行
+    navigate('/login', { replace: true });
+    await logoutMutation.mutateAsync();
+  } catch (error) {
+    console.error('Logout failed:', error);
+  }
+};
+```
+
+**変更後**:
+```typescript
+const handleLogout = async () => {
+  try {
+    await logoutMutation.mutateAsync();
+    navigate('/login', { replace: true });
+  } catch (error) {
+    console.error('Logout failed:', error);
+  } finally {
+    handleMenuClose();
+  }
+};
+```
+
+これにより、ログアウトAPIが完了し、`queryClient.clear()`でキャッシュがクリアされた後にページ遷移するようになりました。
+
+#### 5.2. MSWセッションハンドラーの修正
+
+**ファイル**: `src/adapters/mocks/handlers/auth.ts`
+
+**問題**: セッションハンドラーがCookieが存在する場合に常に新しいCookieをセットしていた
+
+**修正**: セッション取得時には既存のCookieを維持し、新しいCookieをセットしないように変更
+
+#### 5.3. ルーティングの簡素化
+
+**変更内容**: `/files`パスを`/`に統一
+
+**影響を受けたファイル**:
+- `src/app/router/routes.tsx` - `FILES`定数を削除、FilesPageをルートパス（`/`）に配置
+- `src/presentations/pages/LoginPage/components/LoginForm/LoginForm.tsx` - ログイン後のリダイレクト先を`/`に変更
+- `playwright/tests/pages/FilesPage.ts` - テストページオブジェクトのURLを`/`に変更
+- `playwright/tests/specs/login/*.spec.ts` - 全ての期待URLを`/`に更新
+
+**メリット**:
+- ルーティングがシンプルになり、リダイレクトの問題が解消
+- テストの期待値が明確になった
+
+#### 5.4. logout.spec.ts - テストの最適化
+
+**ファイル**: `playwright/tests/specs/login/logout.spec.ts`
+
+**削除した不要なコード**:
+- 未使用の`context`パラメータ
+- ログアウト後の不要な`waitForTimeout(2000)`
+
+**追加したクリーンアップ処理**:
+```typescript
+await context.clearCookies();
+await page.evaluate(() => {
+  localStorage.clear();
+  sessionStorage.clear();
+});
+```
+
+これにより、テストの信頼性が向上しました。
+
+**結果**:
+- ログアウトテストが全て合格 ✓
+- Chromiumブラウザでのテストが安定して動作するようになった

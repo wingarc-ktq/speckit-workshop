@@ -28,13 +28,13 @@ export const UserMenu: React.FC = () => {
   };
 
   const handleLogout = async () => {
+    handleMenuClose();
     try {
+      // ログアウト処理を実行してからログイン画面に遷移
       await logoutMutation.mutateAsync();
       navigate('/login', { replace: true });
     } catch (error) {
       console.error('Logout failed:', error);
-    } finally {
-      handleMenuClose();
     }
   };
 

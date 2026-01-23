@@ -3,6 +3,8 @@ import { delay, http, HttpResponse } from 'msw';
 import { HTTP_STATUS_CLIENT_ERROR, HTTP_STATUS_SUCCESS } from '@/domain/constants';
 import type { FileInfo, FileListResponse } from '@/domain/models/files';
 
+import { MOCK_TAGS } from './tags';
+
 // アップロードされたファイルのデータを保存するMap
 export const uploadedFilesData = new Map<string, Blob>();
 
@@ -82,16 +84,16 @@ startxref
 // モックデータ生成
 const generateMockFiles = (): FileInfo[] => {
   const tags = [
-    ['tag-001', 'tag-002'],
-    ['tag-003'],
-    ['tag-001', 'tag-004'],
-    ['tag-002', 'tag-005'],
-    [],
-    ['tag-001'],
-    ['tag-003', 'tag-004'],
-    ['tag-002'],
-    ['tag-005'],
-    ['tag-001', 'tag-003'],
+    ['tag-001', 'tag-002'], // file-001: 請求書 -> 重要, 学校
+    ['tag-002'], // file-002: 学校だより -> 学校
+    ['tag-002', 'tag-003'], // file-003: 運動会のお知らせ -> 学校, 行事
+    ['tag-002', 'tag-005'], // file-004: 見積書 -> 学校, 医療
+    ['tag-002', 'tag-003'], // file-005: 授業参観 -> 学校, 行事
+    ['tag-001'], // file-006: 領収書 -> 重要
+    ['tag-003', 'tag-004'], // file-007: お祭り -> 行事, お知らせ
+    ['tag-002'], // file-008: 健康診断 -> 学校
+    ['tag-005'], // file-009: 医療 -> 医療
+    ['tag-001', 'tag-003'], // file-010: イベント -> 重要, 行事
   ];
 
   const files: FileInfo[] = [
@@ -320,13 +322,22 @@ export const getFilesHandlers = () => {
       );
     }
 
-    // 検索キーワードでフィルタリング
+    // 検索キーワードでフィルタリング（ファイル名、description、タグ名を検索対象とする）
     if (search) {
-      filteredFiles = filteredFiles.filter(
-        (file) =>
+      filteredFiles = filteredFiles.filter((file) => {
+        // ファイル名とdescriptionで検索
+        const matchesFileInfo =
           file.name.toLowerCase().includes(search.toLowerCase()) ||
-          file.description?.toLowerCase().includes(search.toLowerCase())
-      );
+          file.description?.toLowerCase().includes(search.toLowerCase());
+
+        // タグ名で検索
+        const matchesTag = file.tagIds.some((tagId) => {
+          const tag = MOCK_TAGS.find((t) => t.id === tagId);
+          return tag && tag.name.toLowerCase().includes(search.toLowerCase());
+        });
+
+        return matchesFileInfo || matchesTag;
+      });
     }
 
     // ソート

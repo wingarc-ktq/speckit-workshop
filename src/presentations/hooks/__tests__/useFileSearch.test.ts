@@ -1,5 +1,5 @@
 import { act, renderHook, waitFor } from '@testing-library/react';
-import { describe, expect, it, vi } from 'vitest';
+import { describe, expect, it, vi, beforeEach } from 'vitest';
 
 import { createTestWrapper } from '@/__fixtures__/testWrappers';
 
@@ -29,77 +29,173 @@ vi.mock('../queries/useFiles', () => ({
 }));
 
 describe('useFileSearch', () => {
-  it('初期状態で空の検索クエリを持つ', () => {
-    const { result } = renderHook(() => useFileSearch(), {
-      wrapper: createTestWrapper(),
-    });
-
-    expect(result.current.searchQuery).toBe('');
-    expect(result.current.debouncedSearchQuery).toBe('');
+  beforeEach(() => {
+    vi.clearAllMocks();
   });
 
-  it('検索クエリを設定できる', async () => {
-    const { result } = renderHook(() => useFileSearch(), {
-      wrapper: createTestWrapper(),
+  describe('デバウンス動作確認', () => {
+    it('初期状態で空の検索クエリを持つ', () => {
+      const { result } = renderHook(() => useFileSearch(), {
+        wrapper: createTestWrapper(),
+      });
+
+      expect(result.current.searchQuery).toBe('');
+      expect(result.current.debouncedSearchQuery).toBe('');
     });
 
-    // 検索クエリを設定
-    act(() => {
-      result.current.setSearchQuery('test');
+    it('検索クエリがデバウンスされた値としてuseFilesに渡される', async () => {
+      const { useDebounce } = await import('../useDebounce');
+      const { useFiles } = await import('../queries/useFiles');
+
+      const { result } = renderHook(() => useFileSearch(), {
+        wrapper: createTestWrapper(),
+      });
+
+      result.current.setSearchQuery('test query');
+
+      await waitFor(() => {
+        expect(useDebounce).toHaveBeenCalled();
+        expect(useFiles).toHaveBeenCalled();
+      });
     });
 
-    await waitFor(() => {
-      expect(result.current.searchQuery).toBe('test');
+    it('デバウンス遅延時間をカスタマイズできる', () => {
+      const { result } = renderHook(() => useFileSearch({}, 500), {
+        wrapper: createTestWrapper(),
+      });
+
+      expect(result.current.searchQuery).toBe('');
     });
   });
 
-  it('初期パラメータを受け取る', () => {
-    const initialParams = {
-      page: 2,
-      limit: 10,
-      tagIds: ['tag1', 'tag2'],
-    };
+  describe('検索クエリ変更', () => {
+    it('検索クエリを設定できる', async () => {
+      const { result } = renderHook(() => useFileSearch(), {
+        wrapper: createTestWrapper(),
+      });
 
-    const { result } = renderHook(() => useFileSearch(initialParams), {
-      wrapper: createTestWrapper(),
+      // 検索クエリを設定
+      act(() => {
+        result.current.setSearchQuery('test');
+      });
+
+      await waitFor(() => {
+        expect(result.current.searchQuery).toBe('test');
+      });
     });
 
-    // useFiles が正しいパラメータで呼ばれているか確認
-    expect(result.current.data).toBeDefined();
+    it('検索クエリをクリアできる', async () => {
+      const { result } = renderHook(() => useFileSearch(), {
+        wrapper: createTestWrapper(),
+      });
+
+      // 検索クエリを設定
+      act(() => {
+        result.current.setSearchQuery('test');
+      });
+
+      await waitFor(() => {
+        expect(result.current.searchQuery).toBe('test');
+      });
+
+      // 検索クエリをクリア
+      act(() => {
+        result.current.setSearchQuery('');
+      });
+
+      await waitFor(() => {
+        expect(result.current.searchQuery).toBe('');
+      });
+    });
+
+    it('日本語の検索クエリも正しく設定できる', async () => {
+      const { result } = renderHook(() => useFileSearch(), {
+        wrapper: createTestWrapper(),
+      });
+
+      act(() => {
+        result.current.setSearchQuery('テスト検索');
+      });
+
+      await waitFor(() => {
+        expect(result.current.searchQuery).toBe('テスト検索');
+      });
+    });
   });
 
-  it('デバウンス遅延時間をカスタマイズできる', () => {
-    const { result } = renderHook(() => useFileSearch({}, 500), {
-      wrapper: createTestWrapper(),
+  describe('検索結果更新', () => {
+    it('初期パラメータを受け取る', () => {
+      const initialParams = {
+        page: 2,
+        limit: 10,
+        tagIds: ['tag1', 'tag2'],
+      };
+
+      const { result } = renderHook(() => useFileSearch(initialParams), {
+        wrapper: createTestWrapper(),
+      });
+
+      // useFiles が正しいパラメータで呼ばれているか確認
+      expect(result.current.data).toBeDefined();
     });
 
-    expect(result.current.searchQuery).toBe('');
+    it('useFiles の結果を返す', () => {
+      const { result } = renderHook(() => useFileSearch(), {
+        wrapper: createTestWrapper(),
+      });
+
+      expect(result.current.data).toBeDefined();
+      expect(result.current.data?.files).toHaveLength(2);
+      expect(result.current.data?.total).toBe(2);
+      expect(result.current.isLoading).toBe(false);
+    });
+
+    it('検索クエリ変更後にデータが更新される', async () => {
+      const { result } = renderHook(() => useFileSearch(), {
+        wrapper: createTestWrapper(),
+      });
+
+      act(() => {
+        result.current.setSearchQuery('pdf');
+      });
+
+      await waitFor(() => {
+        expect(result.current.searchQuery).toBe('pdf');
+        // モックしているのでデータは同じだが、クエリが更新されていることを確認
+        expect(result.current.data).toBeDefined();
+      });
+    });
+
+    it('空文字列での検索時は全件取得と同等', () => {
+      const { result } = renderHook(() => useFileSearch(), {
+        wrapper: createTestWrapper(),
+      });
+
+      expect(result.current.searchQuery).toBe('');
+      expect(result.current.data?.total).toBe(2);
+    });
   });
 
-  it('useFiles の結果を返す', () => {
-    const { result } = renderHook(() => useFileSearch(), {
-      wrapper: createTestWrapper(),
+  describe('返却値の確認', () => {
+    it('searchQuery, setSearchQuery, debouncedSearchQuery が返却される', () => {
+      const { result } = renderHook(() => useFileSearch(), {
+        wrapper: createTestWrapper(),
+      });
+
+      expect(result.current.searchQuery).toBeDefined();
+      expect(typeof result.current.setSearchQuery).toBe('function');
+      expect(result.current.debouncedSearchQuery).toBeDefined();
     });
 
-    expect(result.current.data).toBeDefined();
-    expect(result.current.data?.files).toHaveLength(2);
-    expect(result.current.data?.total).toBe(2);
-    expect(result.current.isLoading).toBe(false);
-  });
+    it('useFiles の返却値がスプレッドされて含まれる', () => {
+      const { result } = renderHook(() => useFileSearch(), {
+        wrapper: createTestWrapper(),
+      });
 
-  it('検索クエリがデバウンスされた値としてuseFilesに渡される', async () => {
-    const { useDebounce } = await import('../useDebounce');
-    const { useFiles } = await import('../queries/useFiles');
-
-    const { result } = renderHook(() => useFileSearch(), {
-      wrapper: createTestWrapper(),
-    });
-
-    result.current.setSearchQuery('test query');
-
-    await waitFor(() => {
-      expect(useDebounce).toHaveBeenCalled();
-      expect(useFiles).toHaveBeenCalled();
+      // useFiles から継承されるプロパティ
+      expect(result.current.data).toBeDefined();
+      expect(result.current.isLoading).toBeDefined();
+      expect(result.current.isError).toBeDefined();
     });
   });
 });

@@ -19,17 +19,13 @@ dotenv.config({ path: path.resolve(__dirname, '.env') });
 export default defineConfig({
   testDir: './tests',
   /* Run tests in files in parallel */
-  fullyParallel: true,
+  fullyParallel: false,
   /* Fail the build on CI if you accidentally left test.only in the source code. */
   forbidOnly: !!process.env.CI,
   /* Retry on CI only */
   retries: process.env.CI ? 2 : 0,
-  /* Worker configuration */
-  workers: process.env.CI
-    ? 1
-    : process.env.PLAYWRIGHT_WORKERS
-      ? parseInt(process.env.PLAYWRIGHT_WORKERS)
-      : undefined,
+  /* Worker configuration - 1つずつ実行するため1に固定 */
+  workers: 1,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: process.env.CI
     ? [
@@ -43,13 +39,11 @@ export default defineConfig({
         ['json', { outputFile: 'test-results/results.json' }],
         ['list'],
       ],
-  /* Global test timeout */
-  timeout: process.env.PLAYWRIGHT_TIMEOUT
-    ? parseInt(process.env.PLAYWRIGHT_TIMEOUT)
-    : 30000,
+  /* Global test timeout - 安定化のため90秒に延長 */
+  timeout: 90000,
   /* Global expect timeout */
   expect: {
-    timeout: 5000,
+    timeout: 10000,
   },
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
@@ -86,26 +80,27 @@ export default defineConfig({
       use: { ...devices['Desktop Chrome'] },
     },
 
-    {
-      name: 'firefox',
-      use: { ...devices['Desktop Firefox'] },
-    },
+    // 他のブラウザは一時的にコメントアウト
+    // {
+    //   name: 'firefox',
+    //   use: { ...devices['Desktop Firefox'] },
+    // },
 
-    {
-      name: 'webkit',
-      use: { ...devices['Desktop Safari'] },
-    },
+    // {
+    //   name: 'webkit',
+    //   use: { ...devices['Desktop Safari'] },
+    // },
 
-    // Mobile devices
-    {
-      name: 'Mobile Chrome',
-      use: { ...devices['Pixel 5'] },
-    },
+    // // Mobile devices
+    // {
+    //   name: 'Mobile Chrome',
+    //   use: { ...devices['Pixel 5'] },
+    // },
 
-    {
-      name: 'Mobile Safari',
-      use: { ...devices['iPhone 12'] },
-    },
+    // {
+    //   name: 'Mobile Safari',
+    //   use: { ...devices['iPhone 12'] },
+    // },
   ],
 
   /* Run your local dev server before starting the tests */

@@ -53,7 +53,7 @@ export const LoginForm: React.FC = () => {
       // ログイン処理を実行
       mutate(credentials, {
         onSuccess: () => {
-          // ログイン成功後、元のページまたはホームページにリダイレクト
+          // ログイン成功後、元のページまたはファイル一覧ページにリダイレクト
           void navigate(pathname, {
             replace: true,
           });

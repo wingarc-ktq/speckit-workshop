@@ -26,7 +26,7 @@ export const FileListGrid: React.FC<FileListGridProps> = ({ files, isLoading, on
 
   if (files.length === 0) {
     return (
-      <Box sx={{ p: 8, textAlign: 'center' }}>
+      <Box sx={{ p: 8, textAlign: 'center' }} data-testid="empty-state">
         <Typography variant="body1" color="text.secondary">
           ファイルが見つかりません
         </Typography>
