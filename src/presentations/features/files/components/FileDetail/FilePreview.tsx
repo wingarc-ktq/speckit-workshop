@@ -113,6 +113,7 @@ export const FilePreview = ({ file }: FilePreviewProps) => {
         <img
           src={downloadUrl}
           alt={name}
+          loading="lazy"
           style={{
             maxWidth: '100%',
             maxHeight: '100%',

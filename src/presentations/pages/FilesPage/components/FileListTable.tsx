@@ -5,7 +5,6 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import Box from '@mui/material/Box';
 import Checkbox from '@mui/material/Checkbox';
 import Chip from '@mui/material/Chip';
-import CircularProgress from '@mui/material/CircularProgress';
 import IconButton from '@mui/material/IconButton';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -19,6 +18,7 @@ import { formatFileSize } from '@/domain/models/files/FileInfo';
 import { TAG_COLOR_PALETTE } from '@/domain/models/files/TagInfo';
 import { FileIcon } from '@/presentations/components';
 import { DeleteConfirmDialog } from '@/presentations/components/dialogs';
+import { FileListTableSkeleton } from '@/presentations/components/LoadingSkeletons';
 import { useDeleteFile } from '@/presentations/hooks/mutations/useDeleteFile';
 import { useTags } from '@/presentations/hooks/queries/useTags';
 
@@ -63,11 +63,7 @@ export const FileListTable: React.FC<FileListTableProps> = ({
   const isAllSelected = files.length > 0 && selectedFileIds.length === files.length;
   const isIndeterminate = selectedFileIds.length > 0 && selectedFileIds.length < files.length;
   if (isLoading) {
-    return (
-      <Box sx={{ display: 'flex', justifyContent: 'center', p: 8 }}>
-        <CircularProgress />
-      </Box>
-    );
+    return <FileListTableSkeleton rows={5} />;
   }
 
   if (files.length === 0) {

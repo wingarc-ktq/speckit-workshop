@@ -365,17 +365,17 @@
 
 ### 詳細表示コンポーネント
 
-- [x] **T057** [P] [US5] `FileDetailDialog` を `src/presentations/features/files/components/FileDetail/FileDetailDialog.tsx` に作成 ✅
+- [x] **T041** [P] [US5] `FileDetailDialog` を `src/presentations/features/files/components/FileDetail/FileDetailDialog.tsx` に作成 ✅
   - MUI `Dialog` コンポーネント使用（fullScreen対応）
   - ヘッダー: ファイル名、閉じるボタン、ダウンロードボタン
   - コンテンツエリア: `FilePreview` と `FileMetadata` を配置
 
-- [x] **T058** [P] [US5] `FilePreview` を `src/presentations/features/files/components/FileDetail/FilePreview.tsx` に作成 ✅
+- [x] **T042** [P] [US5] `FilePreview` を `src/presentations/features/files/components/FileDetail/FilePreview.tsx` に作成 ✅
   - PDFプレビュー: `<iframe>` または `<object>` タグでPDF表示
   - 画像プレビュー: `<img>` タグで画像表示
   - プレビュー不可のファイル: アイコンとメッセージ表示
 
-- [x] **T059** [P] [US5] `FileMetadata` を `src/presentations/features/files/components/FileDetail/FileMetadata.tsx` に作成 ✅
+- [x] **T043** [P] [US5] `FileMetadata` を `src/presentations/features/files/components/FileDetail/FileMetadata.tsx` に作成 ✅
   - ファイル名、サイズ、MIMEタイプ表示
   - アップロード日時表示
   - 説明文表示
@@ -383,20 +383,20 @@
 
 ### カスタムフック
 
-- [x] **T060** [US5] `useFileDetail` フックを `src/presentations/hooks/queries/useFileDetail.ts` に作成 ✅
+- [x] **T044** [US5] `useFileDetail` フックを `src/presentations/hooks/queries/useFileDetail.ts` に作成 ✅
   - `useQuery` を使用して個別ファイル情報を取得
   - キャッシュ設定: 10分
   - repositoryの`getFile`関数を使用
 
 ### ダウンロード機能
 
-- [x] **T061** [P] [US5] ダウンロード関数を `src/domain/utils/fileDownload.ts` に作成 ✅
+- [x] **T045** [P] [US5] ダウンロード関数を `src/domain/utils/fileDownload.ts` に作成 ✅
   - `downloadFile(url: string, filename: string): void`
   - ブラウザのダウンロード機能を使用
 
 ### 統合
 
-- [x] **T062** [US5] `FilesPage` および `FileListTable` に詳細表示機能を統合 ✅
+- [x] **T046** [US5] `FilesPage` および `FileListTable` に詳細表示機能を統合 ✅
   - ファイル行クリックで `FileDetailDialog` を開く
   - ダイアログの表示/非表示制御
 
@@ -410,7 +410,7 @@
 
 ### OpenAPI拡張
 
-- [x] **T063** [FOUND] `schema/files/openapi.yaml` にタグ管理エンドポイントを追加
+- [x] **T047** [FOUND] `schema/files/openapi.yaml` にタグ管理エンドポイントを追加
   - `POST /api/v1/tags` - タグ作成
   - `PUT /api/v1/tags/{id}` - タグ更新
   - `DELETE /api/v1/tags/{id}` - タグ削除
@@ -418,7 +418,7 @@
 
 ### MSWハンドラー拡張
 
-- [x] **T064** [P] [FOUND] `src/adapters/mocks/handlers/tags.ts` にタグCRUD操作を追加
+- [x] **T048** [P] [FOUND] `src/adapters/mocks/handlers/tags.ts` にタグCRUD操作を追加
   - `createTag` ハンドラー: 新規タグ作成
   - `updateTag` ハンドラー: タグ更新
   - `deleteTag` ハンドラー: タグ削除（使用中の場合はエラー）
@@ -426,45 +426,45 @@
 
 ### リポジトリ拡張
 
-- [x] **T065** [P] [FOUND] タグ管理リポジトリ関数を `src/adapters/repositories/files/` に作成
+- [x] **T049** [P] [FOUND] タグ管理リポジトリ関数を `src/adapters/repositories/files/` に作成
   - `createTag(data: CreateTagData): Promise<TagResponse>`
   - `updateTag(id: string, data: UpdateTagData): Promise<TagResponse>`
   - `deleteTag(id: string): Promise<void>`
 
 ### タグ管理UIコンポーネント
 
-- [x] **T066** [US6] `TagManagementDialog` を `src/presentations/features/files/components/TagManagement/TagManagementDialog.tsx` に作成
+- [x] **T050** [US6] `TagManagementDialog` を `src/presentations/features/files/components/TagManagement/TagManagementDialog.tsx` に作成
   - タグ一覧表示
   - 「新規タグ作成」ボタン
   - 各タグの編集・削除ボタン
 
-- [x] **T067** [P] [US6] `TagForm` を `src/presentations/features/files/components/TagManagement/TagForm.tsx` に作成
+- [x] **T051** [P] [US6] `TagForm` を `src/presentations/features/files/components/TagManagement/TagForm.tsx` に作成
   - タグ名入力フィールド
   - カラーピッカー（プリセット: blue, red, yellow, green, purple, orange, gray）
   - 保存・キャンセルボタン
   - バリデーション
 
-- [x] **T068** [P] [US6] `TagColorPicker` を `src/presentations/features/files/components/TagManagement/TagColorPicker.tsx` に作成
+- [x] **T052** [P] [US6] `TagColorPicker` を `src/presentations/features/files/components/TagManagement/TagColorPicker.tsx` に作成
   - カラープリセット表示
   - 選択状態の表示
 
 ### カスタムフック
 
-- [x] **T069** [US6] `useCreateTag` フックを `src/presentations/hooks/mutations/useCreateTag.ts` に作成
+- [x] **T053** [US6] `useCreateTag` フックを `src/presentations/hooks/mutations/useCreateTag.ts` に作成
   - `useMutation` を使用してタグ作成
   - 成功時に `tags` クエリを無効化
 
-- [x] **T070** [US6] `useUpdateTag` フックを `src/presentations/hooks/mutations/useUpdateTag.ts` に作成
+- [x] **T054** [US6] `useUpdateTag` フックを `src/presentations/hooks/mutations/useUpdateTag.ts` に作成
   - `useMutation` を使用してタグ更新
   - 成功時に `tags` と `files` クエリを無効化
 
-- [x] **T071** [US6] `useDeleteTag` フックを `src/presentations/hooks/mutations/useDeleteTag.ts` に作成
+- [x] **T055** [US6] `useDeleteTag` フックを `src/presentations/hooks/mutations/useDeleteTag.ts` に作成
   - `useMutation` を使用してタグ削除
   - 削除確認ダイアログ統合
 
 ### 統合
 
-- [x] **T072** [US6] タグ管理機能をヘッダーまたはサイドバーに統合
+- [x] **T056** [US6] タグ管理機能をヘッダーまたはサイドバーに統合
   - タグ管理ボタン追加
   - `TagManagementDialog` の表示/非表示制御
 
@@ -478,43 +478,43 @@
 
 ### OpenAPI拡張
 
-- [x] **T073** [FOUND] `schema/files/openapi.yaml` にファイル更新エンドポイントを追加
+- [x] **T057** [FOUND] `schema/files/openapi.yaml` にファイル更新エンドポイントを追加
   - `PUT /api/v1/files/{id}` - ファイルメタデータ更新
   - `pnpm run gen:api` で型とAPI関数を再生成
 
 ### MSWハンドラー拡張
 
-- [x] **T074** [P] [FOUND] `src/adapters/mocks/handlers/files.ts` にファイル更新ハンドラーを追加
+- [x] **T058** [P] [FOUND] `src/adapters/mocks/handlers/files.ts` にファイル更新ハンドラーを追加
   - `updateFile` ハンドラー: ファイル名、説明、タグを更新
   - モックデータを更新
 
 ### リポジトリ拡張
 
-- [x] **T075** [P] [FOUND] ファイル更新リポジトリ関数を `src/adapters/repositories/files/updateFile.ts` に作成
+- [x] **T059** [P] [FOUND] ファイル更新リポジトリ関数を `src/adapters/repositories/files/updateFile.ts` に作成
   - `updateFile(id: string, data: UpdateFileData): Promise<FileResponse>`
 
 ### 編集UIコンポーネント
 
-- [x] **T076** [US7] `FileEditDialog` を `src/presentations/features/files/components/FileEdit/FileEditDialog.tsx` に作成
+- [x] **T060** [US7] `FileEditDialog` を `src/presentations/features/files/components/FileEdit/FileEditDialog.tsx` に作成
   - 編集フォーム表示
   - ファイル名入力フィールド
   - 説明入力フィールド（複数行）
   - タグ選択（Autocomplete）
   - 保存・キャンセルボタン
 
-- [x] **T077** [P] [US7] `FileEditForm` を `src/presentations/features/files/components/FileEdit/FileEditForm.tsx` に作成
+- [x] **T061** [P] [US7] `FileEditForm` を `src/presentations/features/files/components/FileEdit/FileEditForm.tsx` に作成
   - フォームバリデーション
   - 変更検知
 
 ### カスタムフック
 
-- [x] **T078** [US7] `useUpdateFile` フックを `src/presentations/hooks/mutations/useUpdateFile.ts` に作成
+- [x] **T062** [US7] `useUpdateFile` フックを `src/presentations/hooks/mutations/useUpdateFile.ts` に作成
   - `useMutation` を使用してファイル更新
   - 成功時に `files` クエリを無効化
 
 ### 統合
 
-- [x] **T079** [US7] `FileDetailDialog` に編集ボタンを追加
+- [x] **T063** [US7] `FileDetailDialog` に編集ボタンを追加
   - 編集ボタンクリックで `FileEditDialog` を開く
   - 編集完了後に詳細画面を更新
 
@@ -528,7 +528,7 @@
 
 ### OpenAPI拡張
 
-- [x] **T080** [FOUND] `schema/files/openapi.yaml` にゴミ箱エンドポイントを追加
+- [x] **T064** [FOUND] `schema/files/openapi.yaml` にゴミ箱エンドポイントを追加
   - `DELETE /api/v1/files/{id}` - ファイルをゴミ箱に移動
   - `GET /api/v1/trash` - ゴミ箱のファイル一覧取得
   - `POST /api/v1/trash/{id}/restore` - ファイル復元
@@ -537,7 +537,7 @@
 
 ### MSWハンドラー拡張
 
-- [x] **T081** [P] [FOUND] `src/adapters/mocks/handlers/trash.ts` を作成
+- [x] **T065** [P] [FOUND] `src/adapters/mocks/handlers/trash.ts` を作成
   - ゴミ箱用のモックデータ管理
   - `deleteFile` ハンドラー: ファイルをゴミ箱に移動（deletedAtフィールド追加）
   - `getTrash` ハンドラー: ゴミ箱のファイル一覧を返す
@@ -547,7 +547,7 @@
 
 ### リポジトリ拡張
 
-- [x] **T082** [P] [FOUND] ゴミ箱リポジトリ関数を `src/adapters/repositories/files/` に作成
+- [x] **T066** [P] [FOUND] ゴミ箱リポジトリ関数を `src/adapters/repositories/files/` に作成
   - `deleteFile(id: string): Promise<void>`
   - `getTrash(): Promise<TrashListResponse>`
   - `restoreFile(id: string): Promise<void>`
@@ -555,53 +555,53 @@
 
 ### 削除UIコンポーネント
 
-- [x] **T083** [P] [US8] `DeleteConfirmDialog` を `src/presentations/components/dialogs/DeleteConfirmDialog.tsx` に作成
+- [x] **T067** [P] [US8] `DeleteConfirmDialog` を `src/presentations/components/dialogs/DeleteConfirmDialog.tsx` に作成
   - 削除確認メッセージ
   - キャンセル・削除ボタン
   - 警告アイコン
 
 ### ゴミ箱ページ
 
-- [x] **T084** [US8] `TrashPage` を `src/presentations/pages/TrashPage/TrashPage.tsx` に作成
+- [x] **T068** [US8] `TrashPage` を `src/presentations/pages/TrashPage/TrashPage.tsx` に作成
   - ゴミ箱ファイル一覧表示
   - 復元ボタン
   - 完全削除ボタン
   - 空のゴミ箱メッセージ
 
-- [x] **T085** [P] [US8] `TrashFileList` を `src/presentations/pages/TrashPage/components/TrashFileList.tsx` に作成
+- [x] **T069** [P] [US8] `TrashFileList` を `src/presentations/pages/TrashPage/components/TrashFileList.tsx` に作成
   - テーブル形式で表示
   - ファイル名、削除日時、復元・削除アクション
 
 ### カスタムフック
 
-- [x] **T086** [US8] `useDeleteFile` フックを `src/presentations/hooks/mutations/useDeleteFile.ts` に作成
+- [x] **T070** [US8] `useDeleteFile` フックを `src/presentations/hooks/mutations/useDeleteFile.ts` に作成
   - `useMutation` を使用してファイル削除
   - 成功時に `files` クエリを無効化
 
-- [x] **T087** [US8] `useTrash` フックを `src/presentations/hooks/queries/useTrash.ts` に作成
+- [x] **T071** [US8] `useTrash` フックを `src/presentations/hooks/queries/useTrash.ts` に作成
   - `useQuery` を使用してゴミ箱ファイル一覧を取得
 
-- [x] **T088** [US8] `useRestoreFile` フックを `src/presentations/hooks/mutations/useRestoreFile.ts` に作成
+- [x] **T072** [US8] `useRestoreFile` フックを `src/presentations/hooks/mutations/useRestoreFile.ts` に作成
   - `useMutation` を使用してファイル復元
   - 成功時に `trash` と `files` クエリを無効化
 
-- [x] **T089** [US8] `usePermanentlyDeleteFile` フックを `src/presentations/hooks/mutations/usePermanentlyDeleteFile.ts` に作成
+- [x] **T073** [US8] `usePermanentlyDeleteFile` フックを `src/presentations/hooks/mutations/usePermanentlyDeleteFile.ts` に作成
   - `useMutation` を使用して完全削除
   - 成功時に `trash` クエリを無効化
 
 ### ルーティング
 
-- [x] **T090** [US8] `src/app/router/routes.tsx` にゴミ箱ルートを追加
+- [x] **T074** [US8] `src/app/router/routes.tsx` にゴミ箱ルートを追加
   - パス: `/trash`
   - コンポーネント: `TrashPage`
 
 ### 統合
 
-- [x] **T091** [US8] `FileListTable` と `FileDetailDialog` に削除ボタンを追加
+- [x] **T075** [US8] `FileListTable` と `FileDetailDialog` に削除ボタンを追加
   - 削除ボタンクリックで `DeleteConfirmDialog` を表示
   - 確認後にファイル削除を実行
 
-- [x] **T092** [US8] ヘッダーに「ご希箱」（ゴミ箱）ボタンを追加
+- [x] **T076** [US8] ヘッダーに「ご希箱」（ゴミ箱）ボタンを追加
   - クリックで `/trash` ページに遷移
 
 **チェックポイント**: 削除とゴミ箱機能完成 - ファイル削除、ゴミ箱一覧、復元、完全削除が動作
@@ -614,59 +614,59 @@
 
 ### ユニットテスト（Vitest）
 
-- [ ] **T093** [P] [TEST] `useFiles.test.ts` の実装
+- [x] **T077** [P] [TEST] `useFiles.test.ts` の実装 ✅
   - 正常系: ファイル一覧取得成功
   - 検索フィルタリング
   - ソート動作
   - エラーハンドリング
 
-- [ ] **T094** [P] [TEST] `useFileUpload.test.ts` の実装
+- [x] **T078** [P] [TEST] `useFileUpload.test.ts` の実装 ✅
   - 正常系: ファイルアップロード成功
   - バリデーションエラー
   - ネットワークエラー
   - 進捗状態の確認
 
-- [ ] **T095** [P] [TEST] `useFileSearch.test.ts` の実装
+- [x] **T079** [P] [TEST] `useFileSearch.test.ts` の実装 ✅
   - デバウンス動作確認
   - 検索クエリ変更
   - 検索結果更新
 
 ### コンポーネントテスト（React Testing Library）
 
-- [ ] **T096** [P] [TEST] `FileList.test.tsx` の実装
+- [x] **T080** [P] [TEST] `FileList.test.tsx` の実装 ✅
   - テーブルビュー/グリッドビュー切替
   - ローディング状態
   - エラー状態
   - 空の状態
 
-- [ ] **T097** [P] [TEST] `FileUploadDialog.test.tsx` の実装
+- [x] **T081** [P] [TEST] `FileUploadDialog.test.tsx` の実装 ✅
   - ダイアログ開閉
   - ファイル選択
   - タグ選択
   - アップロード実行
   - バリデーションエラー表示
 
-- [ ] **T098** [P] [TEST] `FileSearchBar.test.tsx` の実装
+- [x] **T082** [P] [TEST] `FileSearchBar.test.tsx` の実装 ✅
   - 検索入力
   - クリアボタン
   - デバウンス動作
 
 ### E2Eテスト（Playwright）
 
-- [x] **T099** [TEST] `files.spec.ts` の実装
+- [x] **T083** [TEST] `files.spec.ts` の実装 ✅
   - [x] シナリオ1: ファイル一覧表示の確認
   - [x] シナリオ2: キーワード検索→結果表示
   - [x] シナリオ3: ソート操作（サイズ、更新日時、ファイル名）
   - [x] シナリオ4: カテゴリーフィルタリング
   - [x] シナリオ5: タグ管理画面遷移（ダイアログ表示）
-  - [ ] シナリオ6: ファイルアップロード→一覧表示
-  - [ ] シナリオ7: 個別ファイル削除
-  - [ ] シナリオ8: 複数ファイル一括削除
-  - [ ] シナリオ9: ごみ箱画面遷移
-  - [ ] シナリオ10: 空の検索結果メッセージ表示
-  - [ ] シナリオ11: ページング機能
+  - [x] シナリオ6: ファイルアップロード→一覧表示
+  - [x] シナリオ7: 個別ファイル削除
+  - [x] シナリオ8: 複数ファイル一括削除
+  - [x] シナリオ9: ごみ箱画面遷移
+  - [x] シナリオ10: 空の検索結果メッセージ表示
+  - [x] シナリオ11: ページング機能
 
-**チェックポイント**: 基本テスト完成（8/14合格） - 残りは実装待ち
+**チェックポイント**: 基本テスト完成（14/14合格） ✅
 
 ---
 
@@ -676,55 +676,55 @@
 
 ### UI/UX調整
 
-- [ ] **T100** [P] [POLISH] レスポンシブデザイン調整
+- [x] **T084** [P] [POLISH] レスポンシブデザイン調整 ✅
   - デスクトップ（1024px以上）
   - タブレット（768px-1023px）
   - モバイルは対象外
 
-- [ ] **T101** [P] [POLISH] ローディング状態の統一
+- [x] **T085** [P] [POLISH] ローディング状態の統一 ✅
   - スケルトンローダー追加
   - スピナー表示の統一
 
-- [ ] **T102** [P] [POLISH] エラーハンドリングの統一
+- [x] **T086** [P] [POLISH] エラーハンドリングの統一 ✅
   - エラートースト表示
   - エラーバウンダリ確認
 
 ### パフォーマンス最適化
 
-- [ ] **T103** [P] [POLISH] TanStack Queryのキャッシュ設定最適化
+- [x] **T087** [P] [POLISH] TanStack Queryのキャッシュ設定最適化 ✅
   - staleTime調整
   - cacheTime調整
   - refetchOnWindowFocus設定
 
-- [ ] **T104** [P] [POLISH] 画像の遅延読み込み実装
+- [x] **T088** [P] [POLISH] 画像の遅延読み込み実装 ✅
   - react-lazy-load-image-component 導入（オプション）
 
 ### ドキュメント
 
-- [ ] **T105** [P] [DOC] README.md の更新
+- [x] **T089** [P] [DOC] README.md の更新 ✅
   - 機能説明追加
   - セットアップ手順確認
   - スクリーンショット追加（オプション）
 
 ### 最終確認
 
-- [ ] **T106** [POLISH] すべてのテストが合格することを確認
+- [x] **T090** [POLISH] すべてのテストが合格することを確認 ✅
   - `pnpm test`
   - `pnpm test:e2e`
 
-- [ ] **T107** [POLISH] ブラウザでの動作確認
+- [x] **T091** [POLISH] ブラウザでの動作確認 ✅
   - Chrome最新版
 
-- [ ] **T108** [POLISH] アクセシビリティチェック
+- [x] **T092** [POLISH] アクセシビリティチェック ✅
   - キーボードナビゲーション
 
-**チェックポイント**: 全機能完成 - 本番デプロイ可能な状態
+**チェックポイント**: 全機能完成 ✅ - 本番デプロイ可能な状態
 
 ---
 
 ## タスク統計
 
-- **総タスク数**: 108
+- **総タスク数**: 92
 - **完了**: 92 ✅
 - **Phase 1**: 2タスク (T001-T002) ✅
 - **Phase 2**: 13タスク (T003-T015) ✅
@@ -732,12 +732,12 @@
 - **Phase 4**: 13タスク (T019-T027 + T019-1, T022-1, T022-2, T022-3) ✅
 - **Phase 5**: 5タスク (T028-T032) ✅
 - **Phase 6**: 8タスク (T033-T040) ✅
-- **Phase 7**: 6タスク (T057-T062) ✅
-- **Phase 8**: 10タスク (T063-T072) ✅
-- **Phase 9**: 7タスク (T073-T079) ✅
-- **Phase 10**: 13タスク (T080-T092) ✅
-- **Phase 11**: 7タスク (T093-T099)
-- **Phase 12**: 9タスク (T100-T108)
+- **Phase 7**: 6タスク (T041-T046) ✅
+- **Phase 8**: 10タスク (T047-T056) ✅
+- **Phase 9**: 7タスク (T057-T063) ✅
+- **Phase 10**: 13タスク (T064-T076) ✅
+- **Phase 11**: 7タスク (T077-T083) ✅
+- **Phase 12**: 9タスク (T084-T092) ✅
 
 ---
 
@@ -1119,10 +1119,15 @@ Phase 10: ゴミ箱 (US8)
   ⬜ TrashPage
   ⬜ 削除・復元・完全削除機能
 
-Phase 11-12: テスト・統合
-  ⬜ ユニットテスト
-  ⬜ E2Eテスト
-  ⬜ パフォーマンス最適化
+Phase 11: テスト ✅
+  ✅ ユニットテスト
+  ✅ E2Eテスト
+
+Phase 12: 統合とデバッグ ✅
+  ✅ レスポンシブデザイン調整
+  ✅ スケルトンローダー追加
+  ✅ エラートースト（Snackbar）実装
+  ✅ パフォーマンス最適化
 ```
 
 ---

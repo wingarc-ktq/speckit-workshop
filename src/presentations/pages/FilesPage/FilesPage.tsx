@@ -7,6 +7,7 @@ import GridViewIcon from '@mui/icons-material/GridView';
 import LabelIcon from '@mui/icons-material/Label';
 import ListIcon from '@mui/icons-material/List';
 import TableRowsIcon from '@mui/icons-material/TableRows';
+import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Fab from '@mui/material/Fab';
@@ -72,7 +73,11 @@ export const FilesPage: React.FC = () => {
     sortOrder,
   };
 
-  const { data: filesData, isLoading } = useFiles(queryParams);
+  const {
+    data: filesData,
+    isLoading,
+    isError: isFilesError,
+  } = useFiles(queryParams);
 
   const { data: tagsData } = useTags();
 
@@ -320,6 +325,7 @@ export const FilesPage: React.FC = () => {
                 >
                   <ToggleButton
                     value="table"
+                    aria-label="テーブル表示"
                     sx={{
                       border: 'none',
                       '&.Mui-selected': { bgcolor: '#ff6900', color: 'white' },
@@ -329,6 +335,7 @@ export const FilesPage: React.FC = () => {
                   </ToggleButton>
                   <ToggleButton
                     value="grid"
+                    aria-label="グリッド表示"
                     sx={{
                       border: 'none',
                       '&.Mui-selected': { bgcolor: '#ff6900', color: 'white' },
@@ -380,6 +387,12 @@ export const FilesPage: React.FC = () => {
               resultCount={filesData?.total || 0}
               isLoading={isLoading}
             />
+
+            {isFilesError && (
+              <Box sx={{ px: { xs: 2, md: 3 }, pb: { xs: 2, md: 3 } }}>
+                <Alert severity="error">ファイル一覧の取得に失敗しました。</Alert>
+              </Box>
+            )}
 
             {/* ファイル一覧 */}
             {viewMode === 'table' ? (

@@ -1,11 +1,11 @@
 import React from 'react';
 
 import Box from '@mui/material/Box';
-import CircularProgress from '@mui/material/CircularProgress';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 
 import type { FileInfo } from '@/adapters/generated/files';
+import { FileListGridSkeleton } from '@/presentations/components/LoadingSkeletons';
 
 import { FileListItem } from './FileListItem';
 
@@ -17,11 +17,7 @@ interface FileListGridProps {
 
 export const FileListGrid: React.FC<FileListGridProps> = ({ files, isLoading, onFileClick }) => {
   if (isLoading) {
-    return (
-      <Box sx={{ display: 'flex', justifyContent: 'center', p: 8 }}>
-        <CircularProgress />
-      </Box>
-    );
+    return <FileListGridSkeleton items={8} />;
   }
 
   if (files.length === 0) {
