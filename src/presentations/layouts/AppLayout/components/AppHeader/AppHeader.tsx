@@ -95,7 +95,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, flex: 1 }}>
             {/* Search Bar */}
             <TextField
-              value={searchKeyword}
+              value={searchKeyword ?? ''}
               onChange={handleSearchChange}
               placeholder="文書を検索..."
               size="small"
@@ -128,7 +128,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
             {/* View Toggle */}
             {onViewChange && (
               <ToggleButtonGroup
-                value={currentView}
+                value={currentView ?? 'list'}
                 exclusive
                 onChange={handleViewChange}
                 size="small"

@@ -108,7 +108,7 @@ export function FileList({
           <TableHead>
             <TableRow sx={{ backgroundColor: '#f5f5f5' }}>
               <TableCell width="5%" padding="checkbox">
-                <Checkbox disabled />
+                <Checkbox disabled checked={false} indeterminate={false} />
               </TableCell>
               <TableCell width="30%">ファイル名</TableCell>
               <TableCell width="15%">タグ</TableCell>

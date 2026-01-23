@@ -32,7 +32,11 @@ import { useDocumentHeader } from '@/presentations/layouts/AppLayout/contexts';
  * US1（アップロード）と US2（一覧表示・ソート・ページネーション）を統合
  */
 export function DocumentManagementPage() {
-  const documentHeader = useDocumentHeader();
+  const {
+    setShowDocumentTools,
+    registerCallbacks,
+    setCurrentView: setHeaderView,
+  } = useDocumentHeader();
   const [showUploadDialog, setShowUploadDialog] = useState(false);
   const [showFilterDialog, setShowFilterDialog] = useState(false);
   const [view, setView] = useState<'list' | 'grid'>('list');
@@ -56,18 +60,20 @@ export function DocumentManagementPage() {
 
   // ヘッダーツールを有効化し、コールバックを登録
   useEffect(() => {
-    documentHeader.setShowDocumentTools(true);
-    documentHeader.registerCallbacks({
+    const callbacks = {
       onSearch: setSearchKeyword,
       onViewChange: setView,
       onUploadClick: () => setShowUploadDialog(true),
       onFilterClick: () => setShowFilterDialog(true),
-    });
+    };
+
+    setShowDocumentTools(true);
+    registerCallbacks(callbacks);
 
     return () => {
-      documentHeader.setShowDocumentTools(false);
+      setShowDocumentTools(false);
     };
-  }, [documentHeader]);
+  }, [registerCallbacks, setShowDocumentTools]);
 
   // localStorage から設定を復元
   useEffect(() => {
@@ -78,17 +84,17 @@ export function DocumentManagementPage() {
 
     if (savedView) {
       setView(savedView);
-      documentHeader.setCurrentView(savedView);
+      setHeaderView(savedView);
     }
     if (savedPageSize) setPageSize(parseInt(savedPageSize, 10));
     if (savedSortBy) setSortBy(savedSortBy);
     if (savedSortOrder) setSortOrder(savedSortOrder);
-  }, [documentHeader]);
+  }, [setHeaderView]);
 
   // ビューが変更されたらlocalStorageとヘッダーを更新
   useEffect(() => {
-    documentHeader.setCurrentView(view);
-  }, [view, documentHeader]);
+    setHeaderView(view);
+  }, [view, setHeaderView]);
 
   // 文書一覧を取得
   const { data, isLoading, error } = useDocuments({

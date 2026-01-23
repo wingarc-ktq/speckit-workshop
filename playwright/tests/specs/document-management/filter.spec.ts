@@ -6,7 +6,7 @@ import { testUsers } from '../../fixtures/testUsers';
  * US4: タグでフィルタリング
  *
  * テスト対象:
- * - GET /files?tagIds[]=id1&tagIds[]=id2 でのフィルタリング
+ * - GET /api/files?tagIds[]=id1&tagIds[]=id2 でのフィルタリング
  * - 単一タグでのフィルタリング
  * - 複数タグのANDフィルタリング
  * - フィルタのクリア機能
@@ -50,6 +50,111 @@ const prepareAuthenticatedPage = async (page: Page) => {
     });
   });
 
+  const tagList = [
+    { id: 'tag-doc-001', name: '請求書', color: 'primary' },
+    { id: 'tag-doc-002', name: '契約書', color: 'secondary' },
+    { id: 'tag-prog-001', name: '完了', color: 'info' },
+    { id: 'tag-prog-002', name: '未完了', color: 'error' },
+    { id: 'tag-prog-003', name: '進行中', color: 'info' },
+  ];
+
+  await page.route('**/api/tags', async (route) => {
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify(tagList),
+    });
+  });
+
+  // Document list mock: default and filtered responses
+  const defaultDocuments = [
+    {
+      id: 'doc-010',
+      fileName: '提案書_D社.pptx',
+      fileSize: 1677721,
+      fileFormat: 'pptx',
+      uploadedAt: '2025-01-17T11:20:00Z',
+      updatedAt: '2025-01-17T11:20:00Z',
+      uploadedByUserId: 'user-321',
+      tags: [
+        { id: 'tag-doc-004', name: '提案書', color: 'success' },
+        { id: 'tag-prog-001', name: '完了', color: 'info' },
+      ],
+      isDeleted: false,
+      deletedAt: null,
+    },
+  ];
+
+  const invoiceDocument = {
+    id: 'doc-001',
+    fileName: '請求書_20250110.pdf',
+    fileSize: 2048576,
+    fileFormat: 'pdf',
+    uploadedAt: '2025-01-10T08:30:00Z',
+    updatedAt: '2025-01-10T08:30:00Z',
+    uploadedByUserId: 'user-123',
+    tags: [
+      { id: 'tag-doc-001', name: '請求書', color: 'primary' },
+      { id: 'tag-prog-003', name: '進行中', color: 'info' },
+    ],
+    isDeleted: false,
+    deletedAt: null,
+  };
+
+  const contractDocument = {
+    id: 'doc-002',
+    fileName: '契約書_20250108.docx',
+    fileSize: 1024576,
+    fileFormat: 'docx',
+    uploadedAt: '2025-01-08T14:15:00Z',
+    updatedAt: '2025-01-08T14:15:00Z',
+    uploadedByUserId: 'user-456',
+    tags: [
+      { id: 'tag-doc-002', name: '契約書', color: 'secondary' },
+      { id: 'tag-prog-002', name: '未完了', color: 'error' },
+    ],
+    isDeleted: false,
+    deletedAt: null,
+  };
+
+  await page.route('**/api/files', async (route) => {
+    const url = new URL(route.request().url());
+    const tagIds = [
+      ...url.searchParams.getAll('tagIds'),
+      ...url.searchParams.getAll('tagIds[]'),
+    ];
+    url.searchParams.forEach((value, key) => {
+      if (key.startsWith('tagIds[')) {
+        tagIds.push(value);
+      }
+    });
+
+    let data;
+    if (tagIds.includes('tag-doc-001') && tagIds.includes('tag-doc-002')) {
+      data = [];
+    } else if (tagIds.includes('tag-doc-001')) {
+      data = [invoiceDocument];
+    } else if (tagIds.includes('tag-doc-002')) {
+      data = [contractDocument];
+    } else {
+      data = [...defaultDocuments, invoiceDocument, contractDocument];
+    }
+
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({
+        data,
+        pagination: {
+          page: 1,
+          limit: 20,
+          total: data.length,
+          totalPages: 1,
+        },
+      }),
+    });
+  });
+
   await page.goto('/');
   await page.waitForLoadState('networkidle');
 
@@ -74,7 +179,8 @@ test.describe('US4: タグでフィルタリング', () => {
     await openFilterDialog(page);
 
     // タグ「請求書」を選択
-    const invoiceChip = page.getByTestId('tag-chip-tag-001');
+    const dialog = page.getByRole('dialog', { name: '絞り込み' });
+    const invoiceChip = dialog.getByTestId('tag-chip-tag-doc-001');
     await expect(invoiceChip).toBeVisible();
     await invoiceChip.click();
 
@@ -103,8 +209,9 @@ test.describe('US4: タグでフィルタリング', () => {
     await openFilterDialog(page);
 
     // 複数のタグを選択
-    const invoiceChip = page.getByTestId('tag-chip-tag-001');
-    const contractChip = page.getByTestId('tag-chip-tag-002');
+    const dialog = page.getByRole('dialog', { name: '絞り込み' });
+    const invoiceChip = dialog.getByTestId('tag-chip-tag-doc-001');
+    const contractChip = dialog.getByTestId('tag-chip-tag-doc-002');
     await expect(invoiceChip).toBeVisible();
     await expect(contractChip).toBeVisible();
     
@@ -136,7 +243,8 @@ test.describe('US4: タグでフィルタリング', () => {
     // まずフィルターを適用
     await openFilterDialog(page);
 
-    const invoiceChip = page.getByTestId('tag-chip-tag-001');
+    const dialog = page.getByRole('dialog', { name: '絞り込み' });
+    const invoiceChip = dialog.getByTestId('tag-chip-tag-doc-001');
     await expect(invoiceChip).toBeVisible();
     await invoiceChip.click();
     
@@ -163,7 +271,7 @@ test.describe('US4: タグでフィルタリング', () => {
     expect(allRows).toBeGreaterThanOrEqual(filteredRows);
   });
 
-  test('T058-4: API契約テスト - GET /files with tagIds param', async ({ page }) => {
+  test('T058-4: API契約テスト - GET /api/files with tagIds param', async ({ page }) => {
     // ネットワークリクエストをキャプチャ
     let capturedRequest: Request | null = null;
     
@@ -176,7 +284,8 @@ test.describe('US4: タグでフィルタリング', () => {
     // フィルターを適用
     await openFilterDialog(page);
 
-    const invoiceChip = page.getByTestId('tag-chip-tag-001');
+    const dialog = page.getByRole('dialog', { name: '絞り込み' });
+    const invoiceChip = dialog.getByTestId('tag-chip-tag-doc-001');
     await expect(invoiceChip).toBeVisible();
     await invoiceChip.click();
     
@@ -193,7 +302,7 @@ test.describe('US4: タグでフィルタリング', () => {
       // tagIds パラメータが含まれることを確認
       const tagIdsParam = url.searchParams.getAll('tagIds') || url.searchParams.getAll('tagIds[]');
       expect(tagIdsParam.length).toBeGreaterThan(0);
-      expect(tagIdsParam).toContain('tag-001');
+      expect(tagIdsParam).toContain('tag-doc-001');
     }
   });
 });

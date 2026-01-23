@@ -62,12 +62,7 @@ export const PDFViewer: React.FC<PDFViewerProps> = ({ fileUrl, height = 480 }) =
             onLoadSuccess={handleLoadSuccess}
             onLoadError={handleLoadError}
           >
-            <Page
-              pageNumber={pageNumber}
-              height={height}
-              renderAnnotationLayer={false}
-              renderTextLayer={false}
-            />
+            <Page pageNumber={pageNumber} height={height} />
           </PdfDocument>
           {numPages && numPages > 1 ? (
             <Stack direction="row" spacing={1} alignItems="center" justifyContent="flex-end" mt={1}>

@@ -184,6 +184,55 @@ pnpm test:e2e:mobile       # モバイルブラウザ
 
 ## 🔧 トラブルシューティング
 
+### API呼び出しで500エラーが返される場合
+
+**原因**: Playwrightで `page.evaluate()` を使用して外部APIを直接呼び出す場合、MSWのモックが機能しません。
+
+**解決方法**: `page.route()` でリクエストをインターセプトして、テストコード内でモックレスポンスを返してください。
+
+```typescript
+// ❌ 不正: 外部URLを直接呼び出し（MSWが機能しない）
+const { status, body } = await page.evaluate(async (baseUrl) => {
+  const res = await fetch(`${baseUrl}/files/doc-001`);
+  return { status: res.status, body: await res.json() };
+}, 'http://localhost:3000/api');
+
+// ✅ 正しい: page.route() でインターセプト
+await page.route('**/api/files/doc-001', async (route) => {
+  await route.fulfill({
+    status: 200,
+    contentType: 'application/json',
+    body: JSON.stringify(mockData),
+  });
+});
+
+// 相対パスでAPIを呼び出し
+const body = await page.evaluate(async () => {
+  const res = await fetch('/api/files/doc-001');
+  return res.json();
+});
+```
+
+### テストがタイムアウトする場合
+
+**原因**: MSWのロード待機が長すぎる、または要素が見つからない。
+
+**解決方法**:
+
+```typescript
+// MSWロード待機をタイムアウト対応に
+try {
+  await page.waitForFunction(() => navigator.serviceWorker?.controller !== null, {
+    timeout: 15000,
+  });
+} catch (e) {
+  console.log('⚠️ MSWロード待機タイムアウト、ページルートでカバー');
+}
+
+// 要素待機時はタイムアウトを明示的に指定
+await page.waitForSelector('[data-testid="element"]', { timeout: 10000 });
+```
+
 **要素が見つからない場合**
 
 ```typescript
@@ -197,6 +246,9 @@ await page.getByRole('button', { name: 'Submit' });
 ```bash
 # リトライ回数を増やす
 pnpm test --retries=3
+
+# UIモードで実行して詳細を確認
+pnpm test:e2e:ui
 ```
 
 ## 📚 参考資料

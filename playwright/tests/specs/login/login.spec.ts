@@ -28,7 +28,7 @@ test.describe('ログイン', () => {
     // 5. ダッシュボードページに遷移すること
     await expect(page).toHaveURL('/');
 
-    // 6. 「ダッシュボード」という見出しが表示されること
+    // 6. 文書一覧画面が表示され、アップロードボタンが見えること
     await expect(await dashboardPage.getDashboardHeading()).toBeVisible();
   });
 

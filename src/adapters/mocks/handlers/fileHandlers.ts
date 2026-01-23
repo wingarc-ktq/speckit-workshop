@@ -286,7 +286,17 @@ function handleGetDocuments() {
   return http.get(`${API_BASE_URL}/files`, ({ request }) => {
     const url = new URL(request.url);
     const search = url.searchParams.get('search')?.toLowerCase() || '';
-    const tagIdsParam = url.searchParams.getAll('tagIds') || [];
+    const tagIdsParam = [
+      ...url.searchParams.getAll('tagIds'),
+      ...url.searchParams.getAll('tagIds[]'),
+    ];
+
+    // Axios can serialize arrays as tagIds[0]=...; include those too
+    url.searchParams.forEach((value, key) => {
+      if (key.startsWith('tagIds[')) {
+        tagIdsParam.push(value);
+      }
+    });
     const page = parseInt(url.searchParams.get('page') || '1');
     const limit = parseInt(url.searchParams.get('limit') || '20');
     const sortBy = url.searchParams.get('sortBy') || 'uploadedAt';
@@ -472,13 +482,17 @@ function handleDownloadDocument() {
 
     // Convert base64 PDF to ArrayBuffer
     const pdfBytes = base64ToUint8Array(MOCK_PDF_BASE64);
-    
+
+    // Content-Disposition に非ASCIIが含まれると MSW が ISO-8859-1 変換で落ちるので RFC 5987 形式にエスケープ
+    const encodedFilename = encodeURIComponent(doc.fileName);
+    const fallbackFilename = 'download.pdf';
+
     return new HttpResponse(pdfBytes.buffer, {
       status: 200,
       headers: {
         'Content-Type': 'application/pdf',
         'Content-Length': String(pdfBytes.buffer.byteLength),
-        'Content-Disposition': `inline; filename="${doc.fileName}"`,
+        'Content-Disposition': `inline; filename="${fallbackFilename}"; filename*=UTF-8''${encodedFilename}`,
       },
     });
   });

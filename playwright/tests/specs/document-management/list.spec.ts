@@ -10,26 +10,26 @@ import { test, expect } from '@playwright/test';
 test.describe('文書一覧表示 (US2)', () => {
   test.beforeEach(async ({ page }) => {
     // ログイン
-    await page.goto('http://localhost:5174/login');
+    await page.goto('/login');
     await page.getByRole('textbox', { name: 'メールアドレスまたはユーザー名' }).fill('test@example.com');
     await page.getByRole('textbox', { name: 'パスワード' }).fill('password123');
     await page.getByRole('button', { name: 'ログイン' }).click();
     await page.waitForURL('**/');
   });
 
-  test('GET /filesエンドポイントがページネーション対応で文書一覧を取得する', async ({
+  test('GET /api/filesエンドポイントがページネーション対応で文書一覧を取得する', async ({
     page,
   }) => {
     // 文書管理ページにアクセス
-    await page.goto('http://localhost:5174/documents');
+    await page.goto('/');
     
     // ローディングの完了を待機
     await page.waitForTimeout(2000);
     
-    // リクエスト検証: ?page=1&limit=20
+    // リクエスト検証: GET /api/files?page=1&limit=20
     const requests = [];
     page.on('response', (response) => {
-      if (response.url().includes('/files') && response.status() === 200) {
+      if (response.url().includes('/api/files') && response.status() === 200) {
         requests.push(response.url());
       }
     });
@@ -41,7 +41,7 @@ test.describe('文書一覧表示 (US2)', () => {
   });
 
   test('ソート機能で文書一覧をファイル名でソートできる', async ({ page }) => {
-    await page.goto('http://localhost:5174/documents');
+    await page.goto('/');
     await page.waitForTimeout(2000);
 
     // ソートコントロールを操作
@@ -52,7 +52,7 @@ test.describe('文書一覧表示 (US2)', () => {
   });
 
   test('ページネーション機能でページを切り替えられる', async ({ page }) => {
-    await page.goto('http://localhost:5174/documents');
+    await page.goto('/');
     await page.waitForTimeout(2000);
 
     // ページネーションボタンの確認
@@ -68,7 +68,7 @@ test.describe('文書一覧表示 (US2)', () => {
   });
 
   test('結果がない場合、空状態メッセージが表示される', async ({ page }) => {
-    await page.goto('http://localhost:5174/documents');
+    await page.goto('/');
     await page.waitForTimeout(2000);
 
     // 文書がない場合のEmpty State

@@ -24,7 +24,8 @@ export class DashboardPage extends BasePage {
    * ダッシュボードの見出しを取得
    */
   async getDashboardHeading() {
-    return this.page.getByRole('heading', { name: 'ダッシュボード', level: 1 });
+    // 文書一覧画面で表示されるアップロードボタンをログイン完了のシグナルとして使用
+    return this.page.getByRole('button', { name: 'アップロード' });
   }
 
   /**
