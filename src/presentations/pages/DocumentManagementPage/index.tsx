@@ -103,7 +103,12 @@ export const DocumentManagementPage: React.FC = () => {
   const totalCount = data?.pagination.total || 0;
 
   return (
-    <Container maxWidth="lg">
+    <Container 
+      maxWidth="lg"
+      sx={{
+        px: { xs: 1, sm: 2, md: 3 },
+      }}
+    >
       <Stack spacing={2} sx={{ py: 3 }}>
         <UploadDialog
           open={showUploadDialog}

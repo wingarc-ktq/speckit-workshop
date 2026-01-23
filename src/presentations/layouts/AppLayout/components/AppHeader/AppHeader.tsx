@@ -15,6 +15,8 @@ import InputAdornment from '@mui/material/InputAdornment';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import Box from '@mui/material/Box';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { useTheme } from '@mui/material/styles';
 
 import { Logo } from '@/presentations/ui';
 
@@ -41,6 +43,8 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
   showDocumentTools = false,
 }) => {
   const [searchKeyword, setSearchKeyword] = useState('');
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
@@ -92,37 +96,59 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
 
         {/* Center - Document Management Tools */}
         {showDocumentTools && (
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, flex: 1 }}>
+          <Box 
+            sx={{ 
+              display: 'flex', 
+              alignItems: 'center', 
+              gap: { xs: 1, sm: 2 }, 
+              flex: 1,
+              flexWrap: 'wrap',
+            }}
+          >
             {/* Search Bar */}
             <TextField
               value={searchKeyword ?? ''}
               onChange={handleSearchChange}
-              placeholder="文書を検索..."
+              placeholder={isMobile ? "検索..." : "文書を検索..."}
               size="small"
               sx={{
-                minWidth: 300,
+                minWidth: { xs: 120, sm: 200, md: 300 },
                 backgroundColor: 'background.paper',
                 borderRadius: 1,
+                flex: { xs: 1, md: 'none' },
               }}
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
-                    <SearchIcon />
+                    <SearchIcon sx={{ fontSize: { xs: 18, sm: 20 } }} />
                   </InputAdornment>
                 ),
               }}
             />
 
-            {/* Filter Button */}
+            {/* Filter Button - Icon on mobile, Text on desktop */}
             {onFilterClick && (
-              <Button
-                variant="contained"
-                color="primary"
-                startIcon={<FilterListIcon />}
-                onClick={onFilterClick}
-              >
-                絞り込み
-              </Button>
+              isMobile ? (
+                <IconButton
+                  color="primary"
+                  onClick={onFilterClick}
+                  data-testid="filter-button-mobile"
+                  title="絞り込み"
+                  size="small"
+                >
+                  <FilterListIcon />
+                </IconButton>
+              ) : (
+                <Button
+                  variant="contained"
+                  color="primary"
+                  startIcon={<FilterListIcon />}
+                  onClick={onFilterClick}
+                  data-testid="filter-button-desktop"
+                >
+                  絞り込み
+                </Button>
+              )
             )}
 
             {/* View Toggle */}
@@ -134,24 +160,37 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
                 size="small"
               >
                 <ToggleButton value="list" aria-label="リスト表示">
-                  <ViewListIcon />
+                  <ViewListIcon sx={{ fontSize: { xs: 18, sm: 20 } }} />
                 </ToggleButton>
                 <ToggleButton value="grid" aria-label="グリッド表示">
-                  <ViewModuleIcon />
+                  <ViewModuleIcon sx={{ fontSize: { xs: 18, sm: 20 } }} />
                 </ToggleButton>
               </ToggleButtonGroup>
             )}
 
-            {/* Upload Button */}
+            {/* Upload Button - Icon on mobile, Text on desktop */}
             {onUploadClick && (
-              <Button
-                variant="contained"
-                color="primary"
-                startIcon={<CloudUploadIcon />}
-                onClick={onUploadClick}
-              >
-                アップロード
-              </Button>
+              isMobile ? (
+                <IconButton
+                  color="primary"
+                  onClick={onUploadClick}
+                  data-testid="upload-button-mobile"
+                  title="アップロード"
+                  size="small"
+                >
+                  <CloudUploadIcon />
+                </IconButton>
+              ) : (
+                <Button
+                  variant="contained"
+                  color="primary"
+                  startIcon={<CloudUploadIcon />}
+                  onClick={onUploadClick}
+                  data-testid="upload-button-desktop"
+                >
+                  アップロード
+                </Button>
+              )
             )}
           </Box>
         )}

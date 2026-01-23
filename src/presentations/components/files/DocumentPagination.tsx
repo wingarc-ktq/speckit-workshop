@@ -61,13 +61,15 @@ export function DocumentPagination({
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
+        flexDirection: { xs: 'column', sm: 'row' },
+        gap: { xs: 2, sm: 0 },
         mt: 3,
         pt: 2,
         borderTop: '1px solid #eee',
       }}
     >
-      <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-        <Typography variant="body2" color="textSecondary">
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, flexWrap: 'wrap', order: { xs: 2, sm: 1 } }}>
+        <Typography variant="body2" color="textSecondary" sx={{ fontSize: { xs: '0.75rem', sm: '0.875rem' } }}>
           {startIndex} - {endIndex} / 全 {totalCount} 件
         </Typography>
 
@@ -94,6 +96,8 @@ export function DocumentPagination({
         onChange={handlePageChange}
         color="primary"
         data-testid="pagination-control"
+        size="small"
+        sx={{ order: { xs: 1, sm: 2 } }}
       />
     </Box>
   );

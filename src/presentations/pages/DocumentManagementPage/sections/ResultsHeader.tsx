@@ -27,8 +27,8 @@ export const ResultsHeader: React.FC<ResultsHeaderProps> = ({
   return (
     <Stack spacing={1}>
       <SearchResultsStatus totalCount={totalCount} searchKeyword={searchKeyword} isSearchActive={!!searchKeyword} />
-      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 2, flexWrap: 'wrap' }}>
-        <Typography sx={{ fontSize: '0.875rem', color: '#666' }}>{displayCount}件の文書</Typography>
+      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: { xs: 1, sm: 2 }, flexWrap: 'wrap' }}>
+        <Typography sx={{ fontSize: { xs: '0.75rem', sm: '0.875rem' }, color: '#666' }}>{displayCount}件の文書</Typography>
         <SortControl
           sortBy={sortBy}
           sortOrder={sortOrder}

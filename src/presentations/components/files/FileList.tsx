@@ -103,8 +103,14 @@ export function FileList({
 
   if (isLoading && documents.length === 0) {
     return (
-      <TableContainer component={Paper}>
-        <Table>
+      <TableContainer 
+        component={Paper}
+        sx={{
+          overflowX: 'auto',
+          WebkitOverflowScrolling: 'touch',
+        }}
+      >
+        <Table sx={{ minWidth: { xs: 600, sm: 'auto' } }}>
           <TableHead>
             <TableRow sx={{ backgroundColor: '#f5f5f5' }}>
               <TableCell width="5%" padding="checkbox">
@@ -186,8 +192,14 @@ export function FileList({
   };
 
   return (
-    <TableContainer component={Paper}>
-      <Table>
+    <TableContainer 
+      component={Paper}
+      sx={{
+        overflowX: 'auto',
+        WebkitOverflowScrolling: 'touch',
+      }}
+    >
+      <Table sx={{ minWidth: { xs: 600, sm: 'auto' } }}>
         <TableHead>
           <TableRow sx={{ backgroundColor: '#f5f5f5' }}>
             <TableCell width="5%" padding="checkbox">

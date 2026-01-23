@@ -84,9 +84,9 @@ export function FileGridView({ documents, isLoading, searchKeyword, onCardClick 
 
   if (isLoading && documents.length === 0) {
     return (
-      <Grid container spacing={2}>
+      <Grid container spacing={1.5}>
         {skeletonCards.map((card) => (
-          <Grid key={card.id} size={{ xs: 12, sm: 6, md: 3 }}>
+          <Grid key={card.id} size={{ xs: 6, sm: 6, md: 3 }}>
             <Card>
               <CardContent>
                 <Skeleton variant="rectangular" height={120} />
@@ -122,12 +122,12 @@ export function FileGridView({ documents, isLoading, searchKeyword, onCardClick 
   }
 
   return (
-    <Grid container spacing={2}>
+    <Grid container spacing={1.5}>
       {documents.map((document) => {
         const { icon, bgColor } = getFileTypeInfo(document.fileName);
         
         return (
-          <Grid key={document.id} size={{ xs: 12, sm: 6, md: 3 }}>
+          <Grid key={document.id} size={{ xs: 6, sm: 6, md: 3 }}>
             <Card
               sx={{
                 position: 'relative',

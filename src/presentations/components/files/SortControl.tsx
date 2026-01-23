@@ -42,8 +42,8 @@ export function SortControl({ sortBy, sortOrder, onSortChange }: SortControlProp
   };
 
   return (
-    <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
-      <FormControl size="small" sx={{ minWidth: 150 }}>
+    <Box sx={{ display: 'flex', gap: { xs: 1, sm: 2 }, alignItems: 'center', flexWrap: 'wrap' }}>
+      <FormControl size="small" sx={{ minWidth: { xs: 120, sm: 150 } }}>
         <InputLabel id="sort-by-label">ソート</InputLabel>
         <Select
           labelId="sort-by-label"
@@ -58,7 +58,7 @@ export function SortControl({ sortBy, sortOrder, onSortChange }: SortControlProp
         </Select>
       </FormControl>
 
-      <FormControl size="small" sx={{ minWidth: 100 }}>
+      <FormControl size="small" sx={{ minWidth: { xs: 80, sm: 100 } }}>
         <InputLabel id="sort-order-label">順序</InputLabel>
         <Select
           labelId="sort-order-label"

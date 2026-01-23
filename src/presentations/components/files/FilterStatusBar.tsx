@@ -37,8 +37,8 @@ export function FilterStatusBar({ selectedTags, onRemoveTag, onClearAll }: Filte
       sx={{
         display: 'flex',
         alignItems: 'center',
-        gap: 1,
-        p: 1.5,
+        gap: { xs: 0.5, sm: 1 },
+        p: { xs: 1, sm: 1.5 },
         backgroundColor: '#f5f5f5',
         borderRadius: 1,
         border: '1px solid #e0e0e0',
@@ -46,7 +46,7 @@ export function FilterStatusBar({ selectedTags, onRemoveTag, onClearAll }: Filte
       }}
       data-testid="filter-status-bar"
     >
-      <Typography variant="body2" sx={{ fontWeight: 500, color: '#666' }}>
+      <Typography variant="body2" sx={{ fontWeight: 500, color: '#666', fontSize: { xs: '0.75rem', sm: '0.875rem' } }}>
         フィルター適用中:
       </Typography>
       
@@ -74,7 +74,7 @@ export function FilterStatusBar({ selectedTags, onRemoveTag, onClearAll }: Filte
       <Button
         size="small"
         onClick={onClearAll}
-        sx={{ textTransform: 'none', fontWeight: 500 }}
+        sx={{ textTransform: 'none', fontWeight: 500, fontSize: { xs: '0.7rem', sm: '0.875rem' } }}
         data-testid="clear-all-filters-button"
       >
         すべてクリア
